@@ -1,0 +1,1079 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Prominent Field Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: branch picker, sticky search + view toggle, filter chips, stacked expandable cards with role badges — one-handed phone use in a truck or driveway */
+:root{
+  --bg:#f3f6f2; --surface:#ffffff; --fg:#17201a; --muted:#5b6a5f; --line:#dbe3dc;
+  --brand:#2bb24c; --brand-ink:#0f6b28; --brand-soft:#e3f5e7;
+  --warn:#9a5b00; --warn-soft:#fff3dc; --stop:#a42a1f; --stop-soft:#fde8e5;
+  --csr:#1d5fa8; --csr-soft:#e3eefb; --tech:#5a3f9e; --tech-soft:#eee8fa; --reg:#7a2e57; --reg-soft:#f8e6ef;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Source Sans 3",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1511; --surface:#18211b; --fg:#e8efe9; --muted:#97a69b; --line:#2a352d;
+  --brand:#3ccf61; --brand-ink:#7be596; --brand-soft:#173322;
+  --warn:#f0b04f; --warn-soft:#2e2412; --stop:#f2877c; --stop-soft:#341a17;
+  --csr:#79b4f2; --csr-soft:#15263a; --tech:#b9a3f0; --tech-soft:#231b38; --reg:#ec9cc4; --reg-soft:#341a28; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1511; --surface:#18211b; --fg:#e8efe9; --muted:#97a69b; --line:#2a352d;
+  --brand:#3ccf61; --brand-ink:#7be596; --brand-soft:#173322;
+  --warn:#f0b04f; --warn-soft:#2e2412; --stop:#f2877c; --stop-soft:#341a17;
+  --csr:#79b4f2; --csr-soft:#15263a; --tech:#b9a3f0; --tech-soft:#231b38; --reg:#ec9cc4; --reg-soft:#341a28; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body)}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+header{padding-block:20px 6px;display:grid;gap:10px}
+.eyebrow{font:600 12px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--brand-ink)}
+h1{font:700 2.1rem/1.05 var(--display);margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0}
+.branch{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.branch-label{font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.branch button{font:600 14px var(--body);min-height:40px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.branch button[aria-pressed="true"]{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-ink)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:grid;gap:10px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{font:700 1.05rem var(--display);letter-spacing:.03em;padding:8px;border:0;border-radius:8px;background:none;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+#q{width:100%;font:inherit;font-size:17px;padding:12px 14px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg)}
+#q:focus{outline:none;border-color:var(--brand)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chip{flex:none;font:600 14px var(--body);padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.count{font-size:13px;color:var(--muted)}
+.list{display:grid;gap:10px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;scroll-margin-top:190px}
+details.flash{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand)}
+details.off{opacity:.72}
+summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+summary::-webkit-details-marker{display:none}
+.say{font:700 1.3rem/1.15 var(--display);letter-spacing:.01em}
+.cat{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fix{grid-column:1/-1;font-weight:600;color:var(--brand-ink)}
+.offtag{grid-column:1/-1;justify-self:start;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--stop)}
+.plus{grid-row:1/3;grid-column:2;font:700 22px var(--display);color:var(--muted);transition:transform .15s}
+details[open]>summary .plus{transform:rotate(45deg)}
+.body{padding:0 16px 16px;display:grid;gap:14px;min-width:0}
+.body h3{font:600 12px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.body ul{margin:0;padding-left:18px}
+.body li+li{margin-top:3px}
+.body p{margin:0}
+.badge{display:inline-block;font:700 10.5px/1 var(--body);letter-spacing:.09em;text-transform:uppercase;padding:4px 6px;border-radius:4px;white-space:nowrap}
+.b-sales{background:var(--brand-soft);color:var(--brand-ink)}
+.b-csr{background:var(--csr-soft);color:var(--csr)}
+.b-tech{background:var(--tech-soft);color:var(--tech)}
+.b-policy{background:var(--warn-soft);color:var(--warn)}
+.b-label{background:var(--reg-soft);color:var(--reg)}
+.b-price{background:var(--brand-soft);color:var(--brand-ink);outline:1px solid var(--brand)}
+.b-safety{background:var(--stop);color:#fff}
+.note{padding:10px 12px;border-radius:8px;font-size:15px}
+.note .badge{margin-right:6px;vertical-align:1px}
+.note.price{background:var(--brand-soft)}
+.note.warn{background:var(--warn-soft);border-left:3px solid var(--warn)}
+.note.stop{background:var(--stop-soft);border-left:3px solid var(--stop)}
+.note.safety{background:var(--stop-soft);border:2px solid var(--stop)}
+.note.safety ul{margin-top:6px}
+.note.label{background:var(--reg-soft);border-left:3px solid var(--reg);font-size:14px}
+.note.loc{background:var(--csr-soft);border-left:3px solid var(--csr)}
+.prods{display:flex;flex-wrap:wrap;gap:6px}
+.prod{font:600 14px var(--body);min-height:34px;padding:5px 10px;border-radius:6px;border:1px solid var(--brand);background:var(--brand-soft);color:var(--brand-ink);cursor:pointer}
+.quote{border-left:3px solid var(--brand);padding:8px 12px;background:var(--bg);border-radius:0 8px 8px 0;font-size:16px}
+.quote p{font-style:italic}
+.copy,.jump{margin-top:8px;font:600 13px var(--body);min-height:34px;padding:5px 10px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+details.treat{background:var(--tech-soft);border:1px solid var(--line);border-radius:10px;scroll-margin-top:190px}
+details.treat>summary{display:flex;align-items:center;gap:8px;padding:12px;font:700 1.05rem var(--display);letter-spacing:.03em;color:var(--fg)}
+details.treat>summary::after{content:"▾";margin-left:auto;color:var(--muted)}
+details.treat[open]>summary::after{content:"▴"}
+.treat-body{padding:0 12px 12px;display:grid;gap:10px}
+.treat-body h4{margin:0;font:600 12px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.treat-body ol,.treat-body ul{margin:0;padding-left:20px}
+.treat-body li+li{margin-top:6px}
+.species{display:grid;gap:8px}
+details.sp{background:var(--surface)}
+.pestpanel{background:var(--brand-soft);border:1px solid var(--brand);border-radius:12px;padding:14px 16px;display:grid;gap:10px}
+.pestpanel h3{margin:0;font:600 12px/1.3 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--brand-ink)}
+.pestpanel .pest{font:700 1.25rem/1.15 var(--display);color:var(--fg)}
+.pestpanel .hint{font-size:13px;color:var(--muted);margin:0}
+.pestpanel .row{display:grid;gap:8px}
+.pestpanel .row+.row{border-top:1px solid var(--line);padding-top:10px}
+.empty{padding:24px 16px;text-align:center;color:var(--muted)}
+.panel{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.panel h2{font:700 1.4rem var(--display);margin:0 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.panel ul,.panel ol{margin:0;padding-left:18px}
+.panel li+li{margin-top:6px}
+.panel p{margin:10px 0 0}
+.panel h3{font:600 13px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+details.panel{padding:0}
+details.panel>summary{display:flex;align-items:center;gap:8px;padding:14px 16px;font:700 1.3rem var(--display)}
+details.panel>summary::after{content:"+";margin-left:auto;color:var(--muted)}
+details.panel[open]>summary::after{content:"–"}
+.panel-body{padding:0 16px 16px}
+.ver{margin-top:22px;font-size:13px;color:var(--muted);display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-variant-numeric:tabular-nums}
+.ver b{font-weight:600;color:var(--fg)}
+@media (prefers-reduced-motion:reduce){.plus{transition:none}}
+</style>
+
+<div class="wrap">
+  <a href="/" style="display:inline-block;margin-top:14px;font:600 15px var(--body);color:var(--brand-ink);text-decoration:none">← All tools</a>
+  <header>
+    <div class="eyebrow">Prominent Pest Solutions · Sales, CSRs &amp; Techs</div>
+    <h1>What's the customer dealing with?</h1>
+    <p class="sub">On the phone, at the door, or on the job: type what the customer tells you, in their words. Tap a match for the fix, the products we use, how it's priced, and what not to promise.</p>
+    <div class="branch" role="group" aria-label="Branch">
+      <span class="branch-label">Branch</span>
+      <button type="button" data-br="ALL" aria-pressed="true">All</button>
+      <button type="button" data-br="ID" aria-pressed="false">Idaho · Idaho Falls</button>
+      <button type="button" data-br="WY" aria-pressed="false">Wyoming · Western WY</button>
+      <button type="button" data-br="MT" aria-pressed="false">Montana · Bozeman</button>
+    </div>
+  </header>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="View">
+      <button type="button" id="vProb" aria-pressed="true">Problems</button>
+      <button type="button" id="vProd" aria-pressed="false">Products &amp; tools</button>
+    </div>
+    <input id="q" type="search" placeholder="e.g. scratching in the attic, holes in yard…" autocomplete="off" aria-label="Search">
+    <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+    <div class="count" id="count" aria-live="polite"></div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <section class="panel" id="rules">
+    <h2>House rules for every call <span class="badge b-policy">Company policy</span></h2>
+    <ul>
+      <li><strong>Inspection fees credit back in full</strong> when the customer books the service we inspected for. Lead with this. It takes the risk out of saying yes.</li>
+      <li><strong>No results guarantee on wildlife or rodent removal.</strong> The price covers the process and labor. Exclusion workmanship <em>is</em> warrantied.</li>
+      <li><strong>All wildlife work and trapping follows NWCOA standards</strong> (National Wildlife Control Operators Association), along with applicable laws and requirements.</li>
+      <li><strong>We don't do general damage repair or cleanup</strong> unless it's specifically contracted. Don't promise it, even if the customer asks.</li>
+      <li><strong>Never call a pesticide "non-toxic."</strong> Botanical or natural doesn't mean harmless. Say botanical, plant-based, or naturally derived.</li>
+      <li><strong>Prices can go up with distance</strong> from the shop on travel-based services. Quote the base and say so.</li>
+      <li><strong>Never make up a price.</strong> If a price isn't in this guide: inspect first, custom quote, or quote per current branch pricing.</li>
+      <li>Not sure? Book the inspection. It's never the wrong answer.</li>
+    </ul>
+    <h3>What the badges mean</h3>
+    <ul>
+      <li><span class="badge b-csr">CSR</span> Questions to ask on the phone or at intake.</li>
+      <li><span class="badge b-sales">Sales</span> What we offer and how to talk about it.</li>
+      <li><span class="badge b-price">Pricing</span> Current pricing rules. Don't go outside them.</li>
+      <li><span class="badge b-policy">Company policy</span> How Prominent does things. Our choice, not the law.</li>
+      <li><span class="badge b-tech">Tech</span> Inspection and treatment strategy. Not a sales script, and never a promised result.</li>
+      <li><span class="badge b-label">Label / regulatory</span> Legal requirements. The product label, equipment instructions, and applicable laws always win.</li>
+      <li><span class="badge b-safety">Safety</span> Stop and handle this first.</li>
+    </ul>
+  </section>
+
+  <details class="panel" id="photos">
+    <summary>Customer sending photos? <span class="badge b-csr">CSR</span><span class="badge b-sales">Sales</span></summary>
+    <div class="panel-body">
+      <h3>Insects</h3>
+      <ul><li>Close, focused photo.</li><li>Include something for size, like a coin or ruler.</li><li>Photograph more than one if they have them.</li></ul>
+      <h3>Droppings</h3>
+      <ul><li>Close photo.</li><li>Include approximate size.</li><li>A wider photo showing where they're finding them.</li></ul>
+      <h3>Holes and entry points</h3>
+      <ul><li>Close photo of the opening.</li><li>A wider photo showing where it sits on the structure.</li></ul>
+      <h3>Wildlife</h3>
+      <ul><li>Photo or video only if they can get it safely, from a distance.</li><li>Never tell a customer to approach, corner, capture, or handle wildlife to get a photo.</li></ul>
+    </div>
+  </details>
+
+  <section class="panel" id="big" hidden>
+    <h2>We aren't selling "a spray"</h2>
+    <p>Before choosing any product, Prominent works out:</p>
+    <ol style="margin-top:8px">
+      <li>What the pest is.</li>
+      <li>Why it's there.</li>
+      <li>How it's getting in or surviving.</li>
+      <li>Which control methods fit its biology.</li>
+      <li>What structural, sanitation, or environmental conditions need correcting.</li>
+      <li>How to keep it from coming back.</li>
+    </ol>
+    <p>Then we pick from the full toolbox:</p>
+    <ul style="margin-top:8px">
+      <li><strong>Residuals</strong> keep protecting after we leave.</li>
+      <li><strong>Non-repellents</strong> let pests walk through treatment without avoiding it.</li>
+      <li><strong>Baits</strong> turn the pest's feeding behavior against it.</li>
+      <li><strong>Growth regulators (IGRs)</strong> stop the next generation.</li>
+      <li><strong>Dusts</strong> reach wall voids and cracks sprays can't.</li>
+      <li><strong>Biologicals</strong> work in a completely different way from chemicals.</li>
+      <li><strong>Mechanical traps</strong> physically remove pests.</li>
+      <li><strong>Monitoring</strong> shows where activity is and whether it's dropping.</li>
+      <li><strong>Wildlife cameras</strong> confirm what's actually on the property.</li>
+      <li><strong>Exclusion</strong> closes the openings so they can't get back in.</li>
+      <li><strong>Physical deterrents</strong> take away landing and roosting spots.</li>
+      <li><strong>Burrow-control equipment</strong> treats underground tunnel systems.</li>
+      <li><strong>Sanitation recommendations</strong> remove what's feeding and sheltering the pest.</li>
+    </ul>
+    <p>We choose products to solve the problem properly, not because they're the cheapest chemical on the truck.</p>
+  </section>
+
+  <div class="ver" id="ver"></div>
+</div>
+
+<script>
+/* ---------- Version info: update these when the guide changes ---------- */
+const VERSION = {
+  name: "Prominent Field Guide",
+  version: "1.2",
+  updated: "October 4, 2026",
+  owner: "Operations",
+  pricingReviewed: "October 3, 2026"
+};
+
+/* ---------- Branches ---------- */
+const BRANCHES = { ID:"Idaho · Idaho Falls", WY:"Wyoming · Western Wyoming", MT:"Montana · Bozeman" };
+
+/* ---------- Shared regulatory text ---------- */
+const LABEL_REQ = "Always follow the current product label for permitted sites, rates, application methods, PPE, reentry requirements, environmental restrictions, food-handling restrictions, weather limitations, and other use directions. The label is the law.";
+const WILDLIFE_REQ = "Follow applicable state and local wildlife laws, NWCOA standards, equipment instructions, and Prominent company SOP. Where requirements vary by location, check them before acting.";
+const EQUIP_REQ = "Follow the equipment instructions, applicable laws, and distance or site restrictions. Never use burrow equipment in a way that could put exhaust into an occupied structure or unsafe area.";
+
+/* ---------- Products & tools ---------- */
+const PR = {
+ "Cyzmic CS":{pest:1,rain:"Do not apply in rain.",type:"Residual",best:"General exterior pest control: spiders, ants, wasps, mosquitoes, occasional invaders, crawling insects.",what:"Microencapsulated residual. Tiny capsules release the active ingredient over time, so it works fairly fast and lasts.",why:"An excellent all-around perimeter product when we want strong residual outdoors.",line:"We apply a professional residual barrier around the structure that continues working after we leave instead of only killing insects that are present that day."},
+ "FastCap":{pest:1,rain:"Do not apply in rain.",type:"Residual",best:"Spiders, scorpions, and other tough crawling pests where fast knockdown matters.",what:"Built for very fast knockdown plus residual control.",why:"Great for heavy spider activity or customers who want to see quick results.",line:"This is one of the products we use when we need aggressive control of spiders and other tough crawling pests rather than just a basic maintenance spray."},
+ "Permethrin":{pest:1,rain:"Do not apply in rain.",type:"Knockdown",best:"Fast results on active insects: wasps, spiders, mosquitoes, ticks, and general pests.",what:"Broad-spectrum pyrethroid with very fast knockdown but a shorter residual than our barrier products.",why:"When the customer needs quick results, we often mix it with a longer-lasting product where the labels allow. Permethrin knocks down what's active now, and the other product provides the strong residual.",line:"We often combine products: one that knocks down the insects you're seeing right away, and another that keeps protecting your home long after we leave."},
+ "Talstar":{pest:1,rain:"Can be applied when rain is around, as long as the surface is dry.",type:"Residual",best:"General exterior pest control, mosquito and flea/tick misting: spiders, ants, wasps, and many other pests.",what:"Bifenthrin-based residual. A long-time workhorse in professional pest control.",why:"Broad-spectrum residual control that fits many situations.",line:"This is a professional residual barrier product designed to keep working well after the initial application."},
+ "Alpine WSG":{pest:1,rain:"Do not apply in rain.",type:"Non-repellent",best:"Ants, carpenter ants, cockroaches, and many indoor and exterior pests.",what:"Non-repellent. Pests cross treated areas without avoiding them.",why:"Pests keep behaving normally and keep contacting the treatment.",line:"The pest doesn't simply encounter a strong-smelling barrier and turn around. It can move through the treatment and pick up the insecticide."},
+ "Taurus SC":{pest:1,rain:"Do not apply in rain.",type:"Non-repellent",best:"Ant colonies, carpenter ants where the label and site allow, termite pre-treats and termite treatments, and some exterior perimeter applications.",what:"Non-repellent fipronil. Exposed pests keep moving normally before they die.",why:"Very effective on social insects like ants and termites, because it reaches beyond the individual insect that touched it.",line:"Rather than putting up a barrier the ants may avoid, we use a treatment they can move through without disrupting their normal behavior."},
+ "Advion Ant Gel":{pest:1,type:"Bait",best:"Ant infestations, including carpenter ants where appropriate, especially indoors or where bait beats spraying.",what:"Gel bait. Worker ants eat it and carry it back toward the colony.",why:"Uses the ants' own social behavior against the colony.",line:"Instead of spraying every individual ant we see, we allow the workers to take the treatment back toward where the colony is living."},
+ "Advion Roach Gel":{pest:1,type:"Bait",best:"German cockroaches and other roach infestations.",what:"Highly attractive gel bait placed in small amounts near where roaches hide. Roaches eat it and die.",why:"Precise placement in cracks, hinges, and harborages.",line:"We're placing small amounts of highly attractive bait directly where cockroaches live and forage instead of simply spraying the entire room."},
+ "Niban":{pest:1,type:"Bait",best:"Cockroaches, ants, crickets, silverfish, and other crawling pests.",what:"Boric-acid granular bait for indoor and outdoor use. Weather resistant.",why:"Long-lasting bait where gels or liquids don't make sense.",line:"It is a durable granular bait that pests seek out and consume, giving us another way to attack infestations without relying exclusively on sprays."},
+ "Alpine Fly Bait":{pest:1,type:"Bait",best:"House flies and other nuisance flies.",what:"Attractive bait flies feed on, which then kills them.",why:"Uses the fly's natural feeding behavior instead of chasing every fly with a spray.",line:"We give the flies something they actively seek out, turning their own feeding behavior against them."},
+ "Tekko Pro":{pest:1,rain:"Do not apply in rain.",type:"Growth regulator",best:"Cockroaches, fleas, mosquitoes, and insects where reproduction is part of the problem.",what:"Insect growth regulator (IGR). Disrupts development and reproduction instead of just killing adults.",why:"Attacks the population's ability to replace itself.",line:"Some products kill the bugs we see. Tekko helps stop the next generation from developing normally."},
+ "Gentrol":{pest:1,rain:"Do not apply in rain.",type:"Growth regulator",best:"Cockroaches, pantry pests, drain flies, and pests where reproduction matters.",what:"Insect growth regulator. Interferes with development and reproduction.",why:"Breaks the reproductive cycle behind long-term infestations.",line:"We don't only kill what is crawling around today. We attack the population's ability to keep reproducing."},
+ "Delta Dust":{pest:1,type:"Dust",best:"Wall voids, cracks, crevices, electrical boxes, and spots where liquids aren't ideal.",what:"Dry residual insecticide dust.",why:"Reaches deep into hiding spots a spray never touches.",line:"We can place treatment inside the structure itself, inside cracks and voids where insects are actually living."},
+ "Bifen LP":{pest:1,type:"Granular",best:"Ants, crickets, and pests in lawns, landscaping, and around foundations.",what:"Granular bifenthrin.",why:"Treats turf and landscape beds where spraying isn't the best delivery.",line:"We're able to treat the ground and landscaping around the home, not just the siding."},
+ "Essentria":{pest:1,rain:"Can be applied when rain is around, as long as the surface is dry.",type:"Botanical",best:"Customers or situations where a botanical product is preferred.",what:"Plant-derived essential oils and botanical active ingredients instead of conventional synthetics.",why:"Another option when the customer specifically wants botanical.",line:"For customers who prefer a botanical approach, we have professional products based on plant-derived active ingredients.",warn:"Never call it \"non-toxic.\" Say botanical, plant-based, or naturally derived."},
+ "Aprehend":{pest:1,rain:"Do not apply in rain.",type:"Biological",best:"Bed bugs.",what:"Spores of a naturally occurring fungus (Beauveria bassiana). Bed bugs walk across it, get infected, and carry spores back to other bed bugs.",why:"A completely different mode of action, valuable against insecticide-resistant bed bugs.",line:"Instead of relying entirely on a traditional chemical spray, this treatment uses a specialized biological fungus that bed bugs pick up simply by walking across treated areas.",
+  price:"Residential: minimum $800 for the first room. Additional rooms can be discounted if needed, but it requires an expensive product and special equipment.",
+  warn:"Never go below $800 for the first residential room."},
+ "CrossFire":{pest:1,rain:"Do not apply in rain.",type:"Residual",best:"Bed bugs.",what:"Professional residual made for bed bugs, including populations resistant to older insecticides.",why:"A purpose-built tool for a hard pest, used as part of a full program.",line:"This isn't just a general bug spray being used on bed bugs. It's a product specifically developed for professional bed bug treatments.",
+  price:"Residential CrossFire-only treatments: $300 per room per treatment, or bundled into one price for a treatment plus a set number of follow-ups."},
+ "Alpine Flea & Bed Bug Aerosol":{pest:1,type:"Aerosol",best:"Fleas inside the home: carpets, rugs, pet areas, and furniture.",what:"Professional aerosol for indoor flea treatment.",why:"Reaches the carpets and furniture where fleas and their developing stages live, without a sprayer.",line:"After we treat the yard, we treat inside where fleas hide in carpets and furniture, so we're hitting them everywhere they live."},
+ "Wasp Freeze":{pest:1,rain:"Do not apply in rain.",type:"Knockdown",best:"Wasps, hornets, and other stinging insects needing immediate knockdown.",what:"Professional aerosol with rapid knockdown from a distance.",why:"With defensive stinging insects, speed matters for the tech's safety.",line:"This is our immediate-knockdown tool for situations where a technician is dealing with actively defensive wasps or hornets."},
+ "Fuse Foam":{pest:1,type:"Termite foam",best:"Termite spot treatments in wall voids, galleries, and damaged wood.",what:"Termiticide foam injected into voids and galleries, where it expands to reach termites inside.",why:"Treats a specific area without drilling and rodding the whole structure.",line:"For a small, localized problem, we can inject a foam treatment right where the termites are active.",warn:"Spot treatments have no warranty or guarantee."},
+ "SureKill":{pest:1,type:"Rodent bait",best:"Mice, around the outside of structures.",what:"Professional rodenticide bait, placed inside secured bait stations.",why:"Controls rodent populations around the building without relying only on traps.",line:"We establish protected feeding points around the building to reduce the rodent population before they make their way inside."},
+ "Bait Stations":{type:"Rodent bait",best:"Protecting rodent bait and setting up exterior control points.",what:"Tamper-resistant containers for rodenticide or monitoring.",why:"Protects bait from weather and limits access by kids, pets, and other animals when used properly.",line:"Instead of leaving bait exposed, we secure it inside professional stations strategically placed around the structure.",
+  price:"1 included with the General Pest Plan. Additional stations are $30 each. More than 5 stations adds $5 to the monthly price, or $15 per service.",
+  how:"Rural homes or high rodent pressure: recommend 1 or more on each side of the structure, plus by sheds. The tech determines the recommended number."},
+ "Snap Traps":{type:"Mechanical",best:"Mice already inside a structure, and targeted spots outside where appropriate.",what:"Immediate mechanical rodent control.",why:"We know when and where rodents are caught, and none die inside walls from bait.",line:"When rodents are already inside, trapping gives us a controlled and measurable way of removing them."},
+ "Fly Lights":{type:"Mechanical",best:"Flies inside restaurants, commercial kitchens, warehouses, and offices.",what:"UV light traps that attract flying insects onto replaceable glue boards.",why:"Continuous indoor control without staff chasing flies.",line:"The unit works 24/7, attracting flies away from sensitive areas and capturing them on a concealed glue board."},
+ "Glue Monitors":{type:"Monitoring",best:"German cockroaches, crawling-insect monitoring, finding activity locations, and measuring treatment progress.",what:"Sticky monitoring boards placed where crawling insects travel.",why:"They show the tech where activity is concentrated, whether numbers are dropping, and whether the treatment needs adjusting.",line:"We set monitors so we can measure the activity and prove the numbers are coming down, visit after visit."},
+ "HEPA / Professional Vacuum":{type:"Mechanical removal",best:"Heavy German cockroach cleanouts and removing pest debris during treatment.",what:"Professional vacuum used to physically remove pests before treatment.",why:"Quickly removes large numbers of roaches, egg cases, cast skins, and debris before bait, residual, and IGR treatment go down.",line:"On heavy infestations, we start by physically removing as many roaches as possible so the treatment works on what's left.",warn:"This is part of treatment, not a cleaning service. We don't do general sanitation or cleanup unless it's specifically contracted."},
+ "Burrow Carbon Monoxide Treatment":{type:"Burrow equipment",best:"Approved burrowing-pest treatments such as gophers, and voles where appropriate.",what:"Specialized equipment that introduces carbon monoxide into active underground burrow systems.",why:"Treats interconnected tunnel systems that can be hard to fully address with traps alone.",line:"Instead of treating only the individual mound you see, the equipment treats the underground tunnel system where the animal is actually living and traveling.",
+  warn:"Follow equipment instructions, applicable laws, and distance or site restrictions. Never use it in a way that could put exhaust into an occupied structure or unsafe area. Results are not guaranteed.",reg:"equip"},
+ "Cellular Wildlife Cameras":{type:"Wildlife tools",best:"Confirming species, monitoring traps and entry points, and learning travel patterns.",what:"Trail-style cameras that send photos over a cell connection.",why:"We know what's actually using the property instead of guessing, and we see trap activity right away.",line:"We set cameras so we know exactly what animal we're dealing with and the moment a trap is triggered.",reg:"wildlife"},
+ "Live Traps":{type:"Wildlife tools",best:"Species-appropriate structural wildlife trapping: raccoons, skunks, squirrels, marmots, porcupines.",what:"Cage-style traps that hold the animal until the tech arrives.",why:"Trap size, placement, and bait or attractant are matched to the target species. Legal requirements and what happens to the animal depend on the species and location.",line:"We use traps sized and baited for the specific animal, and we handle anything caught according to the law.",warn:"Don't promise relocation or release to a specific place.",reg:"wildlife"},
+ "One-Way Doors / Valves":{type:"Wildlife tools",best:"Bats, and other wildlife where appropriate, leaving a structure through an active entry.",what:"Devices installed over an active entry that let animals exit but not get back in.",why:"Removes animals from the structure without trapping when the species and situation allow.",line:"We install a one-way door, so the animal can leave on its own but can't get back inside.",reg:"wildlife"},
+ "Chimney Caps":{type:"Wildlife tools",best:"Raccoons, squirrels, birds, and bats getting into chimneys. Also keeps rain and snow out.",what:"A cap installed on top of the chimney flue that blocks animals while letting smoke out.",why:"Chimneys are one of the most common wildlife entry points, and a cap fixes it in one visit while keeping moisture out too.",line:"An open chimney is an open door for wildlife. A cap keeps animals and moisture out while still letting your chimney work normally."},
+ "Wildlife Exclusion Materials":{type:"Wildlife tools",best:"Sealing wildlife entry points once animals are out.",what:"Metal screening, vent guards, flashing, sealants, chew-resistant materials, and structural barriers matched to the animal and the opening.",why:"Exclusion is what stops the next animal from moving in.",line:"Once the animal's out, we seal the opening with materials it can't chew or push through.",warn:"Ordinary expanding foam alone is never acceptable for wildlife or rodent exclusion."},
+ "Copper Mesh":{type:"Exclusion",best:"Small rodent and pest entry points.",what:"Packed into openings to physically block rodents and pests.",why:"Doesn't rust like steel wool and is hard for rodents to work through.",line:"Killing rodents is only half the solution. We also want to close the openings they're using to enter."},
+ "Xcluder":{type:"Exclusion",best:"Rodent exclusion.",what:"Tough fiber material made to resist rodents chewing through entry points.",why:"Far more durable than stuffing a hole with foam.",line:"We use rodent-resistant materials because ordinary expanding foam alone isn't a permanent rodent repair."},
+ "Optical Gel Discs":{type:"Bird deterrent",best:"Pigeons, starlings, sparrows, and other birds landing or roosting on ledges, beams, signs, and rooflines.",what:"Optical gel creates a visual and sensory deterrent that makes treated landing areas undesirable to birds.",why:"Low profile and nonlethal. Useful where spikes or wire may not fit physically or would look out of place.",line:"We place low-profile discs that make the landing spot undesirable, so birds choose to land somewhere else."},
+ "Pigeon Spikes":{type:"Bird deterrent",best:"Pigeons and larger birds on ledges, rooflines, signs, light fixtures, and beams.",what:"A nonlethal physical landing deterrent when properly installed. It removes comfortable landing and roosting space.",why:"Simple, durable, and very effective on narrow ledges.",line:"We install spikes that take away the comfortable landing spot, so birds move on."},
+ "Bird Wire":{type:"Bird deterrent",best:"Ledges, railings, parapets, and rooftop edges where birds perch.",what:"Thin tensioned wires mounted on small posts, which make the landing surface unstable.",why:"Nearly invisible from the ground, so it keeps the building looking clean.",line:"We install low-profile wire that birds can't comfortably perch on. From the ground, you'll barely see it."},
+ "Bird Intimidators":{type:"Bird deterrent",best:"Open areas, roofs, docks, and spots where birds gather but physical barriers aren't practical.",what:"Visual scare devices, such as predator decoys, that make birds feel unsafe in the area.",why:"Covers larger open areas. Works best combined with other deterrents.",line:"We use scare devices that make birds feel the area isn't safe, so they stop gathering here."}
+};
+
+/* ---------- Wildlife species guides (TECH) ---------- */
+const SPECIES = {
+ "Raccoons":{keys:"raccoon raccoons coon latrine",items:[
+  ["Common signs","Torn shingles, soffits, or vent covers; heavy thumping at night; grease and rub marks; latrines (piles of droppings on flat areas like roofs, decks, and attics)."],
+  ["Dens and entries","Attics, chimneys, roof vents, under decks and porches, crawlspaces, and garages."],
+  ["Inspection","Check the roofline and chimney closely. Look for latrines, nesting areas, and torn insulation. Wear a respirator and gloves near droppings."],
+  ["Young","Spring and summer litters are common. Check and listen for young before any exclusion. Never seal young inside."],
+  ["Trap placement","Large live trap on a level, stable surface on the travel path or near the active entry. Secure it so it can't tip. Bait per company SOP."],
+  ["Camera","On the active entry first if the species isn't confirmed, then on each trap."],
+  ["Exclusion","Heavy-gauge screening, reinforced vent guards, chimney caps. Raccoons are strong, so use materials that can't be pulled loose."],
+  ["Safety","Raccoons can carry rabies, and their droppings can carry roundworm. Avoid contact with feces, wear gloves and a respirator, and keep customers and pets away from caught animals."],
+  ["Law","Trap checks, handling, and disposition follow applicable state and local requirements, NWCOA standards, and company SOP."],
+  ["Document","Photos of entries, latrines, trap sets, catches, and finished exclusion."]]},
+ "Skunks":{keys:"skunk skunks smell spray digging lawn holes grubbing under porch",items:[
+  ["Common signs","Odor; small cone-shaped holes in the lawn from digging for grubs; tracks; activity at dusk and night."],
+  ["Dens and entries","Under decks, porches, sheds, slabs, and stairs, and in crawlspaces."],
+  ["Inspection","Look for a fresh entrance hole along the edge of decks and sheds. Loosely plugging the hole with soil or leaves and checking the next day shows whether it's active."],
+  ["Young","Spring through early summer. Confirm no young remain before sealing a den."],
+  ["Trap placement","Enclosed or covered live trap at the den entrance or travel path. A covered trap keeps the skunk calm and reduces spray risk. Approach slowly and quietly."],
+  ["Camera","On the den entrance to confirm species and whether more than one animal is using it."],
+  ["Exclusion","After the den is confirmed empty: screening along the perimeter of decks and sheds, extended down and out below grade (an L-footer) so they can't dig under. A one-way door may be used where company SOP allows."],
+  ["Safety","Skunks can carry rabies. Protect your eyes and face, move slowly, and keep customers and pets away."],
+  ["Law","Handling and disposition follow applicable state and local requirements, NWCOA standards, and company SOP."],
+  ["Document","Photos of the den, trap set, catches, and the finished footer."]]},
+ "Tree squirrels":{keys:"squirrel squirrels tree squirrel red squirrel fox squirrel gray squirrel flying squirrel morning noise daytime",items:[
+  ["Common signs","Scurrying and chewing noises in the morning and late afternoon; chewed holes at roof returns, fascia, soffits, and gable vents; nesting material in the attic."],
+  ["Dens and entries","Attics, roof returns, soffits, gable vents, and chimneys. Overhanging branches give them roof access."],
+  ["Inspection","Check every roof edge and vent for fresh chew marks (light-colored wood). In the attic, look for nests and chewed wiring. Flag any chewed wiring to the customer as a possible fire hazard."],
+  ["Young","Often two litters a year, spring and late summer. Check for young before exclusion."],
+  ["Trap placement","Live trap at the roofline near the active entry, or a one-way door on the entry where appropriate."],
+  ["Camera","On the active entry to confirm species and activity."],
+  ["Exclusion","Chew-resistant metal over every opening. Recommend the customer trim branches back from the roof."],
+  ["Safety","Ladder and roof safety first. Squirrels bite when cornered."],
+  ["Law","Some squirrel species are regulated or protected. Confirm the species and follow applicable state and local requirements, NWCOA standards, and company SOP."],
+  ["Document","Photos of chew points, nests, trap sets or one-way doors, catches, and finished exclusion."]]},
+ "Ground squirrels":{keys:"ground squirrel ground squirrels chiseler chiselers diggers holes yard field colony",items:[
+  ["Common signs","Open burrow holes in lawns, fields, and along foundations, often in colonies; animals active above ground during the day."],
+  ["Dens and entries","Burrows in turf, field edges, berms, and under slabs, sheds, and foundations."],
+  ["Inspection","Count active burrows and map the colony. Seasonal activity varies, and many are inactive for part of the year, so time the work to when they're active."],
+  ["Young","Spring. Plan around the breeding season per company SOP."],
+  ["Trap placement","Live traps near active burrow entrances. Pre-baiting can help."],
+  ["Camera","On active burrows to confirm species and activity levels."],
+  ["Exclusion","Limited for open yards. Focus on keeping them from burrowing under slabs, sheds, and foundations."],
+  ["Burrow treatment","Only where the law, label or equipment instructions, and company SOP allow it for this species."],
+  ["Safety","Ground squirrels can carry fleas. Wear gloves and avoid direct contact."],
+  ["Law","Follow applicable state and local requirements, NWCOA standards, and company SOP."],
+  ["Document","Burrow count and map, trap sets, catches."]]},
+ "Porcupines":{keys:"porcupine porcupines quills chewing siding bark trees",items:[
+  ["Common signs","Chewed wood on siding, decks, and tool handles (they're drawn to salt and sweat); bark stripped from trees; piles of pellet droppings at den sites."],
+  ["Dens and entries","Under decks, sheds, and outbuildings, and in rock piles and woodpiles."],
+  ["Inspection","Look for droppings piles and fresh chew damage, and check under structures for the den."],
+  ["Young","Usually one young, born in spring. Check for young before closing a den."],
+  ["Trap placement","Large live trap at the den entrance or travel path. Use an attractant per company SOP."],
+  ["Camera","On the den or chew area to confirm species and timing."],
+  ["Exclusion","Seal off under-structure dens after removal."],
+  ["Safety","Quills. Wear heavy gloves, handle traps carefully, and keep pets away."],
+  ["Law","Follow applicable state and local requirements, NWCOA standards, and company SOP."],
+  ["Document","Photos of damage, den, trap sets, catches, and finished exclusion."]]}
+};
+
+/* ---------- Problems ---------- */
+const P = [
+ {cat:"Not sure? Start here", say:"Customer doesn't know what the bug, animal, or problem is", fix:"Professional inspection & identification",
+  keys:"don't know dont know not sure unknown what is this what bug is this weird bug strange bug little black bugs tiny bugs small bugs bugs everywhere something noise something living identify identification id photo picture mystery",
+  ask:["Where are they seeing it?","What does it look like?","How big is it?","When do they see or hear it?","How long has it been happening?","Can they safely send a photo? (See photo tips at the bottom of the page.)"],
+  offer:["We identify the pest or problem before recommending treatment whenever identification changes the solution.","A professional inspection to confirm what it is, where it's coming from, and what will actually fix it."],
+  price:"Inspect first. The inspection fee is credited back in full if they book the service we inspected for.",
+  warn:"Don't guess at a treatment or price before we know what it is. Never ask a customer to catch or handle an animal for a photo.",
+  next:"Once it's identified, open that problem's card here for the right service and pricing.",
+  jump:"photos"},
+ {cat:"Wildlife", say:"Animal in the attic, crawlspace, yard, or under the deck", fix:"Wildlife trapping & removal + exclusion",
+  keys:"raccoon raccoons skunk skunks squirrel squirrels ground squirrel porcupine noises at night noise scratching in wall scratching ceiling scratching attic thumping poop in attic droppings attic animal in roof animal under porch animal under deck animal under shed crawlspace walls chimney vent den critter animal unknown camera trap live trap",
+  ask:["What are they hearing or seeing, and when (day or night)?","Do they know what animal it is, or are they guessing?","Any visible holes, chewed vents, or droppings?","Has anyone been in contact with the animal?"],
+  offer:["Camera monitoring first when we're not sure what animal it is, so we pick the right trap.","Species-appropriate live trapping and removal, following NWCOA standards. Caught animals are handled according to applicable laws and requirements.","Cellular cameras on the traps, so we know right away when something's caught.","Exclusion afterward to seal entry points for good, including chimney caps."],
+  prods:["Cellular Wildlife Cameras","Live Traps","One-Way Doors / Valves","Wildlife Exclusion Materials","Chimney Caps"],
+  price:"Inspection first. Trapping averages $500 per week, charged by the week, not per animal caught. Can be higher for larger properties or multiple traps, and lower when bundled with exclusion. Inspection fee is credited back in full if they book the work. Existing and past customers: mention the free/discounted inspection promo.",
+  warn:"No guarantee on removal. Exclusion workmanship is warrantied. We don't do damage repair or cleanup unless it's specifically contracted.", stop:1,
+  next:"Exclusion is the long-term fix. Trapping alone means the next animal moves in.",
+  reg:"wildlife", species:["Raccoons","Skunks","Tree squirrels","Ground squirrels","Porcupines"]},
+ {cat:"Wildlife", say:"Customer asks how our trapping works", fix:"Explaining the trapping process",
+  keys:"how does trapping work nwcoa standards ethical licensed humane live trap kill relocate relocation what happens to the animal cost per animal per week camera cellular monitor",
+  ask:["Are they worried about the animal's welfare, the cost, or how long it takes?"],
+  offer:["All wildlife work follows NWCOA (National Wildlife Control Operators Association) standards and applicable laws.","For standard structural wildlife work such as raccoons, skunks, squirrels, and marmots, Prominent primarily uses species-appropriate live traps. Other wildlife and pest programs may require different control methods permitted by law, the applicable label or equipment instructions, and Prominent company SOP.","Cellular cameras watch the traps, so we know the moment something's caught.","Camera monitoring before trapping when we need to confirm what animal it is.","Caught wildlife is handled according to applicable laws and requirements."],
+  prods:["Live Traps","Cellular Wildlife Cameras"],
+  price:"Inspection first. Trapping averages $500 per week, charged by the week, not per animal. Catching three raccoons in one week costs the same as catching one. Higher for larger properties or multiple traps; lower when bundled with exclusion.",
+  warn:"Don't promise relocation or release to a specific place. What happens to the animal depends on applicable laws.", stop:1,
+  next:"Mention exclusion so they don't end up paying for trapping again next season."},
+ {cat:"Wildlife", say:"Marmots (rockchucks) under the deck, shed, or rocks", fix:"Marmot trapping",
+  keys:"marmot marmots rockchuck rockchucks rock chuck woodchuck groundhog whistle pig yellow belly burrow under deck under shed rocks woodpile garden",
+  ask:["Where are they denning (under a deck, shed, rocks, woodpile)?","How many are they seeing?"],
+  offer:["Live trapping with bait rotation.","Cellular cameras on the traps.","Exclusion of den sites afterward, where possible."],
+  prods:["Live Traps","Cellular Wildlife Cameras","Wildlife Exclusion Materials"],
+  price:"Inspection first. Trapping averages $500 per week. Marmots often take multiple weeks, so quote with that in mind. Lower when bundled with exclusion.",
+  warn:"Marmots are very trap shy. Set expectations up front: it often takes multiple weeks and rotating baits to catch them. No guarantee on removal.", stop:1,
+  next:"Once they're out, offer exclusion under decks and sheds so new ones don't move into the old dens.", reg:"wildlife"},
+ {cat:"Wildlife", say:"Snake in or around the house", fix:"Snake removal",
+  keys:"snake snakes rattlesnake rattler garter bull snake garage basement under deck porch barrier fence fencing",
+  ask:["Where did they see it, and how recently?","One snake, or are they seeing them repeatedly?","Has anyone or any pet been bitten? (If so, they need medical or veterinary care first.)"],
+  offer:["One-time removal for a single snake they can point us to.","7-day trapping program when they keep seeing snakes or can't say where it went."],
+  prods:["Cellular Wildlife Cameras"],
+  price:"One-time removal: $300. 7-day trapping program: $500. Both can increase with distance from the shop.",
+  warn:"No guarantee we'll catch it. The price covers the process and labor. We don't currently install snake barriers or snake fencing, so don't offer them.", stop:1,
+  next:"If snakes keep getting in, offer a wildlife inspection for exclusion (sealing entry points), which is warrantied.", reg:"wildlife"},
+ {cat:"Wildlife", say:"Bats in the attic, walls, or eaves", fix:"Bat exclusion with one-way valves",
+  keys:"bat bats bat in house bat in bedroom guano droppings attic eaves walls soffit chimney dusk flying squeaking rabies",
+  safety:{title:"Bat inside the living space? Check for possible contact first.",lines:["If a bat was found in occupied living space and there may have been contact with a person or pet, this is not a routine exclusion call.","Especially if it involved: a sleeping person, an unattended child, a person who can't reliably say whether they had contact, or any direct physical contact.","Advise the customer that possible rabies exposure needs to be evaluated by public health or medical authorities, or a veterinarian for pets.","Don't tell them to release the bat if exposure may have occurred. Don't diagnose or reassure them about exposure.","Keep the exposure question separate from our pest-control service. We can still schedule exclusion."]},
+  ask:["Was a bat found inside the living space? Any chance of contact with a person or pet? (See safety box.)","Where are they seeing bats come and go, or finding droppings?","How long has it been going on?"],
+  offer:["Exclusion of every entry point we can find, including chimney caps.","One-way valves on the active entries, so bats can leave the structure but can't get back in."],
+  prods:["One-Way Doors / Valves","Wildlife Exclusion Materials","Chimney Caps"],
+  price:"Inspect first. Fee credits back if they book the work.",
+  blackout:"Blackout period: May 1 – Oct 1. We can start exclusion during blackout, but we leave some entry points open so bats raising young aren't sealed in with pups that can't fly yet. We seal those remaining entry points after Oct 1. Customers don't have to wait to get started.",
+  warn:"We get bats out of the structure, not off the property. Don't promise they'll leave the area. We don't trap bats, and we don't install netting.", stop:1,
+  next:"Exclusion workmanship is warrantied. Point that out, since it's what keeps them from coming back in.", reg:"wildlife"},
+ {cat:"Wildlife", say:"Birds roosting or nesting on the building", fix:"Bird deterrents",
+  keys:"bird birds pigeon pigeons starling starlings sparrow sparrows swallow roosting nesting perching bird droppings ledge roof sign gutter eaves commercial storefront",
+  ask:["What kind of birds, and where are they landing or nesting?","Home or commercial building?","How high up (ladder access or lift)?"],
+  offer:["Pigeon spikes on ledges and rooflines.","Bird wire on railings and parapets.","Optical gel discs on flat surfaces.","Bird intimidators for open areas, usually combined with the others.","Chimney caps where birds are using the chimney."],
+  prods:["Pigeon Spikes","Bird Wire","Optical Gel Discs","Bird Intimidators","Chimney Caps"],
+  price:"Inspect first. Fee credits back if they book.",
+  warn:"We do not install bird netting. We don't clean up droppings or nests unless it's specifically contracted.", stop:1,
+  next:"Commercial storefronts and warehouses are good targets. Birds over entrances and signs are a constant complaint.", reg:"birds"},
+ {cat:"Wildlife", say:"Coyotes on the property", fix:"Custom coyote trapping (Troy's approval only)",
+  keys:"coyote coyotes livestock chickens pets dog cat killed predator howling den",
+  ask:["What's happening (sightings, lost pets, livestock or chicken losses)?","How big is the property, and where are they seeing them?","Get their name, address, and best contact number for Troy."],
+  offer:["Coyote trapping is available, but every job is custom."],
+  price:"Completely custom. No standard price. Don't quote it.",
+  warn:"Coyote jobs are taken only with Troy's approval. Don't book, schedule, or promise it. Take down the details and pass them to Troy.", stop:1,
+  next:"Let the customer know someone will follow up after the job is reviewed.", reg:"wildlife"},
+ {cat:"Wildlife", say:"Smells like a dead animal, or something died in the wall", fix:"Find the source, then escalate",
+  keys:"dead animal dead mouse dead rodent dead raccoon dead squirrel dead bird smell bad smell odor rotten smell stink something died died in wall decomposing flies in one room",
+  ask:["Where is the odor strongest (a wall, ceiling, attic, crawlspace, chimney)?","Can they see the animal, and can it be reached safely?","Have they had recent mouse or wildlife activity, or recent trapping or baiting?","How long has the smell been there?"],
+  offer:["An inspection may be appropriate to find where the odor is coming from and whether animals are still getting in.","Exclusion and wildlife or rodent service if active animals or entry points are found."],
+  price:"Inspect first, or custom quote after the manager reviews it.",
+  warn:"Dead animal removal is not a standard Prominent service. Don't promise removal. CSRs: take the details and escalate to the branch manager or Troy before committing to anything.", stop:1,
+  next:"If there was recent rodent or wildlife activity, offer an inspection for entry points so it doesn't happen again."},
+ {cat:"Rodents", say:"Mice (or possible rats) inside the house or garage", fix:"Rodent control + rodent exclusion",
+  keys:"mouse mice rat rats norway rat roof rat rodent rodents mouse poop rodent droppings droppings chewed chewing garage pantry squeaking scratching in wall",
+  ask:["Where are they seeing droppings or damage?","Inside the living space, or garage and outbuildings only?","How big are the droppings? A photo helps tell mice from rats."],
+  offer:["Snap traps inside for mice already in.","Bait stations outside to cut the population before they get in. Rural homes or high rodent pressure: 1 or more on each side of the structure, plus by sheds. The tech decides the final count.","Exclusion to seal entry points."],
+  prods:["Snap Traps","SureKill","Bait Stations","Copper Mesh","Xcluder"],
+  price:"Inspect first. Fee credits back if they book. Bait stations: 1 included with the General Pest Plan, additional stations $30 each. More than 5 stations adds $5 to the monthly price, or $15 per service.",
+  warn:"No results guarantee on rodent removal. We don't clean up droppings or repair chew damage unless it's specifically contracted. Roof rats and Norway rats are uncommon in our primary East Idaho service area compared with mice. Do not assume rodent activity is rats. Identify the species or evidence before recommending treatment.", stop:1,
+  next:"Exclusion is warrantied and is the long-term fix."},
+ {cat:"Rodents", say:"Mice around the property, rural home, or wants rodent prevention", fix:"Exterior rodent management",
+  keys:"recurring mice mice outside rural farm acreage barn shed outbuilding rodent prevention preventive bait stations bait boxes monitored rodent pressure rodents outside rat rats",
+  ask:["Are mice getting inside, or only around the property?","Rural, acreage, or farm-style property? Sheds, barns, or outbuildings?","Are they on the General Pest Plan already?"],
+  offer:["Tamper-resistant exterior bait stations, placed based on the structure and rodent pressure.","Bait maintained and refilled during recurring service, with activity documented.","Snap traps in specific areas where appropriate.","Exclusion recommended where structural entry points exist."],
+  prods:["Bait Stations","SureKill","Snap Traps","Copper Mesh","Xcluder"],
+  price:"1 bait station is included with the General Pest Plan. Additional stations are $30 each. More than 5 stations adds $5 to the monthly price, or $15 per service.",
+  warn:"No results guarantee on rodent control. Bait stations reduce populations outside; they don't seal the structure. Recommend exclusion where mice can get in.",
+  next:"Every General Pest Plan comes with 1 station. Rural customers usually need more: 1 or more per side of the structure, plus by sheds."},
+ {cat:"Rodents", say:"Keep mice from getting in", fix:"Rodent exclusion",
+  keys:"rodent exclusion mouse mice rat rats seal sealing entry points holes gaps keep out prevent getting in garage door weep holes pipes utility penetrations vents foundation",
+  ask:["Have they had mice before, or is this prevention?","Any known entry points (garage door gaps, pipes, vents, foundation cracks)?"],
+  offer:["Rodent exclusion: we find and seal the openings mice use to get in.","Copper mesh for small openings, Xcluder for chew-resistant repairs. Never expanding foam alone.","Pair with trapping inside and bait stations outside if mice are already active."],
+  prods:["Copper Mesh","Xcluder","Snap Traps","Bait Stations"],
+  price:"Inspect first. Fee credits back if they book.",
+  warn:"Exclusion workmanship is warrantied. We don't repair chew damage or clean up droppings unless it's specifically contracted.",
+  next:"Killing mice is only half the job. Sealing entry points is what stops the next ones, so always offer exclusion with any rodent work."},
+ {cat:"Yard & lawn", say:"Mounds of dirt in the lawn", fix:"Gopher program",
+  keys:"gopher gophers mounds dirt piles dirt mounds holes in yard holes in lawn tunnels lawn yard pocket gopher",
+  ask:["How many mounds, and how big is the area?","Fresh dirt or old mounds?"],
+  offer:["Recommended: trapping and burrow carbon monoxide treatment together.","Trapping only, or","Burrow carbon monoxide treatment only."],
+  prods:["Burrow Carbon Monoxide Treatment"],
+  price:"The inspector can sometimes quote over the phone. Otherwise, inspect first (fee credits back if they book).",
+  warn:"No maintenance plan for gophers. Don't sell it as ongoing coverage. Results are not guaranteed.", stop:1,
+  next:"Ask about lawn weed and feed once the yard's back in shape (Idaho and Wyoming only).", reg:"equip",
+  loc:{ID:"Lawn weed and feed upsell available here.",WY:"Lawn weed and feed upsell available here.",MT:"No lawn service in Montana. Skip the weed and feed upsell."}},
+ {cat:"Yard & lawn", say:"Trails, runways, or dead lines in the grass", fix:"Vole control",
+  keys:"vole voles runways trails grass trails tracks dead grass lines snow mold tunnels surface holes in lawn lawn after snow field mouse",
+  ask:["Are these surface trails (voles) or raised dirt mounds (gophers)?","How much of the yard is affected?"],
+  offer:["Ongoing baiting,","Temporary trapping, or","One-time burrow carbon monoxide treatment."],
+  prods:["Burrow Carbon Monoxide Treatment","Bait Stations","Snap Traps"],
+  price:"The inspector can sometimes quote over the phone. Otherwise, inspect first.",
+  warn:"No maintenance plan for voles. Baiting is the ongoing option. Results are not guaranteed.",
+  next:"Spring snowmelt is when vole damage shows. Follow up with customers who saw it last year.", reg:"label"},
+ {cat:"Yard & lawn", say:"Weeds, thin, or patchy lawn", fix:"Lawn weed and feed",
+  keys:"weeds dandelion lawn grass thin patchy fertilizer weed feed green yard crabgrass clover",
+  ask:["Weeds, thin grass, or both?","Rough yard size?"],
+  offer:["Lawn weed and feed service."],
+  price:"Quote per your branch's current lawn pricing (Idaho or Wyoming).",
+  warn:"Lawn service is Idaho and Wyoming only. Don't offer it in Montana (Bozeman).", stop:1,
+  next:"Pair with the General Pest Plan for one bundled customer.", reg:"label", avail:["ID","WY"]},
+ {cat:"Inside the home", say:"Small roaches in the kitchen or bathroom", fix:"German cockroach cleanout",
+  keys:"roach roaches cockroach cockroaches german small brown bugs kitchen bathroom cabinets appliances apartment",
+  ask:["Where are they seeing them, and at what time of day?","How long has it been going on?","House, apartment, or rental?"],
+  offer:["Cleanout package: initial treatment + 4 follow-ups, 14 days apart."],
+  prods:["Advion Roach Gel","Alpine WSG","Tekko Pro","Gentrol","Delta Dust","Niban","Glue Monitors","HEPA / Professional Vacuum"],
+  price:"Always inspected before pricing. No phone quotes. (Apartment complexes under a multi-family program: see the Multi-family card.)",
+  warn:"Set expectations: it takes the full series of visits. Skipping follow-ups lets them come back.",
+  next:"Once the cleanout is done, recommend the General Pest Plan.", reg:"label"},
+ {cat:"Inside the home", say:"Bites overnight, or bugs in the bed", fix:"Bed bug treatment",
+  keys:"bed bug bedbugs bites itching mattress sheets blood spots hotel travel apartment airbnb rental",
+  ask:["Have they seen a bug, or only bites?","Is this a home, rental, short-term rental, or apartment complex?"],
+  offer:["Curative: active problem, treated after inspection.","Preventative: monthly subscription, treated every 90 days. Good fit for rentals and Airbnbs."],
+  prods:["Aprehend","CrossFire"],
+  price:"Curative is inspected first and never quoted over the phone. After inspection: Aprehend treatments start at $800 for the first room (never lower). Additional rooms can be discounted if needed. CrossFire-only treatments are $300 per room per treatment, or bundled as one price for a treatment plus a set number of follow-ups. Preventative is a monthly subscription. (Apartment complexes under a multi-family program have their own rate: see the Multi-family card.)",
+  warn:"Never quote curative bed bug work on the phone. Never go below $800 for the first Aprehend room on residential jobs. It uses an expensive product and special equipment, so discount additional rooms carefully.", stop:1,
+  next:"After a curative job, offer the preventative subscription, especially to landlords and short-term rental hosts.", reg:"label"},
+ {cat:"Inside the home", say:"Flies in the house or business", fix:"Fly control",
+  keys:"fly flies house flies drain flies fruit flies gnats tiny flies flies from sink bugs from drain gnats in kitchen restaurant kitchen commercial warehouse office dumpster",
+  ask:["Home or business? Restaurant or food service?","Big flies, or tiny flies around drains?"],
+  offer:["Fly bait where flies feed outside.","Fly lights for restaurants, kitchens, warehouses, and offices.","Growth regulator for drain flies."],
+  prods:["Alpine Fly Bait","Fly Lights","Gentrol"],
+  price:"Quote per your branch's current pricing.",
+  warn:"Fly lights are mainly a commercial fit. Pitch them to restaurants and warehouses. Results depend on fixing the source (trash, drains, food).",
+  next:"Commercial fly accounts are recurring. Offer ongoing service to keep the glue boards changed.", reg:"label"},
+ {cat:"Inside the home", say:"Bugs in the pantry", fix:"Pantry pest treatment",
+  keys:"pantry moths weevils flour beetles stored product cereal rice grain kitchen cupboard little bugs in food",
+  ask:["Which foods, and have they thrown out the infested ones?","How long have they been seeing them?"],
+  offer:["Treatment that includes a growth regulator to stop the next generation."],
+  prods:["Gentrol"],
+  price:"Inspect first. Fee credits back if they book.",
+  warn:"Results depend on finding and throwing out the infested food. Set that expectation up front.",
+  next:"Follow up after treatment. These often need a second visit.", reg:"label"},
+ {cat:"Inside the home", say:"Wants a natural or botanical option", fix:"Botanical treatment",
+  keys:"natural organic botanical green safe kids pets plant based chemical free eco essential oil non toxic",
+  ask:["What's driving the concern (kids, pets, a health issue)?","Which pest are they dealing with?"],
+  offer:["Botanical products with plant-derived active ingredients."],
+  prods:["Essentria"],
+  price:"Quote per the service for the pest.",
+  warn:"Never call any pesticide \"non-toxic\" or \"safe.\" Say botanical, plant-based, or naturally derived.", stop:1,
+  next:"Explain how we place products away from where kids and pets spend time. That often matters more to them than the product itself.", reg:"label"},
+ {cat:"Inside the home", say:"Wants to buy supplies and do it themselves", fix:"Retail supplies",
+  keys:"diy do it yourself buy supplies traps trap spray bait purchase product store",
+  ask:["What problem are they trying to fix?","Have they tried anything already?"],
+  offer:["Wildlife trapping supplies","General pest control supplies","Lawn weed and feed supplies"],
+  price:"Sell from current inventory pricing.",
+  warn:"If it's an active wildlife, bed bug, or cockroach problem, recommend the inspection. DIY rarely solves those.",
+  next:"Leave a card. DIY customers often call back when it doesn't work."},
+ {cat:"Insects", say:"Ants in the house or yard", fix:"Ant treatment / General Pest Plan",
+  keys:"ant ants sugar ants little ants small ants trail kitchen counter colony mound anthill",
+  ask:["Inside, outside, or both?","Trails in one spot, or all over?","How big are they? Large ants may be carpenter ants (see that card)."],
+  offer:["Bait inside so workers carry it back to the colony.","Non-repellent perimeter treatment outside.","General Pest Plan to keep them out."],
+  prods:["Advion Ant Gel","Taurus SC","Alpine WSG","Bifen LP","Niban"],
+  price:"Quote per your branch's current General Pest Plan pricing.",
+  warn:"Tell the customer not to spray store-bought killer on the trails. It can scatter the colony and keep the bait from working.",
+  next:"Ants usually mean a recurring problem. Sell the plan, not a one-time visit.", reg:"label"},
+ {cat:"Insects", say:"Large ants, winged ants, or sawdust piles", fix:"Carpenter ant inspection & treatment",
+  keys:"carpenter ant carpenter ants big ants large ants black ants winged ants flying ants sawdust frass damp wood wet wood rotten wood ants in wall ants in ceiling",
+  ask:["How big are the ants, and are any winged?","Any piles of sawdust (frass) near walls, windows, or ceilings?","Any leaks, damp wood, or moisture problems?","Where do they see them, and at what time of day? They're most active at night."],
+  offer:["An inspection to locate the parent colony and any satellite colonies, trails, and moisture problems.","Targeted treatment of nests, trails, voids, and exterior nesting areas using the right mix of products.","Recommendations to fix moisture and damp wood conditions."],
+  prods:["Alpine WSG","Taurus SC","Advion Ant Gel","Delta Dust"],
+  price:"Inspect first. Fee credits back if they book.",
+  warn:"Treating the ants you see doesn't solve the colony. The job depends on finding nests, which may be in walls or outside. We don't repair damaged wood.", stop:1,
+  next:"Carpenter ants usually come back without ongoing coverage. Offer the General Pest Plan after treatment.", reg:"label"},
+ {cat:"Insects", say:"Spiders, crickets, earwigs, or general bugs", fix:"General Pest Plan",
+  keys:"spider spiders webs earwig earwigs beetle millipede centipede bugs insects crickets silverfish general pest scorpion",
+  ask:["Which bugs, and inside or outside?","One-time problem, or every season?"],
+  offer:["General Pest Plan: residual perimeter barrier plus granules in the landscaping.","Heavy spider activity: step up to a fast-knockdown product."],
+  prods:["Cyzmic CS","Talstar","Permethrin","FastCap","Bifen LP","Delta Dust"],
+  price:"Quote per your branch's current General Pest Plan pricing.",
+  warn:"Spring and summer are peak. Sign them now so they're on the schedule before the season starts.",
+  next:"Log home, or bugs keep getting inside? Offer bug exclusion. Every General Pest Plan includes 1 bait station; ask about mice, especially at rural homes. Additional stations are $30 each.", reg:"label"},
+ {cat:"Insects", say:"Hundreds of bugs on windows, walls, or ceilings every fall or spring", fix:"Exterior seasonal treatment + bug exclusion",
+  keys:"bugs by windows hundreds of bugs bugs every fall bugs every spring bugs coming through walls cluster flies boxelder box elder bugs ladybugs lady beetles asian lady beetle stink bugs overwintering occasional invaders fall invaders swarming windows",
+  ask:["Which bugs, and where are they gathering (sunny walls, windows, attics, ceilings)?","Does it happen every fall or spring?","Is it a log home?"],
+  offer:["Exterior seasonal treatment timed before they move in for the winter.","Crack and crevice sealing (bug exclusion).","Inspection of window, door, and utility entry points.","Log-home exclusion where it applies."],
+  prods:["Cyzmic CS","Talstar","Permethrin","Delta Dust"],
+  price:"Quote per your branch's current pricing. Bug exclusion: inspect first.",
+  warn:"Many of these bugs move into structures to spend the winter. Prevention works best before large numbers are already inside. Bugs already in the walls may keep showing up until spring.",
+  next:"Book these customers for next season's treatment before the bugs arrive, and recommend bug exclusion.", reg:"label"},
+ {cat:"Insects", say:"Bugs keep getting inside, or it's a log home", fix:"Bug exclusion",
+  keys:"log home log cabin cabin cracks crevices gaps getting inside coming in keep getting in seal sealing chinking exclusion bugs coming through walls",
+  ask:["Is it a log home or cabin?","Where are bugs coming in (windows, doors, walls, ceilings)?","What time of year is it worst?"],
+  offer:["Bug exclusion: we seal as many cracks and crevices as we can to cut down the access points pests have into the structure.","Pair with the General Pest Plan for treatment plus fewer ways in."],
+  price:"Inspect first. Fee credits back if they book.",
+  warn:"Exclusion reduces entry points; it can't seal every gap. Set expectations: fewer bugs inside, not zero.",
+  next:"Log homes have far more cracks and gaps than a standard house. Always recommend bug exclusion for them, alongside the General Pest Plan."},
+ {cat:"Insects", say:"Wasps, hornets, or yellow jackets", fix:"Stinging insect treatment",
+  keys:"wasp wasps hornet hornets yellow jacket yellowjacket nest bee nest bees in wall ground bees nest in eaves bees sting paper nest",
+  ask:["Where's the nest (eaves, ground, in a wall)?","Does anyone on the property have a known sting allergy?"],
+  offer:["Immediate knockdown of active nests.","Residual on eaves and nesting spots, often as part of the General Pest Plan."],
+  prods:["Wasp Freeze","Permethrin","Cyzmic CS","Talstar","Delta Dust"],
+  price:"Quote per your branch's current pricing.",
+  warn:"If someone on the property has a known sting allergy, prioritize scheduling and advise them to stay away from the nest. If someone has already been stung and has symptoms of a serious allergic reaction, they should get emergency medical care rather than wait for pest service.", stop:1,
+  next:"Wasps come back every year. Good lead-in to the General Pest Plan.", reg:"label"},
+ {cat:"Insects", say:"Mosquitoes in the yard", fix:"Mosquito misting",
+  keys:"mosquito mosquitoes skeeters bites biting yard backyard patio bbq party wedding event standing water misting fogging",
+  ask:["When are they worst (evenings, all day)?","Any standing water on the property (ponds, birdbaths, buckets, clogged gutters)?","Ongoing season, or a one-time event coming up?"],
+  offer:["Mosquito misting with Talstar and Tekko Pro: Talstar knocks down adults and leaves a residual on resting areas, Tekko Pro stops the next generation."],
+  prods:["Talstar","Tekko Pro"],
+  price:"Quote per your branch's current pricing.",
+  warn:"Results depend on the property. Standing water the customer leaves out will keep breeding mosquitoes.",
+  next:"Most customers want this all summer. Offer recurring misting, and book events (parties, weddings) a day or two ahead.", reg:"label"},
+ {cat:"Insects", say:"Fleas or ticks", fix:"Flea & tick treatment (outside mist + inside)",
+  keys:"flea fleas tick ticks pet dog cat bites ankles yard lawn carpet lyme",
+  ask:["Fleas, ticks, or both? Inside the home, the yard, or both?","Any pets, and are they being treated by a vet?","Does wildlife or stray animals pass through the yard?"],
+  offer:["Outside: misting with Talstar and Tekko Pro, like mosquitoes, but covering the lawn and landscaping too.","Inside: Alpine Flea & Bed Bug aerosol on carpets, pet areas, and furniture."],
+  prods:["Talstar","Tekko Pro","Alpine Flea & Bed Bug Aerosol"],
+  price:"Quote per your branch's current pricing.",
+  warn:"Fleas come back if the pets aren't treated too. Set that expectation up front.",
+  next:"Ticks and fleas are seasonal. Offer recurring outside misting through the summer, and combine with mosquito misting.", reg:"label"},
+ {cat:"Termites", say:"New construction: termite pre-treatment", fix:"Termite pre-treat (Taurus SC)",
+  keys:"termite termites pre treat pretreat pre-treatment new construction build builder contractor foundation slab pour footprint",
+  ask:["Who's the builder or contractor, and who do we coordinate with on site?","When is the foundation scheduled to be poured?","Footprint size of the structure?"],
+  offer:["We saturate the soil of the structure's footprint with Taurus SC, 24 hours or less before the foundation is laid."],
+  prods:["Taurus SC"],
+  price:"Quote per job based on footprint size. Includes a 3-year warranty. Customers can extend it for $200 a year, up to 2 more years (5 years total).",
+  warn:"Timing is everything: treatment must go down 24 hours or less before the pour. Confirm the pour date with the builder and reconfirm the day before.", stop:1,
+  next:"Builders pour foundations all season. Offer to be their go-to pre-treat company for every build.", reg:"label"},
+ {cat:"Termites", say:"Termites in an existing structure, or prevention", fix:"Termite treatment: drill & rod (trench if needed)",
+  keys:"termite termites mud tubes swarmers winged ants damaged wood existing home house building commercial structure curative preventative prevention drill trench rod",
+  ask:["Have they seen mud tubes, swarmers, or damaged wood?","Slab, crawlspace, or basement?","Any wells, cisterns, or heating ducts under the slab?"],
+  offer:["Curative or preventative treatment with Taurus SC.","Drill through concrete, inject with high-pressure rods into the soil, and patch the holes.","Trenching only if rodding the soil isn't working well."],
+  prods:["Taurus SC"],
+  price:"Inspect first. Fee credits back if they book. One-time, high-ticket service. Includes a 3-year warranty. Customers can extend it for $200 a year, up to 2 more years (5 years total).",
+  warn:"We patch the drill holes, but patches may show on driveways and patios. Set that expectation up front. We don't repair termite damage.", stop:1,
+  next:"Ask about other structures on the property (garage, shed, deck) that may need treatment too.", reg:"label"},
+ {cat:"Termites", say:"Small termite area, spot treatment", fix:"Termite spot treatment (Fuse Foam)",
+  keys:"termite termites spot treatment small area one spot wall void window frame door frame damaged wood foam fuse budget cheap",
+  ask:["Where exactly are they seeing activity?","Is it one spot, or signs in several places?"],
+  offer:["Spot treatment with Fuse Foam injected into the active area."],
+  prods:["Fuse Foam"],
+  price:"Quote per job.",
+  warn:"No warranty and no guarantee on spot treatments. Make sure the customer understands that. For warranty coverage, recommend the full drill-and-rod treatment (3-year warranty, extendable to 5).", stop:1,
+  next:"Spot treatment only hits the area we treat. Offer the full treatment with the 3-year warranty, extendable to 5 years.", reg:"label"},
+ {cat:"Commercial", say:"Business, restaurant, warehouse, office, or other commercial property", fix:"Commercial Pest Management / IPM program",
+  keys:"commercial business restaurant warehouse office retail store industrial plant facility building manager food service kitchen school church ipm integrated pest management audit documentation",
+  ask:["What type of facility, and roughly how big?","What pests are they seeing, and where?","Any audit, inspection, or documentation requirements?","How often do they want service?"],
+  offer:["A pest management program built from an inspection: pest pressure, facility type, sanitation, structural conditions, monitoring, exterior control, targeted interior treatment where needed, documentation, and recurring service.","Possible tools: exterior residual treatments, rodent bait stations, snap traps, monitoring devices, fly lights, fly bait, cockroach bait, IGRs, dusts, exclusion, sanitation recommendations, and pest trend documentation."],
+  prods:["Cyzmic CS","Talstar","Bait Stations","SureKill","Snap Traps","Glue Monitors","Fly Lights","Alpine Fly Bait","Advion Roach Gel","Gentrol","Delta Dust","Wildlife Exclusion Materials"],
+  price:"Custom quote based on facility size, pest pressure, service frequency, equipment, and scope. Inspect first when necessary.",
+  warn:"No flat commercial prices. Don't quote on the spot.",
+  next:"We're selling a pest management program, not spraying the building. Lead with monitoring, documentation, and prevention.", reg:"label"},
+ {cat:"Commercial", say:"Apartment complex, property manager, or multi-unit housing", fix:"Multi-family pest management program",
+  keys:"apartment apartments complex multi family multifamily multi-unit units property manager property management hoa townhomes condos duplex fourplex tenant landlord bunkhouse community",
+  ask:["How many buildings and units?","What pest issues are they having now?","Do they want the office or community area treated inside?"],
+  offer:["Exterior treatment every quarter.","Year-round warranty for covered general pest issues between scheduled services.","Interior treatment of the office or community/bunkhouse area, included by request.","Bait boxes maintained and refilled as needed.","Specialty treatments billed separately (see pricing)."],
+  prods:["Cyzmic CS","Talstar","Bait Stations","SureKill"],
+  price:"Billed monthly. The monthly price pays for the recurring program, which includes quarterly exterior service. It is not the cost of each quarterly visit. Base monthly price: quote per current branch pricing. Initial startup fee covers bait boxes and installation labor. Specialty treatments under this program: bed bugs $200 per room, per treatment; German cockroaches $200 per unit, per treatment; interior rodent trapping quoted separately after scope is determined; general interior spray of an individual unit $100 (when we determine it's needed or the customer requests it).",
+  warn:"Basic interior spray inside individual apartments is normally unnecessary. General pest control should be achieved mainly from the exterior. Don't promise unit interiors as part of the base program.",
+  next:"Property managers often have more than one property. Ask about their other buildings.", reg:"label"}
+];
+
+/* ---------- TECH: inspection steps ---------- */
+const INSPECT = {
+ "Customer doesn't know what the bug, animal, or problem is":[
+  "Start with the customer's description and any photos. Ask where, when, and how long.",
+  "Collect a specimen or photograph it with something for scale. Never handle wildlife.",
+  "Look for the evidence that separates likely pests: droppings, damage, entry points, nests, trails.",
+  "If it's still unclear, set monitors or a camera before committing to a treatment.",
+  "Once identified, follow that problem's card for service, pricing, and treatment."],
+ "Animal in the attic, crawlspace, yard, or under the deck":[
+  "Bring: flashlight, binoculars, ladder, camera or phone, gloves, respirator for attics.",
+  "Ask what they've heard or seen, where, and when. Night noise points to raccoons or flying squirrels; morning and late-afternoon noise points to tree squirrels.",
+  "Walk the full exterior: roofline, roof vents, soffits, fascia, gable vents, chimney, dryer and bath vents, siding gaps, foundation, deck skirting, and crawlspace vents.",
+  "Look for entry signs: chewed or torn openings, rub marks, hair, tracks, and droppings at the openings.",
+  "If safe and accessible, check the attic or crawlspace for nests, droppings, latrines, and damaged insulation. Wear a respirator.",
+  "In spring and early summer, look and listen for young. That changes the plan and timing.",
+  "If the species isn't clear, recommend camera monitoring before trapping.",
+  "Use the species guide below once the animal is identified.",
+  "Photograph every entry point and sign. Write up the trapping plan (weeks expected, number of traps) and exclusion work, plus chimney cap if needed."],
+ "Marmots (rockchucks) under the deck, shed, or rocks":[
+  "Ask where they're seeing marmots, how many, and how long.",
+  "Find burrows: holes with dirt mounds, usually under decks, sheds, rock piles, woodpiles, and slabs.",
+  "Look for fresh dirt, worn paths, droppings, and feeding damage in gardens and landscaping.",
+  "Count active burrows and note how many traps the job will need.",
+  "Check under decks and sheds for gaps that could be excluded after removal.",
+  "Photograph burrows and dens. Quote multiple weeks of trapping and set the trap-shy expectation, plus exclusion if it fits."],
+ "Birds roosting or nesting on the building":[
+  "Bring binoculars, a camera, and a ladder. Note whether a lift will be needed.",
+  "Identify the species before disturbing birds, eggs, or nests. Many native birds are protected by federal law, and state or local protections may also apply. Pigeons, European starlings, and house sparrows generally aren't federally protected under the Migratory Bird Treaty Act, but follow applicable current law before any removal or nest disturbance.",
+  "Map every landing, roosting, and nesting spot: ledges, signs, beams, rooflines, light fixtures, vents, and the chimney.",
+  "Measure the linear feet of ledges for spikes or wire, and the flat areas for gel discs.",
+  "Note how heavy the droppings are, since surfaces need to be clean for install. We don't clean droppings unless it's specifically contracted.",
+  "Photograph everything and quote the right mix of spikes, wire, gel discs, intimidators, and chimney caps."],
+ "Bats in the attic, walls, or eaves":[
+  "First, ask whether a bat was found in the living space and whether anyone may have had contact. If so, follow the safety box before anything else.",
+  "Check the date. Blackout period is May 1 to Oct 1, which changes how exclusion is done.",
+  "Look for guano below entry points and on walls, siding, and window sills, and for dark rub stains around gaps.",
+  "Inspect the whole structure for gaps: roofline, ridge vents, soffits, fascia, chimney, siding seams, and gable vents. Bats fit through very small gaps.",
+  "If possible, do a dusk exit watch to confirm active exits and estimate colony size.",
+  "Check the attic for guano and roosting areas only with a respirator and gloves.",
+  "Count and photograph every gap. Quote exclusion of all gaps, one-way valves on the active exits, and chimney caps if needed."],
+ "Smells like a dead animal, or something died in the wall":[
+  "Find where the odor is strongest. Check for flies gathering in one spot and stains on walls or ceilings.",
+  "Check accessible areas (attic, crawlspace, under appliances) with gloves and a respirator.",
+  "Look for active entry points and recent rodent or wildlife activity.",
+  "Don't open walls or remove an animal unless the branch manager or Troy has approved it.",
+  "Photograph findings and report back so the office can decide next steps."],
+ "Mice (or possible rats) inside the house or garage":[
+  "Look for droppings, gnaw marks, rub marks, nesting material, and urine odor.",
+  "Identify the rodent from the evidence. Droppings size and shape help tell mice from rats. Don't assume rats.",
+  "Check kitchens, pantries, under sinks, behind appliances, garages, utility rooms, attics, and crawlspaces.",
+  "Map activity areas to place traps inside.",
+  "Walk the exterior for entry points (see Rodent exclusion) and decide how many bait stations to recommend.",
+  "Quote trapping, bait stations (1 included with the General Pest Plan, $30 per additional station), and exclusion."],
+ "Mice around the property, rural home, or wants rodent prevention":[
+  "Walk the property: structure, sheds, barns, woodpiles, fence lines, and feed or storage areas.",
+  "Look for burrows, runways, droppings, and gnawing outside.",
+  "Rate the rodent pressure, and check the structure for entry points.",
+  "Recommend the number and placement of stations: 1 or more per side of the structure, plus by sheds, for rural or high-pressure properties.",
+  "Quote stations (1 included with the General Pest Plan, $30 per additional), and exclusion if entry points exist."],
+ "Keep mice from getting in":[
+  "Walk the full exterior at ground level and check every side.",
+  "Check garage door corners and bottom seals, door sweeps, utility and pipe entries, dryer vents, AC lines, weep holes, foundation cracks, and siding gaps.",
+  "Any opening about 1/4 inch or larger is an entry point.",
+  "Check inside the garage and crawlspace for gaps visible from the inside.",
+  "Count and photograph every entry point and note the material needed (copper mesh or Xcluder).",
+  "Quote rodent exclusion, and note that the workmanship is warrantied."],
+ "Mounds of dirt in the lawn":[
+  "Confirm gophers: crescent or fan-shaped mounds with the hole plugged, not open. Open holes and surface trails point to voles.",
+  "Count fresh mounds (dark, moist soil) and map the affected area.",
+  "Probe near fresh mounds to confirm the main tunnel.",
+  "Note anything that affects burrow CO treatment: distance to buildings and occupied structures, soil conditions, and site restrictions.",
+  "Quote trapping and burrow CO treatment together (recommended), with either one alone as alternatives."],
+ "Trails, runways, or dead lines in the grass":[
+  "Confirm voles: surface runways about 1 to 2 inches wide, small open holes, and clipped grass. Raised mounds with plugged holes are gophers.",
+  "Map the runways and estimate how much of the yard is affected.",
+  "Check under snow-flattened grass, along fences, and in heavy ground cover and mulch beds.",
+  "Look for gnawing on tree and shrub bases.",
+  "Quote baiting, temporary trapping, or a one-time burrow CO treatment. Recommend trimming heavy ground cover."],
+ "Small roaches in the kitchen or bathroom":[
+  "Bring a flashlight and glue monitors.",
+  "Confirm German cockroaches: small, tan, with two dark stripes behind the head.",
+  "Check under sinks, cabinet hinges and corners, drawers, behind and under the fridge, stove, dishwasher and microwave, electrical plates, and bathroom vanities.",
+  "Look for live roaches, droppings (pepper-like specks), egg cases, and cast skins.",
+  "Rate the infestation: light, moderate, or heavy. Heavy jobs start with a vacuum.",
+  "Check sanitation and clutter, and in apartments ask whether neighbors have roaches too.",
+  "Set glue monitors for a baseline count. Quote the cleanout package (initial plus 4 follow-ups, 14 days apart)."],
+ "Bites overnight, or bugs in the bed":[
+  "Bring a flashlight and a card or scraper to check seams.",
+  "Start at the bed: mattress seams, piping, tags, box spring, and bed frame joints.",
+  "Then check the headboard, nightstands, couches and recliners, outlets, baseboards, and behind wall hangings.",
+  "Look for live bugs, eggs, cast skins, and dark fecal spots.",
+  "Check every bedroom and anywhere people sleep or sit for long periods. Count the rooms that need treatment.",
+  "Note clutter, since it changes prep and treatment time.",
+  "Photograph evidence. Residential quote per room: Aprehend from $800 for the first room (never lower), or CrossFire at $300 per room per treatment. Multi-family program: $200 per room, per treatment."],
+ "Bugs in the pantry":[
+  "Identify the pest: pantry moths, flour beetles, weevils, or others.",
+  "Check stored food: flour, grains, cereal, rice, pasta, dried fruit, spices, nuts, and pet food and birdseed.",
+  "Look for webbing, larvae, adult insects, and holes in packaging.",
+  "Check shelf corners, cracks, and gaps where crumbs collect.",
+  "Help the customer find the source package. Quote the treatment and explain that infested food has to go."],
+ "Large ants, winged ants, or sawdust piles":[
+  "Confirm carpenter ants: large, often black or black and red, with a single node and evenly rounded thorax. Winged swarmers indoors suggest a nest inside.",
+  "Look for frass (sawdust mixed with insect parts) below windows, doors, ceilings, and walls.",
+  "Find moisture problems: leaks, damp or rotting wood, gutters, wood-to-soil contact, and roof or window leaks.",
+  "Follow trails, especially at night, between the structure and trees, stumps, woodpiles, and landscape timbers outside.",
+  "Locate the parent colony and any satellite colonies, including in wall and structural voids.",
+  "Photograph frass, damage, and moisture problems. Quote treatment and recommend moisture fixes."],
+ "Hundreds of bugs on windows, walls, or ceilings every fall or spring":[
+  "Identify the insect (cluster flies, boxelder bugs, lady beetles, stink bugs, or others).",
+  "Note where they gather: sunny south and west walls, windows, attics, and ceiling fixtures.",
+  "Inspect window frames, door frames, utility entries, attic and soffit vents, and siding gaps.",
+  "On log homes, check gaps between logs, checks (cracks) in logs, chinking, and corners.",
+  "Photograph entry areas. Quote seasonal exterior treatment and bug exclusion."],
+ "Bugs keep getting inside, or it's a log home":[
+  "Ask which bugs, where they're showing up inside, and what time of year it's worst.",
+  "Check around windows and doors, sill plates, utility entries, attic vents, and ceiling light fixtures.",
+  "On log homes, check gaps between logs, checks (cracks) in logs, chinking, corners, and window and door frames.",
+  "Look for dead insects in window sills and light fixtures; they point to entry areas.",
+  "Estimate the linear feet of sealing needed and photograph problem areas.",
+  "Quote bug exclusion together with the General Pest Plan."],
+ "Termites in an existing structure, or prevention":[
+  "Bring a flashlight, a moisture meter if available, and a screwdriver or probe.",
+  "Inspect the foundation inside and out for mud tubes, swarmer wings, frass, and damaged or hollow-sounding wood.",
+  "Check the crawlspace or basement, sill plates, wood-to-soil contact, door and window frames, and moisture problem areas.",
+  "Note slab type, slab cracks, expansion joints, plumbing penetrations, and any wells, cisterns, or heating ducts under the slab.",
+  "Measure the linear feet of foundation and the areas of concrete that will need drilling.",
+  "Photograph activity and damage. Quote drill and rod with Taurus SC (3-year warranty, extendable to 5). Offer Fuse Foam spot treatment only for small, isolated areas, with no warranty."],
+ "Business, restaurant, warehouse, office, or other commercial property":[
+  "Walk the exterior: dumpsters, loading docks, doors, landscaping, and the building envelope.",
+  "Walk the interior: receiving, storage, kitchens and food areas, break rooms, restrooms, and utility areas.",
+  "Note pest evidence, sanitation issues, structural gaps, and doors left open.",
+  "Map recommended locations for bait stations, monitors, and fly lights.",
+  "Ask about audit or documentation requirements.",
+  "Write up the program scope and frequency for a custom quote."],
+ "Apartment complex, property manager, or multi-unit housing":[
+  "Walk every building's exterior: foundations, entries, dumpster areas, and landscaping.",
+  "Map bait station locations for the startup install.",
+  "Inspect the office or community area if the customer wants it included.",
+  "Note any active specialty issues (bed bugs, roaches, rodents) to quote separately.",
+  "Write up the building and unit count for the monthly quote."]
+};
+
+/* ---------- TECH: treatment strategy (company approach; the label governs exact use) ---------- */
+const TREAT = {
+ "Snake in or around the house":[
+  "Confirm species from a description or photo before approaching. Treat any unknown snake as venomous.",
+  "Wear snake gaiters or boots and use snake tongs and a secure snake bag or lidded bucket. Never handle by hand.",
+  "One-time removal: search the reported area (garage corners, under decks, woodpiles, window wells), capture, and remove.",
+  "7-day program: set snake traps along walls, foundation edges, and travel paths near where it was seen. Monitor with cellular cameras and check per state rules.",
+  "Handle and release or dispose according to applicable laws and NWCOA standards.",
+  "Note entry points into the home and report them so the office can offer exclusion. Don't quote or install snake fencing."],
+ "Animal in the attic, crawlspace, yard, or under the deck":[
+  "If the species is unclear, set a cellular camera on the active entry first and confirm before choosing a trap.",
+  "Set species-appropriate live traps at or near the active entry or travel path, secured so they can't tip. See the species guides below.",
+  "Put a cellular camera on every trap. Check and clear traps per applicable requirements; don't rely on the camera alone if a physical check is required.",
+  "In spring and early summer, check for young before sealing anything. Never seal an animal or its young inside.",
+  "Once the structure is clear, seal entry points with wildlife exclusion materials and install a chimney cap if the chimney is open. Photograph finished work for the warranty file.",
+  "Handle caught wildlife according to applicable laws and NWCOA standards."],
+ "Marmots (rockchucks) under the deck, shed, or rocks":[
+  "Locate active burrows (fresh dirt, worn paths, droppings). Camera the burrows if activity is unclear.",
+  "Set live traps at or right beside active burrow entrances, along their travel path.",
+  "Pre-bait with traps wired open for a few days if they're avoiding traps, then set.",
+  "Rotate baits (fresh fruit and vegetables) every visit if there's no catch. Marmots are very trap shy.",
+  "Monitor with cellular cameras and check per applicable requirements. Expect multiple weeks.",
+  "After removal, recommend exclusion under decks and sheds so new marmots don't reuse the dens."],
+ "Coyotes on the property":[
+  "Do not set anything without Troy's approval. Every coyote job is planned individually.",
+  "On an approved job, follow Troy's plan, applicable law, and NWCOA standards."],
+ "Birds roosting or nesting on the building":[
+  "Confirm the species and nest status before touching any nest (see inspection steps).",
+  "Install on clean, dry surfaces per the manufacturer's instructions. Flag heavy droppings to the office before installing.",
+  "Spikes on narrow ledges, signs, and fixtures. Bird wire on railings and parapets. Optical gel discs on flat surfaces, spaced per the manufacturer.",
+  "Use intimidators for open areas, combined with physical deterrents. Recommend moving them periodically so birds don't get used to them.",
+  "Install chimney caps where birds are using the chimney. Don't install netting."],
+ "Bats in the attic, walls, or eaves":[
+  "Do a dusk exit watch to find active exits and estimate colony size.",
+  "Seal every inactive gap you can find with appropriate exclusion materials. Install chimney caps where needed.",
+  "Install one-way valves on the active exits so bats can leave but can't get back in.",
+  "Blackout period (May 1 – Oct 1): exclusion can start, but leave some entry points open. Return after Oct 1 to seal the remaining entries.",
+  "Leave valves up long enough for all bats to exit, then remove the valves and seal those final openings.",
+  "Never trap or handle bats. Wear gloves and a respirator in attics with guano. Don't install netting."],
+ "Mice (or possible rats) inside the house or garage":[
+  "Confirm the species from evidence before choosing methods.",
+  "Inside: set snap traps along walls in active areas, with the trigger toward the wall. Don't place rodenticide inside living spaces.",
+  "Outside: place SureKill only inside secured, tamper-resistant bait stations, at the locations the label permits. Number the stations and record them on the service map.",
+  "Seal entry points (see Rodent exclusion). Check traps and stations on every visit and record activity."],
+ "Mice around the property, rural home, or wants rodent prevention":[
+  "Install tamper-resistant stations at the recommended locations: around the structure and by sheds and outbuildings.",
+  "Bait with SureKill only inside secured stations, at label-permitted locations. Number every station on the service map.",
+  "Check, refill, and document activity at every station on each recurring service.",
+  "Use snap traps in specific areas where appropriate.",
+  "Report structural entry points so the office can quote exclusion."],
+ "Keep mice from getting in":[
+  "Seal any gap about 1/4 inch or larger; mice fit through very small openings.",
+  "Pack copper mesh tightly into small openings, then seal over it.",
+  "Use Xcluder for larger gaps, chew-prone spots, and garage door corners. Never rely on expanding foam alone.",
+  "Photograph every sealed point for the warranty file."],
+ "Mounds of dirt in the lawn":[
+  "Find the freshest mounds. Probe on the plug side of the mound to locate the main tunnel.",
+  "Trapping: open the tunnel and set traps in pairs facing both directions. Cover the opening to block light. Mark every trap.",
+  "Burrow CO treatment: treat active tunnels following the equipment instructions, applicable laws, and distance and site restrictions. Never where exhaust could reach an occupied structure.",
+  "Recommended: use both. Trap the active runs and treat the rest of the tunnel system.",
+  "Flatten old mounds so new activity is easy to spot on the next visit, and pull traps when finished."],
+ "Trails, runways, or dead lines in the grass":[
+  "Baiting: use bait only in tamper-resistant stations or other placements the label permits, near active runways.",
+  "Trapping: set snap traps perpendicular to the runway, covered to keep birds and pets out.",
+  "Burrow CO treatment: only where appropriate, following the equipment instructions, applicable laws, and site restrictions.",
+  "Recommend the customer trim heavy grass and ground cover near runways."],
+ "Weeds, thin, or patchy lawn":[
+  "Idaho and Wyoming only. Not offered in Montana (Bozeman).",
+  "Identify the main weeds and check lawn condition, irrigation, and mowing height.",
+  "Apply weed and feed according to the label, including its timing, temperature, wind, and watering directions.",
+  "Prevent drift onto flower beds, gardens, and neighboring yards.",
+  "Leave the customer the label's watering and reentry instructions."],
+ "Small roaches in the kitchen or bathroom":[
+  "Give the customer a sanitation and prep list (food, grease, clutter, water leaks), including emptying cabinets and drawers as needed for treatment. Results depend on it.",
+  "Large infestation: start with a thorough vacuum of roaches, egg cases, and debris before treatment.",
+  "Place Advion Roach Gel in small amounts in label-permitted cracks, crevices, and harborages. Keep sprays off bait placements.",
+  "Apply Alpine WSG with an IGR (Tekko Pro or Gentrol) to label-permitted cracks, crevices, voids, harborages, and other approved treatment sites around cabinets, drawers, appliances, and baseboards. Follow the current label for permitted surfaces and food-handling restrictions.",
+  "Use Delta Dust in label-permitted voids, such as wall voids, electrical boxes, and gaps behind appliances.",
+  "Set glue monitors at every visit. Return every 14 days for the 4 follow-ups, check monitors, rebait, and record counts."],
+ "Bites overnight, or bugs in the bed":[
+  "Give the customer the prep list before the treatment visit.",
+  "Aprehend: apply as barrier strips at label-permitted sites (bed legs and frame, perimeter, travel paths). Use the dedicated Aprehend sprayer only. Never run chemical products through it.",
+  "CrossFire: apply to label-permitted seams, harborages, cracks, and crevices.",
+  "Schedule follow-ups and re-inspect each time. Document every room treated."],
+ "Flies in the house or business":[
+  "Identify the fly. House flies, drain flies, and fruit flies have different sources.",
+  "Find and fix sources first: trash, dumpsters, drains, and spoiled food. Give the customer a sanitation list.",
+  "Place Alpine Fly Bait at label-permitted locations where flies land and feed, away from food areas and out of reach of children and pets.",
+  "Fly lights: install inside, out of view from outside doors and windows, and away from food prep surfaces. Change glue boards on schedule.",
+  "Drain flies: have drains cleaned, then apply Gentrol at label-permitted sites."],
+ "Bugs in the pantry":[
+  "Have the customer discard infested food and vacuum and clean the shelves.",
+  "Apply Gentrol to label-permitted cracks and crevices. Follow the label's food-handling restrictions.",
+  "Recommend sealed containers for flour, grains, cereal, and pet food going forward."],
+ "Wants a natural or botanical option":[
+  "Use Essentria products according to the label for the target pest.",
+  "Combine with non-chemical methods: exclusion, traps, sanitation, and monitors.",
+  "When describing it, say botanical or plant-based, never non-toxic."],
+ "Ants in the house or yard":[
+  "Identify the species. Large ants may be carpenter ants; use that card.",
+  "Follow trails to find entry points and nest locations.",
+  "Inside: place Advion Ant Gel along trails and at entry points the label permits. Keep repellent sprays away from bait.",
+  "Outside: apply a non-repellent (Taurus SC or Alpine WSG) to label-permitted sites around the foundation and entry points.",
+  "Use Bifen LP granules in landscaping and turf where ants are nesting, watered in per the label.",
+  "Tell the customer not to spray store-bought products on the trails."],
+ "Large ants, winged ants, or sawdust piles":[
+  "Treat the colony, not just the ants you see. Target the parent colony and satellites found during inspection.",
+  "Exterior: apply a non-repellent (Alpine WSG, or Taurus SC where the label and site allow) to label-permitted sites along the foundation, entry points, and trails.",
+  "Interior: place Advion Ant Gel along active trails where appropriate.",
+  "Wall and structural voids: use Delta Dust in label-permitted void applications where nests are located.",
+  "Treat exterior nests in stumps, trees, or landscape timbers where the label permits.",
+  "Tell the customer which moisture problems need fixing. We don't repair wood."],
+ "Spiders, crickets, earwigs, or general bugs":[
+  "Knock down webs and nests from eaves and corners.",
+  "Apply a residual (Cyzmic CS or Talstar) to label-permitted perimeter sites around the foundation, doors, and windows.",
+  "For fast results, tank-mix Permethrin with the residual only where both labels allow it.",
+  "Use FastCap for heavy spider activity.",
+  "Use Bifen LP in landscape beds and Delta Dust in label-permitted voids and weep holes.",
+  "Use Essentria when the customer requests botanical."],
+ "Hundreds of bugs on windows, walls, or ceilings every fall or spring":[
+  "Time exterior treatment for late summer or early fall, before bugs move in to overwinter.",
+  "Apply a residual to label-permitted exterior sites where they gather: sunny walls, window and door frames, eaves, and vents.",
+  "Use Delta Dust in label-permitted voids where bugs are entering.",
+  "Seal cracks and crevices at windows, doors, utility entries, and log-home gaps (see Bug exclusion).",
+  "Tell the customer that bugs already inside the walls may keep appearing until spring."],
+ "Bugs keep getting inside, or it's a log home":[
+  "Seal cracks and crevices with sealant suited to the surface. On log homes, focus on gaps between logs, checks (cracks) in logs, corners, and window and door frames.",
+  "Install or replace door sweeps and seal around utility penetrations.",
+  "Pair with the General Pest Plan treatment so the remaining entry points get a residual barrier.",
+  "Photograph sealed areas for the customer's records."],
+ "Wasps, hornets, or yellow jackets":[
+  "Wear protective gear. Treat early morning or evening when most wasps are in the nest.",
+  "Keep anyone with a known sting allergy away from the area during treatment.",
+  "Exposed nests: knock down with Wasp Freeze from a distance, then remove the nest.",
+  "Wall voids and ground nests: apply Delta Dust at the entrance where the label permits. Don't seal the entrance until activity stops, or they'll chew inside.",
+  "Apply a residual (Cyzmic CS, Talstar, or Permethrin) to label-permitted eaves and nesting sites."],
+ "Mosquitoes in the yard":[
+  "Walk the property for breeding sites (standing water, birdbaths, buckets, clogged gutters, tarps) and resting areas (shrubs, tall grass, shaded spots, under decks).",
+  "Tip and drain what you can, and tell the customer about the rest.",
+  "Mist Talstar and Tekko Pro onto label-permitted resting areas: undersides of leaves, shrubs, shaded vegetation, under decks.",
+  "Follow label restrictions on blooming plants and pollinators, water bodies, gardens, and wind.",
+  "Company policy: Tekko Pro isn't applied in rain; Talstar can be applied when rain is around as long as surfaces are dry.",
+  "Keep people and pets off treated areas for the label's reentry period."],
+ "Fleas or ticks":[
+  "Confirm pets are being treated by a vet. Give the inside prep list (vacuum everything, wash pet bedding, pick up items off the floor).",
+  "Outside: mist Talstar and Tekko Pro over label-permitted lawn, landscaping, shaded areas, under decks, along fences, and pet resting spots.",
+  "Inside: apply Alpine Flea & Bed Bug aerosol to label-permitted carpets, rugs, pet areas, and furniture.",
+  "Keep people and pets off treated areas for the label's reentry period. Company policy: no outside misting in rain for Tekko Pro.",
+  "Tell the customer to keep vacuuming daily; it pulls fleas out of cocoons so the treatment can reach them. Plan a follow-up."],
+ "New construction: termite pre-treatment":[
+  "Confirm the pour date with the builder. Treat 24 hours or less before the foundation is laid, and reconfirm the day before.",
+  "Check the site: forms set, soil graded and compacted, plumbing in. Follow label limits on soil conditions and weather (company policy: no Taurus SC in rain).",
+  "Saturate the soil of the full footprint with Taurus SC as the label directs, including along the inside of the foundation forms and around plumbing and utility penetrations.",
+  "Follow the label's restrictions near wells and water sources.",
+  "Document the date, area treated, and product used, and give the builder a copy."],
+ "Termites in an existing structure, or prevention":[
+  "Map the structure from the inspection: activity, slab cracks, expansion joints, penetrations, and any wells, cisterns, or sub-slab heating ducts.",
+  "Drill through concrete slabs, patios, and driveways along the foundation at the spacing the label directs.",
+  "Inject Taurus SC into the soil with high-pressure rods as the label directs. Rod the soil along exposed foundation areas as well.",
+  "Trench only if rodding isn't distributing the treatment well.",
+  "Follow the label's precautions for wells, cisterns, and sub-slab heating ducts.",
+  "Patch every drill hole and leave the work area clean.",
+  "Document the treatment map, product, and dates for the customer's file."],
+ "Small termite area, spot treatment":[
+  "Confirm the active area: mud tubes, damaged wood, or live termites.",
+  "Drill small access holes into the wall void, gallery, or damaged wood as needed.",
+  "Inject Fuse Foam as the label directs so it fills the void or galleries.",
+  "Patch access holes and leave the area clean.",
+  "Remind the customer there's no warranty on spot treatments, and document the treatment."],
+ "Business, restaurant, warehouse, office, or other commercial property":[
+  "Exterior first: residual at label-permitted perimeter sites, and bait stations placed and numbered on the site map.",
+  "Interior: monitoring devices and snap traps in sensitive areas; targeted treatment only where needed, using label-permitted products and sites. Follow food-handling restrictions in food areas.",
+  "Fly lights and fly bait where flies are a problem; cockroach bait, IGRs, and dusts where roaches are found.",
+  "Report structural gaps for exclusion and give written sanitation recommendations.",
+  "Document every visit: activity, pest trends, products used, and corrective actions."],
+ "Apartment complex, property manager, or multi-unit housing":[
+  "Startup: install and number bait boxes on the site map.",
+  "Quarterly: exterior treatment at label-permitted perimeter sites on every building, and bait boxes checked and refilled.",
+  "Office or community/bunkhouse area: interior treatment by request.",
+  "Unit interiors only when we determine it's needed or the customer requests it ($100 per unit); specialty work is quoted and billed separately.",
+  "Document every visit by building."]
+};
+
+/* ---------- App ---------- */
+const PCATS=["All","Not sure? Start here","Wildlife","Rodents","Yard & lawn","Inside the home","Insects","Termites","Commercial"];
+const TCATS=["All",...new Set(Object.values(PR).map(p=>p.type))];
+const STOP=new Set("a an and are as at be by can do does for from got have i in is it its it's my of on or our out so the their there they this to under up we what when where with you your keep".split(" "));
+let view="prob", cat="All", branch="ALL";
+try{const b=localStorage.getItem("pfg-branch");if(b&&(b==="ALL"||BRANCHES[b]))branch=b}catch(_){}
+const $=s=>document.querySelector(s);
+const chips=$("#chips"), list=$("#list"), q=$("#q"), count=$("#count");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ul=a=>"<ul>"+a.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ul>";
+const ol=a=>"<ol>"+a.map(x=>"<li>"+esc(x)+"</li>").join("")+"</ol>";
+const slug=s=>"p-"+s.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+const B={sales:'<span class="badge b-sales">Sales</span>',csr:'<span class="badge b-csr">CSR</span>',tech:'<span class="badge b-tech">Tech</span>',policy:'<span class="badge b-policy">Company policy</span>',label:'<span class="badge b-label">Label / regulatory</span>',price:'<span class="badge b-price">Pricing</span>',safety:'<span class="badge b-safety">Safety · Stop</span>'};
+const REGTEXT={label:LABEL_REQ,wildlife:WILDLIFE_REQ,equip:EQUIP_REQ+" "+LABEL_REQ,birds:"Identify the bird species before disturbing birds, eggs, or nests. Many native birds are protected by federal law, and additional state or local protections may apply. Pigeons, European starlings, and house sparrows generally are not federally protected under the Migratory Bird Treaty Act, but technicians must follow applicable current law before removal or nest disturbance."};
+
+$("#ver").innerHTML=`<b>${esc(VERSION.name)}</b><span></span><span>Version</span><span>${esc(VERSION.version)}</span><span>Last updated</span><span>${esc(VERSION.updated)}</span><span>Content owner</span><span>${esc(VERSION.owner)}</span><span>Pricing last reviewed</span><span>${esc(VERSION.pricingReviewed)}</span>`;
+
+function drawChips(){
+  chips.innerHTML="";
+  (view==="prob"?PCATS:TCATS).forEach(c=>{const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=c;b.setAttribute("aria-pressed",c===cat);b.onclick=()=>{cat=c;drawChips();render()};chips.appendChild(b)});
+}
+function terms(){return q.value.toLowerCase().replace(/[^a-z0-9'\s-]/g," ").split(/\s+/).filter(t=>t.length>1&&!STOP.has(t))}
+function score(hay,ts){
+  if(!ts.length) return 1;
+  hay=hay.toLowerCase(); let s=0;
+  for(const t of ts){ if(t.length<=3){ if(new RegExp("\\b"+t+"s?\\b").test(hay)) s++; continue; } if(hay.includes(t)) s++; else if(t.length>3&&hay.includes(t.replace(/(es|s)$/,""))) s+=.8; else if(t.length>4&&hay.includes(t.slice(0,-2))) s+=.4; }
+  const phrase=q.value.toLowerCase().trim(); if(phrase.length>4&&hay.includes(phrase)) s+=2;
+  return s;
+}
+function blackoutNow(){const d=new Date(),m=d.getMonth()+1,day=d.getDate();return (m>4&&m<10)||(m===10&&day===1)}
+function offHere(p){return branch!=="ALL"&&p.avail&&!p.avail.includes(branch)}
+function speciesHTML(names,ts){
+  return `<div class="species">${names.map(n=>{const s=SPECIES[n];const open=ts.length&&score(n+" "+s.keys,ts)>=1;
+    return `<details class="treat sp"${open?" open":""}><summary>${B.tech} Species guide · ${esc(n)}</summary><div class="treat-body"><ul>${s.items.map(([k,v])=>`<li><strong>${esc(k)}:</strong> ${esc(v)}</li>`).join("")}</ul></div></details>`}).join("")}</div>`;
+}
+function probHTML(p,open,ts){
+  const pr=p.prods?`<div><h3>Products &amp; tools</h3><div class="prods">${p.prods.map(n=>`<button type="button" class="prod" data-go="${esc(n)}">${esc(n)}</button>`).join("")}</div></div>`:"";
+  const off=offHere(p);
+  const loc=branch!=="ALL"&&p.loc&&p.loc[branch]?`<div class="note loc"><strong>${esc(BRANCHES[branch])}:</strong> ${esc(p.loc[branch])}</div>`:"";
+  const safety=p.safety?`<div class="note safety">${B.safety} <strong>${esc(p.safety.title)}</strong>${ul(p.safety.lines)}</div>`:"";
+  const reg=p.reg?`<div class="note label">${B.label} ${esc(REGTEXT[p.reg])}</div>`:"";
+  const insp=INSPECT[p.say]?`<details class="treat"><summary>${B.tech} How to inspect</summary><div class="treat-body">${ol(INSPECT[p.say])}</div></details>`:"";
+  const tr=TREAT[p.say]?`<details class="treat"><summary>${B.tech} How to treat</summary><div class="treat-body"><h4>Treatment strategy</h4>${ol(TREAT[p.say])}${p.prods?`<h4>Typical products &amp; tools</h4><p>${esc(p.prods.join(", "))}</p>`:""}${reg}</div></details>`:"";
+  return `<details class="${off?"off":""}"${open?" open":""}><summary><span class="cat">${esc(p.cat)}</span><span class="plus" aria-hidden="true">+</span><span class="say">${esc(p.say)}</span><span class="fix">→ ${esc(p.fix)}</span>${off?`<span class="offtag">Not offered in ${esc(BRANCHES[branch])}</span>`:""}</summary>
+  <div class="body">${safety}
+  ${off?`<div class="note stop">${B.policy} Not offered in ${esc(BRANCHES[branch])}. Available in: ${esc(p.avail.map(a=>BRANCHES[a]).join(", "))}.</div>`:""}${loc}
+  <div><h3>${B.csr} Ask them</h3>${ul(p.ask)}</div>
+  <div><h3>${B.sales} What we offer</h3>${ul(p.offer)}</div>${pr}
+  <div class="note price">${B.price} ${esc(p.price)}</div>
+  ${p.blackout?`<div class="note warn">${B.policy} <strong>${blackoutNow()?"In blackout now. ":"Open season now. "}</strong>${esc(p.blackout)}</div>`:""}
+  <div class="note ${p.stop?"stop":"warn"}">${B.policy} <strong>Watch out:</strong> ${esc(p.warn)}</div>
+  <div><h3>${B.sales} Also offer</h3><p>${esc(p.next)}</p></div>
+  ${p.jump?`<div><button type="button" class="jump" data-jump="${esc(p.jump)}">Photo tips for customers</button></div>`:""}
+  ${insp}${tr}
+  ${p.species?speciesHTML(p.species,ts):""}
+  </div></details>`;
+}
+function prodHTML(n,p,open){
+  const used=P.filter(x=>x.prods&&x.prods.includes(n)).map(x=>x.say);
+  const reg=p.reg?REGTEXT[p.reg]:p.pest?LABEL_REQ:"";
+  return `<details id="${slug(n)}"${open?" open":""}><summary><span class="cat">${esc(p.type)}</span><span class="plus" aria-hidden="true">+</span><span class="say">${esc(n)}</span><span class="fix">${esc(p.best)}</span></summary>
+  <div class="body"><div><h3>What it is</h3><p>${esc(p.what)}</p></div><div><h3>Why we use it</h3><p>${esc(p.why)}</p></div>
+  <div class="quote"><h3>${B.sales} Say it like this</h3><p>“${esc(p.line)}”</p><button type="button" class="copy" data-copy="${esc(p.line)}">Copy line</button></div>
+  ${p.rain?`<div class="note warn">${B.policy} <strong>Weather:</strong> ${esc(p.rain)} The label's weather limits also apply.</div>`:""}
+  ${p.how?`<div><h3>${B.tech} How many</h3><p>${esc(p.how)}</p></div>`:""}
+  ${p.price?`<div class="note price">${B.price} ${esc(p.price)}</div>`:""}
+  ${p.warn?`<div class="note stop">${B.policy} <strong>Watch out:</strong> ${esc(p.warn)}</div>`:""}
+  ${reg?`<div class="note label">${B.label} ${esc(reg)}</div>`:""}
+  ${used.length?`<div><h3>Used for</h3>${ul(used)}</div>`:""}</div></details>`;
+}
+const norm=w=>w.replace(/ies$/,"y").replace(/(ch|sh|x|ss)es$/,"$1").replace(/s$/,"");
+function wscore(hay,ts){
+  if(!ts.length) return 1;
+  const words=new Set((hay.toLowerCase().match(/[a-z0-9]+/g)||[]).map(norm));
+  let s=0; for(const t of ts){ const n=norm(t.replace(/[^a-z0-9]/g,"")); if(n&&words.has(n)) s++; }
+  const phrase=q.value.toLowerCase().trim(); if(s&&phrase.includes(" ")&&hay.toLowerCase().includes(phrase)) s+=1;
+  return s;
+}
+function pestHay(p){
+  let h=p.say+" "+p.fix+" "+p.keys+" "+p.cat;
+  if(p.species) h+=" "+p.species.map(n=>n+" "+SPECIES[n].keys).join(" ");
+  return h;
+}
+function probHay(p){
+  let h=p.say+" "+p.fix+" "+p.keys+" "+p.cat+" "+(p.prods||[]).join(" ");
+  if(p.species) h+=" "+p.species.map(n=>n+" "+SPECIES[n].keys).join(" ");
+  return h;
+}
+function render(){
+  const ts=terms();
+  let html="", n=0;
+  if(view==="prob"){
+    const rows=P.filter(p=>cat==="All"||p.cat===cat).map(p=>[score(probHay(p),ts),p]).filter(r=>r[0]>0).sort((a,b)=>b[0]-a[0]);
+    n=rows.length; html=rows.map(([,p],i)=>probHTML(p,ts.length&&i===0,ts)).join("");
+  } else {
+    const need=Math.max(1,ts.length*0.6);
+    const pests=ts.length?P.filter(p=>p.prods&&p.prods.length).map(p=>[wscore(pestHay(p),ts),p]).filter(r=>r[0]>=need).sort((a,b)=>b[0]-a[0]):[];
+    const rows=Object.entries(PR).filter(([,p])=>cat==="All"||p.type===cat).map(([k,p])=>{
+      const ownRaw=wscore(k+" "+p.type+" "+p.best+" "+p.what,ts), own=ownRaw>=need?ownRaw:0;
+      const via=pests.filter(([,x])=>x.prods.includes(k)).reduce((m,[sc])=>Math.max(m,sc),0);
+      return [own*1.5+via,k,p];
+    }).filter(r=>r[0]>0).sort((a,b)=>b[0]-a[0]);
+    n=rows.length;
+    const isProduct=ts.length&&Object.keys(PR).some(k=>wscore(k,ts)>=need)&&!pests.some(([,x])=>wscore(x.say,ts)>=need);
+    const top=isProduct?[]:pests.slice(0,3);
+    const panel=top.length?`<div class="pestpanel"><h3>Products &amp; tools for this pest</h3>${top.map(([,x])=>`<div class="row"><div class="pest">${esc(x.say)}</div><div class="prods">${x.prods.map(k=>`<button type="button" class="prod" data-go="${esc(k)}">${esc(k)}</button>`).join("")}</div><div><button type="button" class="jump" data-open="${esc(x.say)}">Open the full problem card</button></div></div>`).join("")}<p class="hint">${B.label} Pick products based on the site and situation. The label decides where and how each one can be used.</p></div>`:"";
+    html=panel+rows.map(([,k,p],i)=>prodHTML(k,p,ts.length&&i===0&&!top.length)).join("");
+  }
+  count.textContent=n+(view==="prod"?(n===1?" product":" products"):(n===1?" match":" matches"))+(branch!=="ALL"?" · "+BRANCHES[branch]:"");
+  list.innerHTML=n?html:'<div class="empty">No match. Try the customer\'s own words, or search "not sure". When in doubt, book an inspection. The fee credits back if they book the work.</div>';
+  $("#rules").hidden=view!=="prob"; $("#photos").hidden=view!=="prob"; $("#big").hidden=view!=="prod";
+}
+function setView(v){view=v;cat="All";$("#vProb").setAttribute("aria-pressed",v==="prob");$("#vProd").setAttribute("aria-pressed",v==="prod");
+  q.placeholder=v==="prob"?"e.g. scratching in the attic, holes in yard…":"Type a pest (roaches, ants, wasps) or a product…";drawChips();render()}
+function setBranch(b){branch=b;document.querySelectorAll("[data-br]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.br===b));try{localStorage.setItem("pfg-branch",b)}catch(_){};render()}
+document.querySelectorAll("[data-br]").forEach(x=>x.onclick=()=>setBranch(x.dataset.br));
+$("#vProb").onclick=()=>{q.value="";setView("prob")};
+$("#vProd").onclick=()=>{q.value="";setView("prod")};
+q.addEventListener("input",render);
+const smooth=()=>matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth";
+list.addEventListener("click",e=>{
+  const go=e.target.closest("[data-go]");
+  const op=e.target.closest("[data-open]");
+  if(op){const say=op.dataset.open;view="prob";cat="All";$("#vProb").setAttribute("aria-pressed",true);$("#vProd").setAttribute("aria-pressed",false);q.placeholder="e.g. scratching in the attic, holes in yard…";drawChips();
+    list.innerHTML=probHTML(P.find(p=>p.say===say),true,terms());count.textContent="1 match";$("#rules").hidden=false;$("#photos").hidden=false;$("#big").hidden=true;q.value=say;window.scrollTo({top:0,behavior:smooth()});return}
+  if(go){if(view!=="prod"){q.value="";setView("prod")}const d=document.getElementById(slug(go.dataset.go));if(d){d.open=true;d.classList.add("flash");d.scrollIntoView({block:"start",behavior:smooth()});setTimeout(()=>d.classList.remove("flash"),1600)}return}
+  const j=e.target.closest("[data-jump]");
+  if(j){const d=document.getElementById(j.dataset.jump);if(d){d.open=true;d.scrollIntoView({block:"start",behavior:smooth()})}return}
+  const c=e.target.closest("[data-copy]");
+  if(c){const t=c.dataset.copy;const done=()=>{c.textContent="Copied";setTimeout(()=>c.textContent="Copy line",1400)};
+    try{navigator.clipboard.writeText(t).then(done,()=>{sel(c)})}catch(_){sel(c)}}
+});
+function sel(btn){const p=btn.previousElementSibling;const r=document.createRange();r.selectNodeContents(p);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="Text selected"}
+document.querySelectorAll("[data-br]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.br===branch));
+drawChips();render();
+</script>
+
+</body></html>
