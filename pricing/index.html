@@ -120,8 +120,8 @@ function vView(){
   var body=groups(rows).map(function(g){
     return '<section class="sec"><h2>'+esc(g.name)+'</h2><div class="row hd"><div>Service</div><div>Standard Price / Guidelines</div><div>Floor (Minimum)</div></div>'+
       g.rows.map(function(r){ return '<div class="row"><div class="svc"><b>'+hl(r.service)+'</b>'+(r.note?'<small>'+hl(r.note)+'</small>':'')+'</div>'+
-        '<div><span class="lbl">Standard</span><div class="val">'+hl(r.standard||'-')+'</div></div>'+
-        '<div><span class="lbl">Floor</span><div class="val floor">'+hl(r.floor||'-')+'</div></div></div>'; }).join('')+'</section>';
+        '<div><span class="lbl">Standard</span><div class="val floor">'+hl(r.standard||'-')+'</div></div>'+
+        '<div><span class="lbl">Floor</span><div class="val">'+hl(r.floor||'-')+'</div></div></div>'; }).join('')+'</section>';
   }).join('');
   return h+'<div class="bar"><input type="search" id="q" placeholder="Search services or prices" value="'+esc(S.q)+'" aria-label="Search">'+
     '<span class="meta">'+(d.updated?'Updated '+esc(upd(d.updated)):'')+'</span></div>'+
