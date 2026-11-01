@@ -56,7 +56,7 @@ function size(kb){return kb>=1024?(kb/1024).toFixed(1)+' MB':kb+' KB';}
 function render(q){ q=(q||'').toLowerCase().trim();
   var html=CATS.map(function(c){ var rows=D.filter(function(d){return d[1]===c[0]&&(!q||d[0].toLowerCase().indexOf(q)>=0);}).sort(function(a,b){return a[0].localeCompare(b[0]);});
     if(!rows.length) return '';
-    return '<section class="sec"><h2>'+c[1]+'</h2>'+rows.map(function(d){ return '<a class="item" href="'+esc(d[2])+'" target="_blank" rel="noopener"><span><b>'+esc(d[0])+'</b><br><small>'+d[3]+' pages · '+size(d[4])+'</small></span><span class="go">Open PDF ›</span></a>'; }).join('')+'</section>';
+    return '<section class="sec"><h2>'+c[1]+'</h2>'+rows.map(function(d){ return '<a class="item" href="view.html?f='+encodeURIComponent(d[2])+'&amp;n='+encodeURIComponent(d[0])+'"><span><b>'+esc(d[0])+'</b><br><small>'+d[3]+' pages · '+size(d[4])+'</small></span><span class="go">View ›</span></a>'; }).join('')+'</section>';
   }).join('');
   document.getElementById('list').innerHTML=html||'<div class="empty">No products match “'+esc(q)+'”.</div>';
 }
