@@ -84,7 +84,7 @@ var MARK='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAA
 var BRANCHES=['Idaho Falls','Wyoming','Bozeman'];
 var STATES=[['ID','Idaho'],['WY','Wyoming'],['MT','Montana'],['UT','Utah'],['OTHER','Other']];
 var app=document.getElementById('app');
-var S={view:'pin',pin:null,busy:false,d:null,tab:'list',q:'',branch:'all',filter:'all',edit:null,confirm:null};
+var S={view:'loading',pin:'',busy:false,d:null,tab:'list',q:'',branch:'all',filter:'all',edit:null,confirm:null};
 function api(fn){ var args=[].slice.call(arguments,1);
   return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args})})
     .then(function(r){ if(!r.ok) throw new Error('Server error '+r.status); return r.json(); })
@@ -107,7 +107,7 @@ function vPin(){
 function vMain(){
   var tabs='<div class="tabs" role="tablist">'+[['list','Licenses'],['add',S.edit?'Edit license':'Add license'],['settings','Reminders']].map(function(t){
     return '<button class="tab" role="tab" aria-selected="'+(S.tab===t[0])+'" data-a="tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join('')+'</div>';
-  return header('<button class="btn ghost sm" data-a="lock">Lock</button>')+tabs+({list:vList,add:vForm,settings:vSettings})[S.tab]();
+  return header('')+tabs+({list:vList,add:vForm,settings:vSettings})[S.tab]();
 }
 function vList(){
   var rows=S.d.rows, q=S.q.toLowerCase();
@@ -150,10 +150,10 @@ function vSettings(){
     '<p>Every morning at 7am the system checks expiration dates. When a license hits one of the reminder points below, it emails the address here. Each reminder point is sent once per license.</p>'+
     '<form id="setForm" class="form"><label>Send reminders to<input name="email" type="email" value="'+esc(S.d.email)+'"></label>'+
     '<label>Days before expiration<input name="days" value="'+esc(String(S.d.days).replace(/,/g,', '))+'" placeholder="60, 30, 14, 7, 0"></label>'+
-    '<label>New PIN for this tool (optional)<input name="newPin" inputmode="numeric" maxlength="8" placeholder="Leave blank to keep"></label>'+
     '<div class="wide bar" style="justify-content:flex-end"><button class="btn" type="button" data-a="test">Send test email now</button><button class="btn primary" type="submit">Save</button></div></form></div>';
 }
-function render(){ app.innerHTML=S.view==='pin'?vPin():vMain(); if(S.view==='pin'){ var p=document.getElementById('pinIn'); if(p) p.focus(); } }
+function render(){ app.innerHTML=S.view==='loading'?header('')+'<div class="empty">'+(S.err?esc(S.err)+'<br><br><button class="btn" data-a="retry">Try again</button>':'Loading licenses…')+'</div>':vMain(); }
+function load(){ S.err=''; render(); api('licUnlock','').then(function(d){ apply(d); S.view='main'; render(); }).catch(function(err){ S.err=msg(err); render(); }); }
 function apply(d){ S.d=d; }
 
 app.addEventListener('submit',function(e){
@@ -168,7 +168,7 @@ app.addEventListener('submit',function(e){
     api('licSave',S.pin,r).then(function(d){ S.busy=false; apply(d); var was=!!S.edit; S.edit=null; S.tab='list'; render(); toast(was?'License updated.':'License added.'); })
       .catch(function(err){ S.busy=false; render(); toast(msg(err)); }); }
   else if(f.id==='setForm'){ var g=new FormData(f);
-    api('licSettings',S.pin,g.get('email'),g.get('days'),g.get('newPin')||'').then(function(d){ if(g.get('newPin')) S.pin=g.get('newPin'); apply(d); render(); toast('Reminder settings saved.'); })
+    api('licSettings',S.pin,g.get('email'),g.get('days'),'').then(function(d){ apply(d); render(); toast('Reminder settings saved.'); })
       .catch(function(err){ toast(msg(err)); }); }
 });
 app.addEventListener('input',function(e){
@@ -182,7 +182,7 @@ app.addEventListener('change',function(e){
 app.addEventListener('click',function(e){
   var b=e.target.closest('[data-a]'); if(!b) return; var a=b.getAttribute('data-a'), id=b.getAttribute('data-id');
   if(a==='tab'){ S.tab=b.getAttribute('data-t'); if(S.tab!=='add') S.edit=null; S.confirm=null; render(); }
-  else if(a==='lock'){ S.pin=null; S.d=null; S.view='pin'; S.edit=null; render(); }
+  else if(a==='retry'){ load(); }
   else if(a==='filter'){ var f=b.getAttribute('data-f'); S.filter=(S.filter===f?'all':f); render(); }
   else if(a==='edit'){ S.edit=Object.assign({},S.d.rows.filter(function(r){return r.id===id;})[0]); S.tab='add'; render(); window.scrollTo(0,0); }
   else if(a==='cancelEdit'){ S.edit=null; S.tab='list'; render(); }
@@ -191,9 +191,7 @@ app.addEventListener('click',function(e){
   else if(a==='del'){ api('licDelete',S.pin,id).then(function(d){ apply(d); S.confirm=null; render(); toast('License removed.'); }).catch(function(err){ toast(msg(err)); }); }
   else if(a==='test'){ toast('Sending…'); api('licTest',S.pin).then(function(r){ toast(r.sent?'Test email sent ('+r.sent+' license'+(r.sent===1?'':'s')+').':r.note); }).catch(function(err){ toast(msg(err)); }); }
 });
-var idle; function resetIdle(){ clearTimeout(idle); idle=setTimeout(function(){ if(S.view!=='pin'){ S.pin=null; S.d=null; S.view='pin'; S.edit=null; render(); } }, 600000); }
-['click','keydown','touchstart'].forEach(function(ev){ document.addEventListener(ev,resetIdle,{passive:true}); });
-render();
+load();
 })();
 </script>
 </body>
