@@ -50,7 +50,7 @@ label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .card h3{margin:0;padding:12px 16px;font:700 1.3rem/1.1 var(--display);letter-spacing:.03em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
 .card h3 small{font:600 .8rem var(--body);color:var(--muted);text-transform:none;letter-spacing:0}
-.lic{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;padding:12px 16px;border-top:1px solid var(--line)}
+.lic{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:12px 16px;border-top:1px solid var(--line)}
 .lic:first-of-type{border-top:0}
 .st{font:700 1.05rem var(--display);width:46px;height:46px;border-radius:10px;display:grid;place-items:center;background:var(--sunk);letter-spacing:.04em}
 .lic .main b{font-weight:600}.lic .main div{color:var(--muted);font-size:.9rem;overflow-wrap:anywhere}
@@ -71,7 +71,7 @@ label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
 .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
 .tab{padding:12px 16px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent}
 .tab[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
-@media (max-width:520px){.lic{grid-template-columns:auto 1fr}.lic .right{grid-column:1/-1;justify-items:start;grid-auto-flow:column;justify-content:space-between}}
+@media (max-width:520px){.lic .right{grid-column:1/-1;justify-items:start;grid-auto-flow:column;justify-content:space-between}}
 </style>
 </head>
 <body>
@@ -118,13 +118,13 @@ function vList(){
     .forEach(function(r){ if(!by[r.tech]){ by[r.tech]=[]; order.push(r.tech); } by[r.tech].push(r); });
   var stats='<div class="stats">'+[['crit','Expired'],['warn','Due soon'],['ok','Valid']].map(function(s){
     return '<button class="stat '+s[0]+'" data-a="filter" data-f="'+s[0]+'" aria-pressed="'+(S.filter===s[0])+'"><div class="v">'+c[s[0]]+'</div><span class="eyebrow">'+s[1]+'</span></button>'; }).join('')+'</div>';
-  var bar='<div class="bar"><input type="search" id="q" placeholder="Search tech, state, license #" value="'+esc(S.q)+'">'+
-    '<select id="br" aria-label="Branch"><option value="all">All branches</option>'+BRANCHES.map(function(b){ return '<option'+(S.branch===b?' selected':'')+'>'+b+'</option>'; }).join('')+'</select>'+
+  var bar='<div class="bar"><input type="search" id="q" placeholder="Search tech or license #" value="'+esc(S.q)+'">'+
+
     (S.filter!=='all'?'<button class="btn sm" data-a="filter" data-f="all">Show all</button>':'')+'</div>';
   var list=order.map(function(t){ var rs=by[t];
-    return '<section class="card"><h3>'+esc(t)+'<small>'+esc(rs[0].branch||'')+'</small></h3>'+rs.map(function(r){ var s=status(r);
-      return '<div class="lic"><div class="st">'+esc(r.state||'?')+'</div><div class="main"><b>'+esc(r.type||'Applicator license')+'</b>'+
-        '<div>'+(r.number?'<span class="num">#'+esc(r.number)+'</span> · ':'')+'Expires '+fmtDate(r.expires)+(r.notes?' · '+esc(r.notes):'')+'</div></div>'+
+    return '<section class="card"><h3>'+esc(t)+'<small>'+rs.length+' license'+(rs.length===1?'':'s')+'</small></h3>'+rs.map(function(r){ var s=status(r);
+      return '<div class="lic"><div class="main"><b class="num">'+(r.number?'#'+esc(r.number):'No license #')+'</b>'+
+        '<div>Expires '+fmtDate(r.expires)+'</div></div>'+
         '<div class="right"><span class="pill '+s+'">'+pillText(r)+'</span>'+
         (S.confirm===r.id?'<span class="bar"><button class="btn danger sm" data-a="del" data-id="'+r.id+'">Delete</button><button class="btn sm" data-a="noconf">Keep</button></span>':
         '<span class="bar"><button class="btn sm" data-a="edit" data-id="'+r.id+'">Edit</button><button class="btn ghost sm" data-a="conf" data-id="'+r.id+'">Remove</button></span>')+'</div></div>';
@@ -138,23 +138,16 @@ function vForm(){
   var r=S.edit||{tech:'',branch:'',state:'ID',type:'',number:'',expires:'',email:'',notes:''};
   var techs=S.d.techs.map(function(t){ return '<option value="'+esc(t.name)+'">'+esc(t.branch)+'</option>'; }).join('');
   var st=STATES.some(function(s){return s[0]===r.state;})?r.state:(r.state?'OTHER':'ID');
-  return '<form class="box" id="licForm"><div class="form">'+
+  return '<form class="box" id="licForm"><div class="form" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">'+
     '<label>Tech name<input name="tech" list="techList" required value="'+esc(r.tech)+'" autocomplete="off"></label><datalist id="techList">'+techs+'</datalist>'+
-    '<label>Branch<select name="branch"><option value="">—</option>'+BRANCHES.map(function(b){ return '<option'+(r.branch===b?' selected':'')+'>'+b+'</option>'; }).join('')+'</select></label>'+
-    '<label>State<select name="state">'+STATES.map(function(s){ return '<option value="'+s[0]+'"'+(st===s[0]?' selected':'')+'>'+s[1]+'</option>'; }).join('')+'</select></label>'+
-    '<label id="otherWrap"'+(st==='OTHER'?'':' hidden')+'>State (2 letters)<input name="stateOther" maxlength="2" value="'+(st==='OTHER'?esc(r.state):'')+'"></label>'+
-    '<label>License type<input name="type" list="typeList" placeholder="e.g. Commercial Applicator" value="'+esc(r.type)+'"></label>'+
-    '<datalist id="typeList"><option>Commercial Applicator</option><option>Professional Applicator</option><option>Operator</option><option>Technician / Registered Tech</option><option>Structural Pest Control</option><option>Restricted Use (RUP)</option></datalist>'+
     '<label>License #<input name="number" value="'+esc(r.number)+'" autocomplete="off"></label>'+
-    '<label>Expiration date<input name="expires" type="date" value="'+esc(r.expires)+'"></label>'+
-    '<label>Tech email (optional)<input name="email" type="email" value="'+esc(r.email)+'" placeholder="Also remind the tech"></label>'+
-    '<label class="wide">Notes (categories, CEUs needed, etc.)<input name="notes" value="'+esc(r.notes)+'"></label>'+
+    '<label>Expiration date<input name="expires" type="date" required value="'+esc(r.expires)+'"></label>'+
     '</div><div class="bar" style="justify-content:flex-end">'+(S.edit?'<button class="btn" type="button" data-a="cancelEdit">Cancel</button>':'')+
     '<button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>'+(S.busy?'Saving…':(S.edit?'Save changes':'Add license'))+'</button></div></form>';
 }
 function vSettings(){
   return '<div class="box"><h3 style="margin:0;font:700 1.3rem var(--display);text-transform:uppercase">Reminder emails</h3>'+
-    '<p>Every morning at 7am the system checks expiration dates. When a license hits one of the reminder points below, it emails the address here (and the tech, if their email is on the license). Each reminder point is sent once per license.</p>'+
+    '<p>Every morning at 7am the system checks expiration dates. When a license hits one of the reminder points below, it emails the address here. Each reminder point is sent once per license.</p>'+
     '<form id="setForm" class="form"><label>Send reminders to<input name="email" type="email" value="'+esc(S.d.email)+'"></label>'+
     '<label>Days before expiration<input name="days" value="'+esc(String(S.d.days).replace(/,/g,', '))+'" placeholder="60, 30, 14, 7, 0"></label>'+
     '<label>New PIN for this tool (optional)<input name="newPin" inputmode="numeric" maxlength="8" placeholder="Leave blank to keep"></label>'+
@@ -168,8 +161,8 @@ app.addEventListener('submit',function(e){
   if(f.id==='pinForm'){ var pin=document.getElementById('pinIn').value; if(!pin) return; S.busy=true; render();
     api('licUnlock',pin).then(function(d){ S.busy=false; S.pin=pin; apply(d); S.view='main'; render(); }).catch(function(err){ S.busy=false; render(); toast(msg(err)); }); }
   else if(f.id==='licForm'){ var fd=new FormData(f), r={};
-    fd.forEach(function(v,k){ r[k]=v; }); if(r.state==='OTHER') r.state=(r.stateOther||'').toUpperCase(); delete r.stateOther;
-    if(S.edit) r.id=S.edit.id;
+    if(S.edit){ ['branch','state','type','email','notes'].forEach(function(k){ r[k]=S.edit[k]||''; }); r.id=S.edit.id; }
+    fd.forEach(function(v,k){ r[k]=v; });
     if(!r.branch){ var t=S.d.techs.filter(function(x){return x.name.toLowerCase()===r.tech.trim().toLowerCase();})[0]; if(t) r.branch=t.branch; }
     S.busy=true; render();
     api('licSave',S.pin,r).then(function(d){ S.busy=false; apply(d); var was=!!S.edit; S.edit=null; S.tab='list'; render(); toast(was?'License updated.':'License added.'); })
@@ -183,9 +176,8 @@ app.addEventListener('input',function(e){
 });
 app.addEventListener('change',function(e){
   if(e.target.id==='br'){ S.branch=e.target.value; render(); }
-  if(e.target.name==='state'){ document.getElementById('otherWrap').hidden=e.target.value!=='OTHER'; }
   if(e.target.name==='tech'){ var t=S.d.techs.filter(function(x){return x.name.toLowerCase()===e.target.value.trim().toLowerCase();})[0];
-    var b=e.target.form.querySelector('[name=branch]'); if(t&&b&&!b.value) b.value=t.branch; }
+ }
 });
 app.addEventListener('click',function(e){
   var b=e.target.closest('[data-a]'); if(!b) return; var a=b.getAttribute('data-a'), id=b.getAttribute('data-id');
