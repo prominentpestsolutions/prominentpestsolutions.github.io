@@ -153,8 +153,12 @@ function vSettings(){
     '<div class="wide bar" style="justify-content:flex-end"><button class="btn" type="button" data-a="test">Send test email now</button><button class="btn primary" type="submit">Save</button></div></form></div>';
 }
 function render(){ app.innerHTML=S.view==='loading'?header('')+'<div class="empty">'+(S.err?esc(S.err)+'<br><br><button class="btn" data-a="retry">Try again</button>':'Loading licenses…')+'</div>':vMain(); }
-function load(){ S.err=''; render(); api('licUnlock','').then(function(d){ apply(d); S.view='main'; render(); }).catch(function(err){ S.err=msg(err); render(); }); }
-function apply(d){ S.d=d; }
+function load(){ S.err='';
+  try{ var c=JSON.parse(localStorage.getItem('licCache')||'null'); if(c&&c.rows){ S.d=c; S.view='main'; } }catch(_){}
+  render();
+  api('licUnlock','').then(function(d){ var busy=S.tab!=='list'; apply(d); S.view='main'; if(!busy) render(); })
+    .catch(function(err){ if(S.view!=='main'){ S.err=msg(err); render(); } }); }
+function apply(d){ S.d=d; try{ localStorage.setItem('licCache',JSON.stringify(d)); }catch(_){} }
 
 app.addEventListener('submit',function(e){
   e.preventDefault(); var f=e.target;
