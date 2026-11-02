@@ -73,6 +73,17 @@ label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
 .tab[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
 @media (max-width:520px){.lic .right{grid-column:1/-1;justify-items:start;grid-auto-flow:column;justify-content:space-between}}
 </style>
+<meta name="build" content="20261102a">
+<script>/* auto-update: reload when a newer version is published */
+(function(){var B='20261102a';
+ function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
+  var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
+  try{ if(sessionStorage.getItem('upd')===m[1]) return; sessionStorage.setItem('upd',m[1]); }catch(_){}
+  var u=new URL(location.href); u.searchParams.set('v',m[1]); location.replace(u.toString());
+ }).catch(function(){}); }
+ chk(); document.addEventListener('visibilitychange',function(){ if(!document.hidden) chk(); });
+ window.addEventListener('pageshow',function(e){ if(e.persisted) chk(); });
+})();</script>
 </head>
 <body>
 <div id="app"></div>
