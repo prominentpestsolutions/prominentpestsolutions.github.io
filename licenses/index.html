@@ -58,6 +58,18 @@ label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
 .pill{display:inline-block;align-self:center;justify-self:end;padding:3px 10px;border-radius:999px;font-size:.8rem;font-weight:600;white-space:nowrap;text-align:center}
 .pill.ok{background:var(--accent-soft);color:var(--ok)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.crit{background:var(--crit-soft);color:var(--crit)}.pill.none{background:var(--sunk);color:var(--muted)}
 .right{display:grid;gap:6px;justify-items:end}
+.prof{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.prof .ph{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.av{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 1.2rem var(--display);flex:none}
+.prof .ph b{display:block;font:700 1.35rem/1.1 var(--display);letter-spacing:.03em;text-transform:uppercase}
+.prof .ph small{color:var(--muted);font-size:.88rem}
+.prof .ph .pill{margin-left:auto}
+.lrow{display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;width:100%;padding:12px 16px;border-top:1px solid var(--line);text-align:left}
+.lrow:hover{background:var(--sunk)}
+.st{font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-width:76px;text-align:center}
+.lrow .num{font-family:var(--mono);font-size:.92rem;font-weight:600}
+.lrow .ex{color:var(--muted);font-size:.85rem}
+.addmore{display:block;width:100%;padding:12px 16px;border-top:1px solid var(--line);text-align:left;color:var(--ok);font-weight:600;font-size:.92rem}
 .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:12px}
 .box p{margin:0;color:var(--muted)}
 .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
@@ -73,9 +85,9 @@ label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
 .tab[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
 @media (max-width:520px){.lic .right{grid-column:1/-1;justify-items:start;grid-auto-flow:column;justify-content:space-between}}
 </style>
-<meta name="build" content="20261102a">
+<meta name="build" content="20261102d">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261102a';
+(function(){var B='20261102d';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   try{ if(sessionStorage.getItem('upd')===m[1]) return; sessionStorage.setItem('upd',m[1]); }catch(_){}
@@ -93,7 +105,9 @@ label{display:grid;gap:4px;font-size:.82rem;font-weight:600;color:var(--muted)}
 var API_URL='https://script.google.com/macros/s/AKfycbzrmF4sf_UMHB3DBmd2k6aLW3Bf60s-nbBxcCs-aa_4_jn1r4pj8Nq4NGPKuC6WLhF5/exec';
 var MARK='data:image/png;base64,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';
 var BRANCHES=['Idaho Falls','Wyoming','Bozeman'];
-var STATES=[['ID','Idaho'],['WY','Wyoming'],['MT','Montana'],['UT','Utah'],['OTHER','Other']];
+var STATES=[['ID','Idaho'],['MT','Montana'],['WY','Wyoming'],['UT','Utah']];
+function stName(c){ c=String(c||'').toUpperCase(); var m=STATES.filter(function(s){return s[0]===c;})[0]; return m?m[1]:(c||''); }
+var RANK={crit:0,warn:1,ok:2,none:3};
 var app=document.getElementById('app');
 var S={view:'loading',pin:'',busy:false,d:null,tab:'list',q:'',branch:'all',filter:'all',edit:null,confirm:null};
 function api(fn){ var args=[].slice.call(arguments,1);
@@ -116,7 +130,7 @@ function vPin(){
     '<button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>'+(S.busy?'Checking…':'Unlock')+'</button><p class="eyebrow" style="text-transform:none;letter-spacing:0">License numbers are private, so this tool is locked.</p></form></div>';
 }
 function vMain(){
-  var tabs='<div class="tabs" role="tablist">'+[['list','Licenses'],['add',S.edit?'Edit license':'Add license'],['settings','Reminders']].map(function(t){
+  var tabs='<div class="tabs" role="tablist">'+[['list','Licenses'],['add',S.edit&&S.edit.id?'Edit license':'Add license'],['settings','Reminders']].map(function(t){
     return '<button class="tab" role="tab" aria-selected="'+(S.tab===t[0])+'" data-a="tab" data-t="'+t[0]+'">'+t[1]+'</button>'; }).join('')+'</div>';
   return header('')+tabs+({list:vList,add:vForm,settings:vSettings})[S.tab]();
 }
@@ -124,7 +138,7 @@ function vList(){
   var rows=S.d.rows, q=S.q.toLowerCase();
   var c={crit:0,warn:0,ok:0,none:0}; rows.forEach(function(r){ c[status(r)]++; });
   var f=rows.filter(function(r){ return (S.branch==='all'||r.branch===S.branch) && (S.filter==='all'||status(r)===S.filter) &&
-    (!q||[r.tech,r.state,r.type,r.number,r.notes].join(' ').toLowerCase().indexOf(q)>=0); });
+    (!q||[r.tech,r.state,stName(r.state),r.type,r.number,r.notes].join(' ').toLowerCase().indexOf(q)>=0); });
   var by={},order=[]; f.sort(function(a,b){ return a.tech.localeCompare(b.tech)||((a.days==null?99999:a.days)-(b.days==null?99999:b.days)); })
     .forEach(function(r){ if(!by[r.tech]){ by[r.tech]=[]; order.push(r.tech); } by[r.tech].push(r); });
   var stats='<div class="stats">'+[['crit','Expired'],['warn','Due soon'],['ok','Valid']].map(function(s){
@@ -132,29 +146,36 @@ function vList(){
   var bar='<div class="bar"><input type="search" id="q" placeholder="Search tech or license #" value="'+esc(S.q)+'">'+
 
     (S.filter!=='all'?'<button class="btn sm" data-a="filter" data-f="all">Show all</button>':'')+'</div>';
-  var list=order.map(function(t){ var rs=by[t];
-    return '<section class="card"><h3>'+esc(t)+'<small>'+rs.length+' license'+(rs.length===1?'':'s')+'</small></h3>'+rs.map(function(r){ var s=status(r);
-      return '<div class="lic"><div class="main"><b class="num">'+(r.number?'#'+esc(r.number):'No license #')+'</b>'+
-        '<div>Expires '+fmtDate(r.expires)+'</div></div>'+
-        '<div class="right"><span class="pill '+s+'">'+pillText(r)+'</span>'+
-        (S.confirm===r.id?'<span class="bar"><button class="btn danger sm" data-a="del" data-id="'+r.id+'">Delete</button><button class="btn sm" data-a="noconf">Keep</button></span>':
-        '<span class="bar"><button class="btn sm" data-a="edit" data-id="'+r.id+'">Edit</button><button class="btn ghost sm" data-a="conf" data-id="'+r.id+'">Remove</button></span>')+'</div></div>';
-    }).join('')+'</section>'; }).join('');
+  var list=order.map(function(t){ var rs=by[t], worst=rs.slice().sort(function(x,y){ return RANK[status(x)]-RANK[status(y)]; })[0];
+    var ws=status(worst), initials=t.split(/\s+/).map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+    var summary=ws==='crit'?'<span class="pill crit">'+(rs.filter(function(r){return status(r)==='crit';}).length)+' expired</span>':
+      ws==='warn'?'<span class="pill warn">Renewal due</span>':ws==='ok'?'<span class="pill ok">All valid</span>':'';
+    return '<section class="prof"><div class="ph"><div class="av">'+esc(initials)+'</div><div><b>'+esc(t)+'</b><small>'+rs.length+' license'+(rs.length===1?'':'s')+'</small></div>'+summary+'</div>'+
+      rs.map(function(r){ var s=status(r);
+        return '<button class="lrow" data-a="edit" data-id="'+r.id+'" aria-label="Edit '+esc(stName(r.state)||'license')+' license"><span class="st">'+esc(stName(r.state)||'—')+'</span>'+
+          '<span><span class="num">'+(r.number?'#'+esc(r.number):'No license #')+'</span><br><span class="ex">Expires '+fmtDate(r.expires)+'</span></span>'+
+          '<span class="pill '+s+'">'+pillText(r)+'</span></button>';
+      }).join('')+
+      '<button class="addmore" data-a="addFor" data-t="'+esc(t)+'">+ Add another license for '+esc(t.split(' ')[0])+'</button></section>'; }).join('');
   if(!rows.length) list='<div class="empty"><b>No licenses yet</b>Tap “Add license” to enter the first one.</div>';
   else if(!f.length) list='<div class="empty">No licenses match.</div>';
   return stats+bar+'<div style="display:grid;gap:14px">'+list+'</div>'+
+    (rows.length?'<p class="eyebrow" style="text-transform:none;letter-spacing:0;margin:0">Tap a license to edit or remove it.</p>':'')+
     (S.d.sheetUrl?'<p class="eyebrow" style="text-transform:none;letter-spacing:0">Everything is also in the <a href="'+esc(S.d.sheetUrl)+'" target="_blank" rel="noopener">Licenses tab of your Google Sheet</a>.</p>':'');
 }
 function vForm(){
   var r=S.edit||{tech:'',branch:'',state:'ID',type:'',number:'',expires:'',email:'',notes:''};
   var techs=S.d.techs.map(function(t){ return '<option value="'+esc(t.name)+'">'+esc(t.branch)+'</option>'; }).join('');
-  var st=STATES.some(function(s){return s[0]===r.state;})?r.state:(r.state?'OTHER':'ID');
+  var st=String(r.state||'').toUpperCase();
   return '<form class="box" id="licForm"><div class="form" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">'+
     '<label>Tech name<input name="tech" list="techList" required value="'+esc(r.tech)+'" autocomplete="off"></label><datalist id="techList">'+techs+'</datalist>'+
+    '<label>State<select name="state" required><option value="">Choose…</option>'+STATES.map(function(x){ return '<option value="'+x[0]+'"'+(st===x[0]?' selected':'')+'>'+x[1]+'</option>'; }).join('')+'</select></label>'+
     '<label>License #<input name="number" value="'+esc(r.number)+'" autocomplete="off"></label>'+
     '<label>Expiration date<input name="expires" type="date" required value="'+esc(r.expires)+'"></label>'+
     '</div><div class="bar" style="justify-content:flex-end">'+(S.edit?'<button class="btn" type="button" data-a="cancelEdit">Cancel</button>':'')+
-    '<button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>'+(S.busy?'Saving…':(S.edit?'Save changes':'Add license'))+'</button></div></form>';
+    '<button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>'+(S.busy?'Saving…':(S.edit&&S.edit.id?'Save changes':'Add license'))+'</button></div>'+
+    (S.edit&&S.edit.id?'<div class="bar" style="border-top:1px solid var(--line);padding-top:12px">'+(S.confirm===S.edit.id?'<span>Remove this license?</span><button class="btn danger sm" type="button" data-a="del" data-id="'+S.edit.id+'">Yes, remove</button><button class="btn sm" type="button" data-a="noconf">Keep</button>':
+      '<button class="btn ghost sm" type="button" data-a="conf" data-id="'+S.edit.id+'">Remove this license</button>')+'</div>':'')+'</form>';
 }
 function vSettings(){
   return '<div class="box"><h3 style="margin:0;font:700 1.3rem var(--display);text-transform:uppercase">Reminder emails</h3>'+
@@ -176,11 +197,11 @@ app.addEventListener('submit',function(e){
   if(f.id==='pinForm'){ var pin=document.getElementById('pinIn').value; if(!pin) return; S.busy=true; render();
     api('licUnlock',pin).then(function(d){ S.busy=false; S.pin=pin; apply(d); S.view='main'; render(); }).catch(function(err){ S.busy=false; render(); toast(msg(err)); }); }
   else if(f.id==='licForm'){ var fd=new FormData(f), r={};
-    if(S.edit){ ['branch','state','type','email','notes'].forEach(function(k){ r[k]=S.edit[k]||''; }); r.id=S.edit.id; }
+    if(S.edit&&S.edit.id){ ['branch','type','email','notes'].forEach(function(k){ r[k]=S.edit[k]||''; }); r.id=S.edit.id; }
     fd.forEach(function(v,k){ r[k]=v; });
     if(!r.branch){ var t=S.d.techs.filter(function(x){return x.name.toLowerCase()===r.tech.trim().toLowerCase();})[0]; if(t) r.branch=t.branch; }
     S.busy=true; render();
-    api('licSave',S.pin,r).then(function(d){ S.busy=false; apply(d); var was=!!S.edit; S.edit=null; S.tab='list'; render(); toast(was?'License updated.':'License added.'); })
+    api('licSave',S.pin,r).then(function(d){ S.busy=false; apply(d); var was=!!(S.edit&&S.edit.id); S.edit=null; S.tab='list'; render(); toast(was?'License updated.':'License added.'); })
       .catch(function(err){ S.busy=false; render(); toast(msg(err)); }); }
   else if(f.id==='setForm'){ var g=new FormData(f);
     api('licSettings',S.pin,g.get('email'),g.get('days'),'').then(function(d){ apply(d); render(); toast('Reminder settings saved.'); })
@@ -200,10 +221,11 @@ app.addEventListener('click',function(e){
   else if(a==='retry'){ load(); }
   else if(a==='filter'){ var f=b.getAttribute('data-f'); S.filter=(S.filter===f?'all':f); render(); }
   else if(a==='edit'){ S.edit=Object.assign({},S.d.rows.filter(function(r){return r.id===id;})[0]); S.tab='add'; render(); window.scrollTo(0,0); }
+  else if(a==='addFor'){ S.edit={tech:b.getAttribute('data-t'),state:'',number:'',expires:''}; S.tab='add'; S.confirm=null; render(); window.scrollTo(0,0); }
   else if(a==='cancelEdit'){ S.edit=null; S.tab='list'; render(); }
   else if(a==='conf'){ S.confirm=id; render(); }
   else if(a==='noconf'){ S.confirm=null; render(); }
-  else if(a==='del'){ api('licDelete',S.pin,id).then(function(d){ apply(d); S.confirm=null; render(); toast('License removed.'); }).catch(function(err){ toast(msg(err)); }); }
+  else if(a==='del'){ api('licDelete',S.pin,id).then(function(d){ apply(d); S.confirm=null; S.edit=null; S.tab='list'; render(); toast('License removed.'); }).catch(function(err){ toast(msg(err)); }); }
   else if(a==='test'){ toast('Sending…'); api('licTest',S.pin).then(function(r){ toast(r.sent?'Test email sent ('+r.sent+' license'+(r.sent===1?'':'s')+').':r.note); }).catch(function(err){ toast(msg(err)); }); }
 });
 load();
