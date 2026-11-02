@@ -73,10 +73,23 @@ input,textarea{width:100%;min-height:44px;padding:8px 12px;border-radius:8px;bor
 .empty b{display:block;color:var(--ink);font-family:var(--display);font-size:1.5rem;margin-bottom:4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:20;font-weight:600;max-width:calc(100% - 32px)}
 .sticky{position:sticky;bottom:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.qty{font:700 1.5rem var(--display);white-space:nowrap;text-align:right}
+.qty small{display:block;font:600 .78rem var(--body);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.holders{grid-column:1/-1;display:grid;gap:6px;margin-top:4px}
+.holder{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:8px 10px;border-radius:10px;background:var(--sunk);flex-wrap:wrap}
+.holder.late{background:var(--crit-soft)}
+.holder span{font-size:.95rem;overflow-wrap:anywhere}
+.acts{grid-column:1/-1;display:flex;justify-content:flex-end}
+.step{display:flex;align-items:center;gap:12px}
+.step button{width:56px;height:56px;border-radius:14px;font:700 1.8rem var(--display);background:var(--sunk);border:1px solid var(--line)}
+.step output{font:700 2.4rem var(--mono);min-width:64px;text-align:center}
+.arow{display:grid;grid-template-columns:1fr 90px auto;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.arow:first-child{border-top:0}
+@media (max-width:480px){.arow{grid-template-columns:1fr 76px}.arow .bar{grid-column:1/-1;justify-content:flex-end}}
 </style>
-<meta name="build" content="20261102a">
+<meta name="build" content="20261102b">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261102a';
+(function(){var B='20261102b';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   try{ if(sessionStorage.getItem('upd')===m[1]) return; sessionStorage.setItem('upd',m[1]); }catch(_){}
@@ -93,124 +106,126 @@ input,textarea{width:100%;min-height:44px;padding:8px 12px;border-radius:8px;bor
 (function(){
 var API_URL='https://script.google.com/macros/s/AKfycbzrmF4sf_UMHB3DBmd2k6aLW3Bf60s-nbBxcCs-aa_4_jn1r4pj8Nq4NGPKuC6WLhF5/exec';
 var MARK='data:image/png;base64,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';
-var BRANCHES={IF:'Idaho Falls',WY:'Wyoming',BZ:'Bozeman'};
 var LATE_DAYS=7;
 var app=document.getElementById('app');
 function store(k,v){ try{ if(v===undefined) return localStorage.getItem(k); if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v); }catch(e){ return null; } }
-var BR=(function(){ var q=(new URLSearchParams(location.search).get('branch')||'').toUpperCase();
-  if(BRANCHES[q]){ store('shopBranch',q); return q; } var s=(store('shopBranch')||'').toUpperCase(); return BRANCHES[s]?s:null; })();
-var S={view:BR?'home':'branch',items:[],techs:[],loaded:false,err:'',q:'',filter:'all',sel:null,tech:null,note:'',pin:null,log:[],busy:false};
-function apiBr(br,fn,args){
-  return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:[br].concat(args)})})
+var S={view:'home',items:[],techs:[],loaded:false,err:'',q:'',filter:'all',sel:null,hold:null,tech:null,n:1,pin:null,log:[],busy:false,confirm:null};
+function api(fn){ var args=[].slice.call(arguments,1);
+  return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args})})
     .then(function(r){ if(!r.ok) throw new Error('Server error '+r.status); return r.json(); })
     .then(function(j){ if(!j.ok) throw new Error(j.error||'Something went wrong.'); return j.data; })
     .catch(function(e){ throw (e instanceof TypeError ? new Error('No connection. Check Wi-Fi or data.') : e); }); }
-function api(fn){ return apiBr(BR,fn,[].slice.call(arguments,1)); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
 function msg(e){ return (e&&e.message?e.message:String(e)).replace(/^Exception:\s*/,''); }
 function toast(t){ var el=document.getElementById('toast'); el.textContent=t; el.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(function(){el.hidden=true;},2800); }
-function brName(){ return BR?BRANCHES[BR]:'Prominent'; }
 function ago(ms){ if(!ms) return ''; var m=Math.floor((Date.now()-ms)/60000); if(m<60) return m<=1?'just now':m+' min'; var h=Math.floor(m/60); if(h<24) return h+' hr'; var d=Math.floor(h/24); return d+' day'+(d===1?'':'s'); }
 function fmt(ms){ return new Date(ms).toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }
 function byId(id){ return S.items.filter(function(e){return e.id===id;})[0]; }
-function header(right){ return '<a class="back" href="/">← All tools</a><div class="top"><div class="brand"><img src="'+MARK+'" alt=""><div class="txt"><b>'+esc(brName())+' Equipment</b><span class="eyebrow">Who has what</span></div></div>'+(right||'')+'</div>'; }
+function outN(it){ return it.out.reduce(function(a,o){ return a+o.qty; },0); }
+function avail(it){ return Math.max(0,it.total-outN(it)); }
+function findHold(id){ for(var i=0;i<S.items.length;i++){ var o=S.items[i].out.filter(function(x){return x.id===id;})[0]; if(o) return {it:S.items[i],o:o}; } return null; }
+function header(right){ return '<a class="back" href="/">← All tools</a><div class="top"><div class="brand"><img src="'+MARK+'" alt=""><div class="txt"><b>Company Equipment</b><span class="eyebrow">Who has what</span></div></div>'+(right||'')+'</div>'; }
 
 /* ---------- offline-safe queue ---------- */
-function getQ(){ try{ return JSON.parse(store('eqQueue')||'[]'); }catch(_){ return []; } }
-function setQ(q){ store('eqQueue',JSON.stringify(q)); }
-function pendingHere(){ return getQ().filter(function(x){ return x.br===BR; }); }
-function overlay(items){ items=items.map(function(e){ return Object.assign({},e); });
-  pendingHere().forEach(function(op){ var e=items.filter(function(x){return x.id===op.id;})[0]; if(!e) return;
-    if(op.fn==='eqOut'){ e.out=true; e.who=op.tech; e.since=op.when; e.note=op.note; } else { e.out=false; e.who=''; e.since=null; e.note=''; } });
+function getQ(){ try{ return JSON.parse(store('eqQueue2')||'[]'); }catch(_){ return []; } }
+function setQ(q){ store('eqQueue2',JSON.stringify(q)); }
+function overlay(items){
+  items=items.map(function(e){ return {id:e.id,name:e.name,total:e.total,out:e.out.map(function(o){ return Object.assign({},o); })}; });
+  getQ().forEach(function(op){
+    if(op.fn==='eqOut'){ var it=items.filter(function(x){return x.id===op.item;})[0]; if(it&&!it.out.some(function(o){return o.id===op.key;})) it.out.push({id:op.key,tech:op.tech,qty:op.qty,since:op.when,note:op.note}); }
+    else { items.forEach(function(it){ it.out=it.out.map(function(o){ if(o.id!==op.hold) return o; var c=Object.assign({},o); c.qty-=Math.min(c.qty,op.qty); return c; }).filter(function(o){ return o.qty>0; }); }); }
+  });
   return items; }
 var flushing=false;
 function retryable(m){ return /connection|server error|timeout|lock|too many|try again|unavailable|internal/i.test(m); }
 function flush(){ if(flushing) return; var q=getQ(); if(!q.length) return; flushing=true; var op=q[0];
-  apiBr(op.br,op.fn,[op.tech,op.id,op.note,op.when,op.key]).then(function(){ setQ(getQ().filter(function(x){return x.key!==op.key;})); flushing=false; if(!getQ().length) load(); else render(); flush(); })
+  var call=op.fn==='eqOut'?api('eqOut',op.tech,op.item,op.qty,op.note,op.when,op.key):api('eqIn',op.hold,op.qty,op.note,op.when,op.key);
+  call.then(function(){ setQ(getQ().filter(function(x){return x.key!==op.key;})); flushing=false; if(!getQ().length) load(); else if(S.view==='home') render(); flush(); })
     .catch(function(e){ flushing=false; var m=msg(e); if(!retryable(m)){ setQ(getQ().filter(function(x){return x.key!==op.key;})); toast('Not saved: '+m); load(); flush(); } }); }
 setInterval(flush,20000); window.addEventListener('online',flush);
 document.addEventListener('visibilitychange',function(){ if(!document.hidden){ flush(); if(S.view==='home') load(); } });
-function queue(fn,id,tech,note){ var op={key:Date.now().toString(36)+Math.random().toString(36).slice(2,8),br:BR,fn:fn,id:id,tech:tech||'',note:note||'',when:Date.now()};
+function queue(op){ op.key=Date.now().toString(36)+Math.random().toString(36).slice(2,8); op.when=Date.now();
   var q=getQ(); q.push(op); setQ(q); S.items=overlay(S.items); flush(); }
 
 /* ---------- data ---------- */
-function fromCache(){ try{ var c=JSON.parse(store('eq_'+BR)||'null'); if(c&&c.items){ S.items=overlay(c.items); S.techs=c.techs; S.loaded=true; } }catch(_){} }
-function load(){ if(!BR) return Promise.resolve(); var br=BR;
-  return api('eqList').then(function(d){ if(br!==BR) return; store('eq_'+BR,JSON.stringify(d)); S.items=overlay(d.items); S.techs=d.techs; S.loaded=true; S.err=''; if(S.view==='home') render(); })
+function fromCache(){ try{ var c=JSON.parse(store('eqCo')||'null'); if(c&&c.items){ S.items=overlay(c.items); S.techs=c.techs; S.loaded=true; } }catch(_){} }
+function load(){
+  return api('eqList').then(function(d){ store('eqCo',JSON.stringify(d)); S.items=overlay(d.items); S.techs=d.techs; S.loaded=true; S.err=''; if(S.view==='home') render(); })
     .catch(function(e){ if(!S.loaded){ S.err='Can\'t reach the equipment list: '+msg(e); } if(S.view==='home') render(); }); }
 
 /* ---------- views ---------- */
-function vBranch(){
-  return header('')+'<div class="home"><div style="display:grid;gap:18px;justify-items:center"><span class="eyebrow">Which shop is this?</span>'+
-    Object.keys(BRANCHES).map(function(k){ return '<button class="big" data-a="setBranch" data-id="'+k+'">'+esc(BRANCHES[k])+'</button>'; }).join('')+'</div></div>';
-}
 function vHome(){
-  var q=S.q.toLowerCase(), outN=S.items.filter(function(e){return e.out;}).length;
-  var list=S.items.filter(function(e){ return (S.filter==='all'||(S.filter==='out'?e.out:!e.out)) && (!q||(e.name+' '+e.who+' '+e.note).toLowerCase().indexOf(q)>=0); });
-  var n=pendingHere().length;
+  var q=S.q.toLowerCase(), totalOut=S.items.filter(function(e){return outN(e)>0;}).length;
+  var list=S.items.filter(function(e){ return (S.filter==='all'||outN(e)>0) && (!q||(e.name+' '+e.out.map(function(o){return o.tech+' '+o.note;}).join(' ')).toLowerCase().indexOf(q)>=0); });
+  var n=getQ().length;
   var body=!S.loaded&&!S.err?'<div class="empty">Loading equipment…</div>':
     !S.items.length?'<div class="empty"><b>No equipment yet</b>A manager can add items under Manager.</div>':
     !list.length?'<div class="empty">Nothing matches.</div>':
     '<div class="list">'+list.map(function(e){
-      var days=e.since?(Date.now()-e.since)/86400000:0, late=e.out&&days>=LATE_DAYS;
-      var st=e.out?'<span class="pill '+(late?'crit':'warn')+'">Out</span><b style="font-size:1rem">'+esc(e.who)+'</b> · '+ago(e.since)+(e.note?' · '+esc(e.note):''):'<span class="pill ok">Available</span>';
-      return '<div class="eq'+(e.out?(late?' late':' out'):'')+'"><div><b>'+esc(e.name)+'</b><div class="st">'+st+'</div></div>'+
-        (e.out?'<button class="btn" data-a="ret" data-id="'+e.id+'">Return</button>':'<button class="btn primary" data-a="take" data-id="'+e.id+'">Check out</button>')+'</div>';
+      var a=avail(e), o=outN(e), late=e.out.some(function(h){ return h.since&&(Date.now()-h.since)/86400000>=LATE_DAYS; });
+      return '<div class="eq'+(o?(late?' late':' out'):'')+'"><div><b>'+esc(e.name)+'</b><div class="st">'+
+        (o?'<span class="pill '+(late?'crit':'warn')+'">'+o+' out</span>':'')+'<span class="pill '+(a?'ok':'crit')+'">'+a+' available</span></div></div>'+
+        '<div class="qty">'+a+' / '+e.total+'<small>in shop</small></div>'+
+        (e.out.length?'<div class="holders">'+e.out.map(function(h){ var lt=h.since&&(Date.now()-h.since)/86400000>=LATE_DAYS;
+          return '<div class="holder'+(lt?' late':'')+'"><span><b>'+esc(h.tech)+'</b> has '+h.qty+' · '+ago(h.since)+(h.note?' · '+esc(h.note):'')+'</span><button class="btn sm" data-a="ret" data-id="'+h.id+'">Return</button></div>'; }).join('')+'</div>':'')+
+        '<div class="acts"><button class="btn primary" data-a="take" data-id="'+e.id+'"'+(a?'':' disabled')+'>'+(a?'Check out':'None available')+'</button></div></div>';
     }).join('')+'</div>';
   return header('<button class="btn ghost sm" data-a="toPin">Manager</button>')+
     (S.err?'<div class="note err">'+esc(S.err)+'</div>':'')+
     (n?'<div class="note">⟳ '+n+' change'+(n===1?'':'s')+' waiting to sync — it\'ll send automatically when the connection is back.</div>':'')+
     '<div class="bar"><input type="search" id="q" placeholder="Search equipment, tech or job" value="'+esc(S.q)+'">'+
-    [['all','All'],['out','Out ('+outN+')'],['in','Available']].map(function(f){ return '<button class="chip" data-a="filter" data-f="'+f[0]+'" aria-pressed="'+(S.filter===f[0])+'">'+f[1]+'</button>'; }).join('')+'</div>'+
-    body+'<button class="btn ghost sm" style="align-self:center" data-a="switchBranch">Not '+esc(brName())+'? Switch branch</button>';
+    [['all','All'],['out','Checked out ('+totalOut+')']].map(function(f){ return '<button class="chip" data-a="filter" data-f="'+f[0]+'" aria-pressed="'+(S.filter===f[0])+'">'+f[1]+'</button>'; }).join('')+'</div>'+body;
 }
+function stepper(max){ return '<div class="step"><button data-a="minus" aria-label="Fewer">−</button><output>'+S.n+'</output><button data-a="plus" aria-label="More">+</button><span class="eyebrow">of '+max+'</span></div>'; }
 function vTake(){
-  var e=byId(S.sel)||{name:''};
+  var e=byId(S.sel)||{name:'',total:0,out:[]}, a=avail(e);
   return header('<button class="btn sm" data-a="home">Cancel</button>')+
     '<div><span class="eyebrow">Check out</span><h2>'+esc(e.name)+'</h2></div>'+
     '<span class="eyebrow">Who\'s taking it?</span>'+
     (S.techs.length?'<div class="grid">'+S.techs.map(function(t,i){ return '<button class="tech" data-a="pickTech" data-i="'+i+'" aria-pressed="'+(S.tech===t)+'">'+esc(t)+'</button>'; }).join('')+'</div>':
       '<div class="box empty"><b>No techs yet</b>Techs are managed in Inventory → Manager → Techs.</div>')+
-    '<label class="eyebrow" for="note">Job or address (optional)</label><input id="note" placeholder="e.g. 123 Main St, skunk under deck" value="'+esc(S.note)+'">'+
-    '<div class="sticky"><button class="btn primary" data-a="confirmTake"'+(S.tech?'':' disabled')+'>Check out to '+(S.tech?esc(S.tech):'…')+'</button></div>';
+    '<span class="eyebrow">How many?</span>'+stepper(a)+
+    '<label class="eyebrow" for="note">Job or address (optional)</label><input id="note" placeholder="e.g. 123 Main St, skunk under deck" value="'+esc(S.note||'')+'">'+
+    '<div class="sticky"><button class="btn primary" data-a="confirmTake"'+(S.tech&&a?'':' disabled')+'>Check out '+S.n+' to '+(S.tech?esc(S.tech):'…')+'</button></div>';
 }
 function vRet(){
-  var e=byId(S.sel)||{name:'',who:''};
+  var f=findHold(S.hold); if(!f) return header('')+'<div class="empty">Already returned.</div>';
   return header('<button class="btn sm" data-a="home">Cancel</button>')+
-    '<div><span class="eyebrow">Return</span><h2>'+esc(e.name)+'</h2></div>'+
-    '<div class="box"><p>Out with <b style="color:var(--ink)">'+esc(e.who)+'</b> for '+ago(e.since)+(e.note?' · '+esc(e.note):'')+'.</p>'+
-    '<label class="eyebrow" for="note">Note (optional)</label><input id="note" placeholder="e.g. needs new bait tray" value="'+esc(S.note)+'"></div>'+
-    '<div class="sticky"><button class="btn primary" data-a="confirmRet">Mark as returned</button></div>';
+    '<div><span class="eyebrow">Return</span><h2>'+esc(f.it.name)+'</h2></div>'+
+    '<div class="box"><p><b style="color:var(--ink)">'+esc(f.o.tech)+'</b> has '+f.o.qty+' · out '+ago(f.o.since)+(f.o.note?' · '+esc(f.o.note):'')+'</p>'+
+    (f.o.qty>1?'<span class="eyebrow">How many coming back?</span>'+stepper(f.o.qty):'')+
+    '<label class="eyebrow" for="note">Note (optional)</label><input id="note" placeholder="e.g. needs new bait tray" value="'+esc(S.note||'')+'"></div>'+
+    '<div class="sticky"><button class="btn primary" data-a="confirmRet">Return '+S.n+'</button></div>';
 }
 function vPin(){
   return header('<button class="btn sm" data-a="home">Back</button>')+
-    '<div class="pin"><form id="pinForm"><span class="eyebrow">'+esc(brName())+' manager PIN</span><input id="pinIn" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN">'+
-    '<button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>'+(S.busy?'Checking…':'Unlock')+'</button><p class="eyebrow" style="text-transform:none;letter-spacing:0">Same PIN as the Inventory manager screen.</p></form></div>';
+    '<div class="pin"><form id="pinForm"><span class="eyebrow">Manager PIN</span><input id="pinIn" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN">'+
+    '<button class="btn primary" type="submit"'+(S.busy?' disabled':'')+'>'+(S.busy?'Checking…':'Unlock')+'</button><p class="eyebrow" style="text-transform:none;letter-spacing:0">Same PIN as the Pricing page.</p></form></div>';
 }
 function vAdmin(){
   return header('<button class="btn sm" data-a="lock">Done</button>')+
-    '<form class="box" id="addForm"><b>Add equipment</b><p>One item per line.</p><textarea id="newItems" rows="3" placeholder="Camera 5&#10;Raccoon trap 3"></textarea><div class="bar" style="justify-content:flex-end"><button class="btn primary" type="submit">Add</button></div></form>'+
-    '<div class="box"><b>Equipment ('+S.items.length+')</b><div>'+(S.items.map(function(e){
-      return '<div class="row"><span style="flex:1 1 180px"><input data-ren="'+e.id+'" value="'+esc(e.name)+'" aria-label="Name"></span><span class="bar">'+
-        (S.confirm===e.id?'<button class="btn danger sm" data-a="del" data-id="'+e.id+'">Delete</button><button class="btn sm" data-a="noconf">Keep</button>':'<button class="btn ghost sm" data-a="conf" data-id="'+e.id+'">Remove</button>')+'</span></div>'; }).join('')||'<p>No equipment yet.</p>')+'</div>'+
-      '<p style="font-size:.88rem">Edit a name and tap outside the box to save it.</p></div>'+
-    '<div class="box"><b>History</b><div>'+(S.log.length?S.log.map(function(l){ return '<div class="log"><span class="w">'+fmt(l.when)+'</span><span><b>'+esc(l.who)+'</b> · '+esc(l.action)+' · '+esc(l.item)+(l.note?' <span style="color:var(--muted)">— '+esc(l.note)+'</span>':'')+'</span></div>'; }).join(''):'<p>No activity yet.</p>')+'</div></div>';
+    '<form class="box" id="addForm"><b>Add equipment</b><div class="arow" style="border:0;padding:0"><input id="newName" placeholder="e.g. Raccoon trap"><input id="newQty" type="number" min="0" inputmode="numeric" placeholder="Qty" aria-label="Quantity"><button class="btn primary" type="submit">Add</button></div></form>'+
+    '<div class="box"><b>Equipment ('+S.items.length+')</b><p>Change a name or quantity and tap outside the box to save.</p><div>'+(S.items.map(function(e){
+      return '<div class="arow"><input data-ed="name" data-id="'+e.id+'" value="'+esc(e.name)+'" aria-label="Name"><input data-ed="total" data-id="'+e.id+'" type="number" min="0" inputmode="numeric" value="'+e.total+'" aria-label="Quantity"><span class="bar">'+
+        (S.confirm===e.id?'<button class="btn danger sm" data-a="del" data-id="'+e.id+'">Delete</button><button class="btn sm" data-a="noconf">Keep</button>':'<button class="btn ghost sm" data-a="conf" data-id="'+e.id+'">Remove</button>')+'</span></div>'; }).join('')||'<p>No equipment yet.</p>')+'</div></div>'+
+    '<div class="box"><b>History</b><div>'+(S.log.length?S.log.map(function(l){ return '<div class="log"><span class="w">'+fmt(l.when)+'</span><span><b>'+esc(l.who)+'</b> · '+esc(l.action)+' '+(l.qty||'')+' · '+esc(l.item)+(l.note?' <span style="color:var(--muted)">— '+esc(l.note)+'</span>':'')+'</span></div>'; }).join(''):'<p>No activity yet.</p>')+'</div></div>';
 }
-function render(){ app.innerHTML=({branch:vBranch,home:vHome,take:vTake,ret:vRet,pin:vPin,admin:vAdmin})[S.view](); if(S.view==='pin'){ var p=document.getElementById('pinIn'); if(p) p.focus(); } }
+function render(){ app.innerHTML=({home:vHome,take:vTake,ret:vRet,pin:vPin,admin:vAdmin})[S.view](); if(S.view==='pin'){ var p=document.getElementById('pinIn'); if(p) p.focus(); } }
 function go(v){ S.view=v; S.confirm=null; render(); window.scrollTo(0,0); }
-function admin(action,payload,ok){ S.busy=true; return api('eqAdmin',S.pin,action,payload||{}).then(function(d){ S.busy=false; S.items=overlay(d.items); S.techs=d.techs; S.log=d.log; store('eq_'+BR,JSON.stringify({items:d.items,techs:d.techs})); if(ok) toast(ok); return true; })
+function keepNote(){ var n=document.getElementById('note'); if(n) S.note=n.value; }
+function admin(action,payload,ok){ S.busy=true; return api('eqAdmin',S.pin,action,payload||{}).then(function(d){ S.busy=false; S.items=overlay(d.items); S.techs=d.techs; S.log=d.log; store('eqCo',JSON.stringify({items:d.items,techs:d.techs})); if(ok) toast(ok); return true; })
   .catch(function(e){ S.busy=false; toast(msg(e)); return false; }); }
 
 app.addEventListener('click',function(e){
-  var b=e.target.closest('[data-a]'); if(!b) return; var a=b.getAttribute('data-a'), id=b.getAttribute('data-id');
-  if(a==='setBranch'){ BR=id; store('shopBranch',BR); try{ history.replaceState(null,'','?branch='+BR); }catch(_){} S.items=[]; S.loaded=false; S.err=''; fromCache(); go('home'); load(); }
-  else if(a==='switchBranch'){ go('branch'); }
-  else if(a==='filter'){ S.filter=b.getAttribute('data-f'); render(); }
-  else if(a==='take'){ S.sel=id; S.tech=null; S.note=''; go('take'); }
-  else if(a==='ret'){ S.sel=id; S.note=''; go('ret'); }
-  else if(a==='pickTech'){ S.tech=S.techs[+b.getAttribute('data-i')]; var n=document.getElementById('note'); if(n) S.note=n.value; render(); }
-  else if(a==='confirmTake'){ var nt=(document.getElementById('note')||{}).value||''; var it=byId(S.sel); queue('eqOut',S.sel,S.tech,nt); toast((it?it.name:'Item')+' checked out to '+S.tech); go('home'); }
-  else if(a==='confirmRet'){ var nr=(document.getElementById('note')||{}).value||''; var r=byId(S.sel); queue('eqIn',S.sel,r?r.who:'',nr); toast((r?r.name:'Item')+' returned'); go('home'); }
+  var b=e.target.closest('[data-a]'); if(!b||b.disabled) return; var a=b.getAttribute('data-a'), id=b.getAttribute('data-id');
+  if(a==='filter'){ S.filter=b.getAttribute('data-f'); render(); }
+  else if(a==='take'){ S.sel=id; S.tech=null; S.note=''; S.n=1; go('take'); }
+  else if(a==='ret'){ var f=findHold(id); S.hold=id; S.note=''; S.n=f?f.o.qty:1; go('ret'); }
+  else if(a==='pickTech'){ keepNote(); S.tech=S.techs[+b.getAttribute('data-i')]; render(); }
+  else if(a==='minus'||a==='plus'){ keepNote(); var max=S.view==='take'?avail(byId(S.sel)||{total:0,out:[]}):((findHold(S.hold)||{o:{qty:1}}).o.qty);
+    S.n=Math.max(1,Math.min(max,S.n+(a==='plus'?1:-1))); render(); }
+  else if(a==='confirmTake'){ keepNote(); var it=byId(S.sel); queue({fn:'eqOut',item:S.sel,tech:S.tech,qty:S.n,note:S.note||''}); toast(S.n+' '+(it?it.name:'item')+' checked out to '+S.tech); go('home'); }
+  else if(a==='confirmRet'){ keepNote(); var h=findHold(S.hold); queue({fn:'eqIn',hold:S.hold,qty:S.n,note:S.note||''}); toast(S.n+' '+(h?h.it.name:'item')+' returned'); go('home'); }
   else if(a==='home'){ go('home'); load(); }
   else if(a==='toPin'){ go('pin'); }
   else if(a==='lock'){ S.pin=null; go('home'); load(); }
@@ -219,19 +234,21 @@ app.addEventListener('click',function(e){
   else if(a==='del'){ admin('delete',{id:id},'Removed').then(function(){ S.confirm=null; render(); }); }
 });
 app.addEventListener('input',function(e){ if(e.target.id==='q'){ S.q=e.target.value; var pos=e.target.selectionStart; render(); var n=document.getElementById('q'); n.focus(); try{n.setSelectionRange(pos,pos);}catch(_){} } });
-app.addEventListener('change',function(e){ var id=e.target.getAttribute('data-ren'); if(id){ var nm=e.target.value.trim(), it=byId(id); if(nm&&it&&nm!==it.name) admin('rename',{id:id,name:nm},'Renamed').then(function(){ render(); }); } });
+app.addEventListener('change',function(e){ var k=e.target.getAttribute('data-ed'), id=e.target.getAttribute('data-id'); if(!k) return; var it=byId(id); if(!it) return;
+  var v=e.target.value.trim(), p={id:id};
+  if(k==='name'){ if(!v||v===it.name) return; p.name=v; } else { var q=Math.max(0,Math.floor(Number(v)||0)); if(q===it.total) return; p.total=q; }
+  admin('update',p,'Saved').then(function(){ render(); }); });
 app.addEventListener('submit',function(e){
   e.preventDefault();
   if(e.target.id==='pinForm'){ var p=document.getElementById('pinIn').value; if(!p) return; S.busy=true; render();
     api('eqAdmin',p,'list',{}).then(function(d){ S.busy=false; S.pin=p; S.items=overlay(d.items); S.techs=d.techs; S.log=d.log; go('admin'); })
       .catch(function(err){ S.busy=false; render(); toast(msg(err)); }); }
-  else if(e.target.id==='addForm'){ var names=document.getElementById('newItems').value.split('\n').map(function(x){return x.trim();}).filter(String); if(!names.length) return;
-    admin('add',{names:names},'Added '+names.length+' item'+(names.length===1?'':'s')).then(function(ok){ render(); }); }
+  else if(e.target.id==='addForm'){ var nm=document.getElementById('newName').value.trim(), q=document.getElementById('newQty').value; if(!nm) return;
+    admin('add',{name:nm,total:q||1},'Added '+nm).then(function(){ render(); }); }
 });
-var idle; function resetIdle(){ clearTimeout(idle); idle=setTimeout(function(){ if(S.view!=='home'&&S.view!=='branch'){ S.pin=null; go('home'); load(); } }, S.view==='admin'?300000:120000); }
+var idle; function resetIdle(){ clearTimeout(idle); idle=setTimeout(function(){ if(S.view!=='home'){ S.pin=null; go('home'); load(); } }, S.view==='admin'?300000:120000); }
 ['pointerdown','keydown'].forEach(function(ev){ document.addEventListener(ev,resetIdle,{passive:true}); });
 setInterval(function(){ if(S.view==='home') load(); },60000);
-if(BR) document.title=brName()+' Equipment';
 fromCache(); render(); load(); flush();
 })();
 </script>
