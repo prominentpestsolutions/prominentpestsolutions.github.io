@@ -39,13 +39,13 @@ input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .empty{padding:28px 16px;text-align:center;color:var(--muted)}
 .full{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--sunk);font-weight:600;text-decoration:none;color:inherit;align-self:flex-start}
 </style>
-<meta name="build" content="20261102a">
+<meta name="build" content="20261103b">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261102a';
+(function(){var B='20261103b';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
-  try{ if(sessionStorage.getItem('upd')===m[1]) return; sessionStorage.setItem('upd',m[1]); }catch(_){}
-  var u=new URL(location.href); u.searchParams.set('v',m[1]); location.replace(u.toString());
+  var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
+  u.searchParams.set('v',m[1]); location.replace(u.toString());
  }).catch(function(){}); }
  chk(); document.addEventListener('visibilitychange',function(){ if(!document.hidden) chk(); });
  window.addEventListener('pageshow',function(e){ if(e.persisted) chk(); });
