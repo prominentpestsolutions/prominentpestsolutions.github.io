@@ -71,9 +71,9 @@ label{display:grid;gap:4px;font-weight:600;font-size:.92rem}
 .log .w{color:var(--muted);font-size:.85rem}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:20;font-weight:600;max-width:calc(100% - 32px)}
 </style>
-<meta name="build" content="20261103e">
+<meta name="build" content="20261103f">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261103e';
+(function(){var B='20261103f';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -108,6 +108,10 @@ function fmt(ms){ return new Date(ms).toLocaleString([], {weekday:'short',month:
 function state(t){ var left=t.nextDue-Date.now(); return left<0?'crit':left<=4*3600000?'warn':'ok'; }
 function pill(t){ var left=t.nextDue-Date.now(), s=state(t); return '<span class="pill '+s+'">'+(left<0?'Overdue '+dur(left):'Check in '+dur(left))+'</span>'; }
 function avail(it){ return Math.max(0,it.total-it.out.reduce(function(a,o){return a+o.qty;},0)); }
+function spare(itemId,tech){ var who=String(tech||'').toLowerCase(), it=S.items.filter(function(i){return i.id===itemId;})[0]; if(!it||!who) return 0;
+  var have=it.out.filter(function(o){return o.tech.toLowerCase()===who;}).reduce(function(a,o){return a+o.qty;},0);
+  var set=S.active.filter(function(t){return t.itemId===itemId&&t.tech.toLowerCase()===who;}).reduce(function(a,t){return a+t.qty;},0);
+  return Math.max(0,have-set); }
 function trapItems(){ var t=S.items.filter(function(i){ return /trap/i.test(i.name); }); return t.length?t:S.items; }
 function byId(id){ return S.active.filter(function(t){return t.id===id;})[0]; }
 function maps(t){ return t.lat!=null&&t.lat!==''?'https://maps.apple.com/?daddr='+t.lat+','+t.lng+'&q='+encodeURIComponent(t.address):'https://maps.apple.com/?daddr='+encodeURIComponent(t.address); }
@@ -162,12 +166,12 @@ function vHome(){
 }
 function stepper(k,max){ return '<div class="step"><button type="button" data-a="dec" data-k="'+k+'">−</button><output>'+S.f[k]+'</output><button type="button" data-a="inc" data-k="'+k+'" data-max="'+max+'">+</button></div>'; }
 function techGrid(cur,act){ if(!S.loaded) return '<div class="note">Loading names\u2026</div>'; return S.techs.length?'<div class="grid">'+S.techs.map(function(t,i){ return '<button type="button" class="tech" data-a="'+act+'" data-i="'+i+'" aria-pressed="'+(cur===t)+'">'+esc(t)+'</button>'; }).join('')+'</div>':'<div class="note">No techs yet. Add them in Inventory → Manager → Techs.</div>'; }
-function vNew(){ var f=S.f, items=trapItems(), it=items.filter(function(i){return i.id===f.itemId;})[0], max=it?Math.max(1,avail(it)):1;
+function vNew(){ var f=S.f, items=trapItems(), it=items.filter(function(i){return i.id===f.itemId;})[0], sp=it?spare(it.id,f.tech):0, max=it?Math.max(1,avail(it)+sp):1;
   return header('<button class="btn sm" data-a="home">Cancel</button>')+'<div><span class="eyebrow">New trap</span><h2>Set a trap</h2></div>'+
     '<span class="eyebrow">Who’s setting it?</span>'+techGrid(f.tech,'pickTech')+
     '<label>Branch<select id="fBranch">'+Object.keys(BRANCHES).map(function(k){ return '<option'+(f.branch===BRANCHES[k]?' selected':'')+'>'+BRANCHES[k]+'</option>'; }).join('')+'</select></label>'+
-    '<span class="eyebrow">Which trap?</span><div class="res">'+items.map(function(i){ var a=avail(i); return '<button type="button" data-a="pickItem" data-id="'+i.id+'" aria-pressed="'+(f.itemId===i.id)+'"'+(a?'':' disabled')+'>'+esc(i.name)+'<small>'+a+' of '+i.total+' available</small></button>'; }).join('')+'</div>'+
-    (it?'<span class="eyebrow">How many?</span>'+stepper('qty',max):'')+
+    '<span class="eyebrow">Which trap?</span><div class="res">'+items.map(function(i){ var a=avail(i), m=spare(i.id,f.tech); return '<button type="button" data-a="pickItem" data-id="'+i.id+'" aria-pressed="'+(f.itemId===i.id)+'"'+(a||m?'':' disabled')+'>'+esc(i.name)+'<small>'+(m?'You have '+m+' on hand':a+' in the shop')+'</small></button>'; }).join('')+'</div>'+
+    (it?'<span class="eyebrow">How many?</span>'+stepper('qty',max)+'<p class="meta" style="margin:0;color:var(--muted);font-size:.9rem">'+(sp>=f.qty?'Using '+(f.qty===1?'a trap':'traps')+' you already checked out \u2014 Equipment won\u2019t change.':(sp?sp+' from your truck, '+(f.qty-sp)+' will be checked out from the shop.':'You don\u2019t have this checked out, so '+(f.qty===1?'it':'they')+'\u2019ll be checked out to you from the shop.'))+'</p>':'')+
     '<label>Address<input id="fAddr" value="'+esc(f.address||'')+'" placeholder="Street address" autocomplete="street-address"></label>'+
     '<button type="button" class="btn sm" data-a="here" style="justify-self:start">◎ Use my location</button>'+(f.lat?'<span class="eyebrow" style="text-transform:none;letter-spacing:0">📍 Location saved for directions</span>':'')+
     '<span class="eyebrow">Target animal</span><div class="chips">'+ANIMALS.map(function(a){ return '<button type="button" class="chip" data-a="target" data-v="'+a+'" aria-pressed="'+(f.target===a)+'">'+a+'</button>'; }).join('')+'</div>'+
@@ -176,7 +180,7 @@ function vNew(){ var f=S.f, items=trapItems(), it=items.filter(function(i){retur
     '<label>Notes (optional)<input id="fNotes" value="'+esc(f.notes||'')+'" placeholder="e.g. under back deck, left side"></label>'+
     '<div class="sticky"><button class="btn primary big" data-a="saveNew"'+(f.tech&&it?'':' disabled')+'>Set trap</button></div>';
 }
-var RESULTS=[['Empty','Nothing caught','Countdown restarts'],['Caught','Animal caught',''],['Released','Non-target released','Countdown restarts'],['Reset','Tripped / re-baited','Countdown restarts'],['Pulled','Pull the trap','Goes back to Equipment']];
+var RESULTS=[['Empty','Nothing caught','Countdown restarts'],['Caught','Animal caught',''],['Released','Non-target released','Countdown restarts'],['Reset','Tripped / re-baited','Countdown restarts'],['Pulled','Pull the trap','Stays checked out to you']];
 function vCheck(){ var t=byId(S.sel); if(!t) return header('')+'<div class="empty">That trap was already pulled.</div><button class="btn" data-a="home">Back</button>';
   var c=S.c;
   return header('<button class="btn sm" data-a="home">Cancel</button>')+'<div><span class="eyebrow">Log a check</span><h2>'+esc(t.address)+'</h2><div class="meta" style="color:var(--muted)">'+t.qty+' × '+esc(t.item)+(t.target?' · '+esc(t.target):'')+' · '+pill(t)+'</div></div>'+
@@ -199,7 +203,7 @@ app.addEventListener('click',function(e){
   else if(a==='home'){ go('home'); load(); }
   else if(a==='filter'){ S.filter=b.getAttribute('data-f'); render(); }
   else if(a==='br'){ S.br=b.getAttribute('data-b'); render(); }
-  else if(a==='pickTech'){ S.f.tech=S.techs[+b.getAttribute('data-i')]; render(); }
+  else if(a==='pickTech'){ S.f.tech=S.techs[+b.getAttribute('data-i')]; S.f.qty=1; render(); }
   else if(a==='pickChecker'){ S.c.tech=S.techs[+b.getAttribute('data-i')]; render(); }
   else if(a==='pickItem'){ S.f.itemId=b.getAttribute('data-id'); S.f.qty=1; var it=S.items.filter(function(i){return i.id===S.f.itemId;})[0]; if(it&&!S.f.target){ var m=ANIMALS.filter(function(x){ return it.name.toLowerCase().indexOf(x.toLowerCase())>=0; })[0]; if(m) S.f.target=m; } render(); }
   else if(a==='inc'){ S.f.qty=Math.min(+b.getAttribute('data-max'),S.f.qty+1); render(); }
@@ -226,7 +230,7 @@ app.addEventListener('click',function(e){
   else if(a==='saveCheck'){ var c=S.c, tr=byId(S.sel); S.me=c.tech; store('trapMe',c.tech);
     queue({fn:'trapCheck',trapId:S.sel,tech:c.tech,result:c.result,animal:c.animal,count:c.result==='Caught'?c.count:0,keep:!!c.keep,notes:(c.notes||'').trim()});
     var pulled=c.result==='Pulled'||(c.result==='Caught'&&!c.keep);
-    toast(pulled?'Trap pulled and returned to Equipment':'Check saved — next one due in '+(tr?tr.every:24)+' hours'); go('home'); }
+    toast(pulled?'Trap pulled \u2014 return it in Equipment when it\u2019s back at the shop':'Check saved — next one due in '+(tr?tr.every:24)+' hours'); go('home'); }
 });
 setInterval(function(){ if(S.view==='home') render(); },60000);
 setInterval(function(){ if(S.view==='home') load(); },120000);
