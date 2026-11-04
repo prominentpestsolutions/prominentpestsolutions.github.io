@@ -63,9 +63,9 @@ h2{font:700 1.25rem/1 var(--display);letter-spacing:.06em;text-transform:upperca
 .fine{font-size:.82rem;color:var(--muted);margin:0}
 @media (prefers-color-scheme: dark){.rv{background:#4a3a10;color:#f6e3b4}}
 </style>
-<meta name="build" content="20261103k">
+<meta name="build" content="20261103l">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261103k';
+(function(){var B='20261103l';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -85,6 +85,7 @@ var MARK='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAA
    water = per 100 sq ft of water surface, acre = per acre, rtu = no mixing. */
 var P=[
  {n:'Bifen I/T',c:'Spray',sds:'bifen-i-t',u:[{m:'gal',un:'floz',s:0.5,h:1,lab:'Label 0.33–1.0 fl oz/gal'}]},
+ {n:'Talstar P',c:'Spray',lnk:'https://ordspub.epa.gov/ords/pesticides/f?p=PPLS:102:::NO::P102_REG_NUM:279-3206',u:[{m:'gal',un:'floz',s:0.5,h:1,lab:'Label 0.33–1.0 fl oz/gal (same as Bifen I/T)'}]},
  {n:'Cyzmic CS',c:'Spray',sds:'cyzmic-cs',u:[{m:'gal',un:'floz',s:0.4,h:0.8,lab:'Label 0.2–0.4 fl oz/gal; 0.8 for heavy infestations'}]},
  {n:'Dominion 2L',c:'Spray',sds:'dominion-2l',u:[{m:'gal',un:'floz',s:0.4,h:0.6,lab:'Label 0.3–0.6 fl oz/gal (0.05–0.1%)'}]},
  {n:'Taurus SC',c:'Spray',sds:'taurus-sc',u:[{m:'gal',un:'floz',s:0.8,h:0.8,lab:'Label 0.8 fl oz/gal (0.06%) for perimeter. The 1.6 oz rate is for termites only.'}]},
@@ -172,7 +173,7 @@ function results(){
   var waterOut=0;
   var cards=S.sel.map(function(k){var o=byKey(k),p=o.p,u=o.u,name=p.n+(u.t?' · '+u.t:'');
     var hd='<div class="rh"><div><b>'+esc(name)+'</b>'+((p.rv||u.rv)?' <span class="rv">Needs review</span>':'')+'</div><button class="x" data-del="'+k+'" aria-label="Remove '+esc(name)+'">×</button></div>';
-    var foot='<p class="lab">'+esc(u.lab)+'</p><a class="lbl-link" href="/sds/view.html?f='+p.sds+'.pdf&n='+encodeURIComponent(p.n)+'">Label / SDS</a>';
+    var foot='<p class="lab">'+esc(u.lab)+'</p><a class="lbl-link" href="'+(p.lnk||'/sds/view.html?f='+p.sds+'.pdf&n='+encodeURIComponent(p.n))+'">Label / SDS</a>';
     if(u.m==='rtu') return '<article class="res">'+hd+'<p class="rtu">No mixing</p>'+foot+'</article>';
     var a=calc(u,'s'),b=calc(u,'h'),fa=fmt(u.un,a),fb=fmt(u.un,b),same=u.s===u.h;
     if(u.m==='fin'&&u.un==='floz') waterOut=Math.max(waterOut,b);
