@@ -63,9 +63,9 @@ h2{font:700 1.25rem/1 var(--display);letter-spacing:.06em;text-transform:upperca
 .fine{font-size:.82rem;color:var(--muted);margin:0}
 @media (prefers-color-scheme: dark){.rv{background:#4a3a10;color:#f6e3b4}}
 </style>
-<meta name="build" content="20261103j">
+<meta name="build" content="20261103k">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261103j';
+(function(){var B='20261103k';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -93,7 +93,8 @@ var P=[
    {t:'Ants, roaches, crickets',m:'gal',un:'floz',s:2,h:2,lab:'Label 2 fl oz/gal'}]},
  {n:'Alpine WSG',c:'Spray',sds:'alpine-wsg',u:[
    {t:'Ants & general',m:'gal',un:'g',s:10,h:20,lab:'Label 10 g/gal; up to 20 g/gal for carpenter ants'},
-   {t:'Bed bugs',m:'gal',un:'g',s:15,h:30,lab:'Label 10–30 g/gal'}]},
+   {t:'Bed bugs',m:'gal',un:'g',s:15,h:30,lab:'Label 10–30 g/gal'},
+   {t:'German cockroaches',m:'gal',un:'g',s:20,h:30,lab:'Our protocol: 20 g/gal standard, 30 g/gal heavy'}]},
  {n:'Astro',c:'Spray',sds:'astro',u:[{m:'gal',un:'floz',s:1.6,h:1.6,lab:'Label 1.6 fl oz/gal (0.5%)'}]},
  {n:'Onslaught FastCap',c:'Spray',sds:'onslaught-fastcap',u:[{m:'gal',un:'floz',s:0.75,h:1,lab:'Label 0.5–1.0 fl oz per 1,000 sq ft, applied in about 1 gal of water'}]},
  {n:'Crossfire',c:'Spray',sds:'crossfire',u:[{m:'fin',un:'floz',s:13,h:13,lab:'Label 13 fl oz + 115 fl oz water = 1 finished gallon'}]},
@@ -204,7 +205,7 @@ function render(){
    (inputs?'<section class="inputs">'+inputs+'</section>':'')+
    '<section class="out" aria-live="polite">'+(S.sel.length>1?'<h2>Tank mix</h2>':'')+results()+'</section>'+
    (S.sel.length?'<button class="clear" id="clr">Clear all</button>':'')+
-   '<p class="fine">Rates are from each product’s label. Always follow the label on the container. Anything marked “Needs review” is waiting on a manager to confirm.</p>';
+   '<p class="fine">Rates are from each product’s label. Always follow the label on the container.</p>';
   if(keepFocus){var el=document.getElementById(keepFocus);if(el){el.focus();try{if(pos!=null)el.setSelectionRange(pos,pos);}catch(e){}}}
 }
 app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
