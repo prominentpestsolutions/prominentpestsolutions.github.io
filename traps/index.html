@@ -71,9 +71,9 @@ label{display:grid;gap:4px;font-weight:600;font-size:.92rem}
 .log .w{color:var(--muted);font-size:.85rem}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:20;font-weight:600;max-width:calc(100% - 32px)}
 </style>
-<meta name="build" content="20261103f">
+<meta name="build" content="20261104a">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261103f';
+(function(){var B='20261104a';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -88,7 +88,7 @@ label{display:grid;gap:4px;font-weight:600;font-size:.92rem}
 <div id="toast" class="toast" hidden></div>
 <script>
 (function(){
-var API_URL='https://script.google.com/macros/s/AKfycbzrmF4sf_UMHB3DBmd2k6aLW3Bf60s-nbBxcCs-aa_4_jn1r4pj8Nq4NGPKuC6WLhF5/exec';
+var API_URL='https://script.google.com/macros/s/AKfycbxo4fckh7oI-qBhFa1qK_7597w_yS4p43mspjgEG7k0DzNAUEFPfAtTxGfDWJM3GNG6Xw/exec';
 var MARK='data:image/png;base64,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';
 var BRANCHES={IF:'Idaho Falls',WY:'Wyoming',BZ:'Bozeman'};
 var ANIMALS=['Skunk','Raccoon','Squirrel','Marmot','Rabbit','Bird','Other'];
