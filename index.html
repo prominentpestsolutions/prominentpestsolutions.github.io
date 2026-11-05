@@ -77,9 +77,9 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .crumb h2{font:700 1.9rem/1 var(--display);letter-spacing:.02em;text-transform:uppercase;margin:0}
 footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
-<meta name="build" content="20261105t">
+<meta name="build" content="20261105u">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105t';
+(function(){var B='20261105u';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -184,6 +184,14 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="9" y="7" width="30" height="36" rx="4" fill="currentColor"/><rect x="17" y="4" width="14" height="7" rx="2" fill="var(--accent)" stroke="currentColor" stroke-width="2.4"/><path d="M15 21l3 3 5-6M15 32l3 3 5-6M27 21h6M27 32h6" fill="none" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div><b>SOPs</b><span>Step-by-step for every job</span></div>
     </a>
+    <a class="tile" href="/time-off/" data-g="ops office mgmt" data-k="time off request pto vacation sick day schedule leave attendance">
+      <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="5" y="9" width="38" height="34" rx="4" fill="currentColor"/><rect x="5" y="9" width="38" height="10" rx="4" fill="var(--accent)"/><path d="M15 5v9M33 5v9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M15 31l6 6 12-13" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 -2)"/></svg></div>
+      <div><b>Time Off</b><span>Request days off</span></div>
+    </a>
+    <a class="tile" href="/time-off-tracker/" data-g="mgmt" data-k="time off tracker approve approval deny requests pto vacation fieldroutes block schedule strike attendance manager">
+      <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="5" y="9" width="38" height="34" rx="4" fill="currentColor"/><rect x="5" y="9" width="38" height="10" rx="4" fill="var(--accent)"/><path d="M15 5v9M33 5v9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M14 26h20M14 32h20M14 38h12" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg></div>
+      <div><b>Time Off Tracker</b><span>Approve and track requests</span></div>
+    </a>
     <a class="tile" href="/policies/" data-g="ops office mgmt" data-k="handbook employee policy policies driving vehicle credit card time off attendance strike pto vacation sign signature acknowledgment hr rules">
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M10 6h20l8 8v28a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" fill="currentColor"/><path d="M30 6v8h8" fill="var(--accent)" stroke="currentColor" stroke-width="2"/><path d="M14 33c3-5 5-5 6-2s3 3 5-1 4-3 5 0 3 2 4 0" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 20h14M14 25h10" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round"/></svg></div>
       <div><b>Handbook &amp; Policies</b><span>Read and sign company policies</span></div>
@@ -234,7 +242,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     list.forEach(function(t){ nav.insertBefore(t,none); }); }
   function saveOrder(){ order=[].filter.call(nav.querySelectorAll('.tile'),function(t){ return !t.hidden; }).map(function(t){ return t.getAttribute('href'); });
     try{ localStorage.setItem(okey(),JSON.stringify(order)); }catch(e){} }
-  var DEF={"ops": ["/field-guide/", "/sops/", "/mix/", "/sds/", "/traps/", "https://webapp.spypoint.com/", "/equipment/", "/shop/", "/measure/", "/licenses/", "/directory/", "/policies/", "/soon/?t=onboarding", "/soon/?t=training"], "office": ["/manual/", "/csr/", "/pricing/", "/measure/", "/commission/", "/sops/", "/field-guide/", "/directory/", "/soon/?t=sales", "/policies/"], "mgmt": ["/kpis/", "/commission/", "/licenses/", "/shop/", "/equipment/", "/pricing/", "/traps/", "/directory/", "/policies/", "/soon/?t=onboarding", "/soon/?t=training", "/soon/?t=admin"]};
+  var DEF={"ops": ["/field-guide/", "/sops/", "/mix/", "/sds/", "/traps/", "https://webapp.spypoint.com/", "/equipment/", "/shop/", "/measure/", "/licenses/", "/directory/", "/policies/", "/time-off/", "/soon/?t=onboarding", "/soon/?t=training"], "office": ["/manual/", "/csr/", "/pricing/", "/measure/", "/commission/", "/sops/", "/field-guide/", "/directory/", "/soon/?t=sales", "/policies/", "/time-off/"], "mgmt": ["/kpis/", "/commission/", "/licenses/", "/shop/", "/equipment/", "/pricing/", "/traps/", "/time-off-tracker/", "/time-off/", "/directory/", "/policies/", "/soon/?t=onboarding", "/soon/?t=training", "/soon/?t=admin"]};
   var press=null, drag=null, blockClick=false;
   function pt(e){ var p=e.touches&&e.touches[0]||e.changedTouches&&e.changedTouches[0]||e; return {x:p.clientX,y:p.clientY}; }
   function start(e){ if(e.button>0) return; var t=e.target.closest('.tile'); if(!t||q.value.trim()||!G) return;
