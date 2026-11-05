@@ -77,9 +77,9 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .crumb h2{font:700 1.9rem/1 var(--display);letter-spacing:.02em;text-transform:uppercase;margin:0}
 footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
-<meta name="build" content="20261104x">
+<meta name="build" content="20261105a">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261104x';
+(function(){var B='20261105a';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -156,7 +156,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M4 18l20-10 20 10-20 10z" fill="currentColor"/><path d="M12 22v9c0 3 6 6 12 6s12-3 12-6v-9l-12 6z" fill="var(--accent)" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M42 19v11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div>
       <div><b>Training</b><span>Coming soon · Tech training and sign-offs</span></div>
     </a>
-    <a class="tile" href="/soon/?t=onboarding" data-g="mgmt" data-k="onboarding new hire hiring first day checklist paperwork employee coming soon">
+    <a class="tile" href="/soon/?t=onboarding" data-g="ops mgmt" data-k="onboarding new hire hiring first day checklist paperwork employee coming soon">
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="20" cy="15" r="8" fill="currentColor"/><path d="M5 40c1-8 7-13 15-13s14 5 15 13z" fill="currentColor"/><circle cx="36" cy="32" r="9" fill="var(--accent)" stroke="currentColor" stroke-width="2.4"/><path d="M36 27v10M31 32h10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div>
       <div><b>Onboarding</b><span>Coming soon · New hire checklists</span></div>
     </a>
@@ -234,7 +234,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     list.forEach(function(t){ nav.insertBefore(t,none); }); }
   function saveOrder(){ order=[].filter.call(nav.querySelectorAll('.tile'),function(t){ return !t.hidden; }).map(function(t){ return t.getAttribute('href'); });
     try{ localStorage.setItem(okey(),JSON.stringify(order)); }catch(e){} }
-  var DEF={"ops": ["/field-guide/", "/sops/", "/mix/", "/sds/", "/traps/", "https://webapp.spypoint.com/", "/equipment/", "/shop/", "/measure/", "/licenses/", "/directory/", "/policies/", "/soon/?t=training"], "office": ["/manual/", "/csr/", "/pricing/", "/measure/", "/commission/", "/sops/", "/field-guide/", "/directory/", "/soon/?t=sales", "/policies/"], "mgmt": ["/kpis/", "/commission/", "/licenses/", "/shop/", "/equipment/", "/pricing/", "/traps/", "/directory/", "/policies/", "/soon/?t=onboarding", "/soon/?t=training", "/soon/?t=admin"]};
+  var DEF={"ops": ["/field-guide/", "/sops/", "/mix/", "/sds/", "/traps/", "https://webapp.spypoint.com/", "/equipment/", "/shop/", "/measure/", "/licenses/", "/directory/", "/policies/", "/soon/?t=onboarding", "/soon/?t=training"], "office": ["/manual/", "/csr/", "/pricing/", "/measure/", "/commission/", "/sops/", "/field-guide/", "/directory/", "/soon/?t=sales", "/policies/"], "mgmt": ["/kpis/", "/commission/", "/licenses/", "/shop/", "/equipment/", "/pricing/", "/traps/", "/directory/", "/policies/", "/soon/?t=onboarding", "/soon/?t=training", "/soon/?t=admin"]};
   var press=null, drag=null, blockClick=false;
   function pt(e){ var p=e.touches&&e.touches[0]||e.changedTouches&&e.changedTouches[0]||e; return {x:p.clientX,y:p.clientY}; }
   function start(e){ if(e.button>0) return; var t=e.target.closest('.tile'); if(!t||q.value.trim()||!G) return;
