@@ -50,6 +50,9 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .none{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px 0}
 .tile{position:relative}
 .tile.off{display:none}
+.tile{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.tile.dragging{z-index:5;box-shadow:0 12px 32px rgba(0,0,0,.25);transition:box-shadow .15s;pointer-events:none;opacity:.95}
+.tiles.sorting .tile:not(.dragging){transition:transform .15s}
 .choosing .tile.off{display:flex;opacity:.45}
 .chk{display:none;position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface)}
 .choosing .chk{display:grid;place-items:center}
@@ -61,9 +64,9 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .hint{text-align:center;color:var(--muted);font-size:.9rem;margin:-8px 0 0}
 footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
-<meta name="build" content="20261104e">
+<meta name="build" content="20261104f">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261104e';
+(function(){var B='20261104f';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -132,7 +135,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     </a>
     <p class="none" id="none" hidden>Nothing matches. Try the Field Guide for problems and treatments.</p>
   </nav>
-  <div class="choose"><button type="button" id="pick">Choose tools</button><button type="button" id="all" hidden>Show all</button></div>
+  <div class="choose"><button type="button" id="pick">Choose tools</button><button type="button" id="all" hidden>Show all</button><button type="button" id="reorder" hidden>Reset order</button></div>
   <footer>Internal tools for the Prominent team</footer>
 </main>
 <script>
@@ -158,6 +161,43 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
   nav.addEventListener('click',function(e){ if(!choosing) return; var t=e.target.closest('.tile'); if(!t) return; e.preventDefault();
     var key=t.getAttribute('href'), i=hide.indexOf(key); if(i>=0) hide.splice(i,1); else hide.push(key); save(); paint(); });
   q.addEventListener('input',paint);
+  /* order: hold a tile, then drag it. Saved on this phone. */
+  var reo=document.getElementById('reorder'), order=[];
+  try{ order=JSON.parse(localStorage.getItem('hub.order')||'[]')||[]; }catch(e){ order=[]; }
+  function applyOrder(){ var by={}; tiles.forEach(function(t){ by[t.getAttribute('href')]=t; });
+    var end=none, list=order.filter(function(k){ return by[k]; }).map(function(k){ return by[k]; });
+    tiles.forEach(function(t){ if(list.indexOf(t)<0) list.push(t); });
+    list.forEach(function(t){ nav.insertBefore(t,end); }); }
+  function saveOrder(){ order=[].map.call(nav.querySelectorAll('.tile'),function(t){ return t.getAttribute('href'); });
+    try{ localStorage.setItem('hub.order',JSON.stringify(order)); }catch(e){} }
+  applyOrder();
+  var press=null, drag=null, blockClick=false;
+  function pt(e){ var p=e.touches&&e.touches[0]||e.changedTouches&&e.changedTouches[0]||e; return {x:p.clientX,y:p.clientY}; }
+  function start(e){ if(e.button>0) return; var t=e.target.closest('.tile'); if(!t||q.value.trim()) return;
+    var p=pt(e); press={t:t,x:p.x,y:p.y,timer:setTimeout(function(){ lift(t,p); },450)}; }
+  function lift(t,p){ var r=t.getBoundingClientRect(); drag={t:t,gx:p.x-r.left,gy:p.y-r.top,x:p.x,y:p.y};
+    t.classList.add('dragging'); nav.classList.add('sorting'); try{ navigator.vibrate&&navigator.vibrate(12); }catch(e){} place(); }
+  function place(){ var t=drag.t; t.style.transform=''; var r=t.getBoundingClientRect();
+    t.style.transform='translate('+(drag.x-drag.gx-r.left)+'px,'+(drag.y-drag.gy-r.top)+'px) scale(1.04)'; }
+  function move(e){ if(press&&!drag){ var p=pt(e); if(Math.abs(p.x-press.x)>10||Math.abs(p.y-press.y)>10){ clearTimeout(press.timer); press=null; } return; }
+    if(!drag) return; if(e.cancelable) e.preventDefault(); var p=pt(e); drag.x=p.x; drag.y=p.y;
+    var el=document.elementFromPoint(p.x,p.y), over=el&&el.closest&&el.closest('.tile');
+    if(over&&over!==drag.t&&!over.hidden){ var kids=[].slice.call(nav.querySelectorAll('.tile'));
+      if(kids.indexOf(drag.t)<kids.indexOf(over)) nav.insertBefore(drag.t,over.nextSibling); else nav.insertBefore(drag.t,over); }
+    if(p.y<70) window.scrollBy(0,-12); else if(p.y>window.innerHeight-70) window.scrollBy(0,12);
+    place(); }
+  function end(){ if(press){ clearTimeout(press.timer); press=null; }
+    if(!drag) return; var t=drag.t; drag=null; t.classList.remove('dragging'); t.style.transform=''; nav.classList.remove('sorting');
+    blockClick=true; setTimeout(function(){ blockClick=false; },350); saveOrder(); paint(); }
+  nav.addEventListener('touchstart',start,{passive:true}); nav.addEventListener('mousedown',start);
+  document.addEventListener('touchmove',move,{passive:false}); document.addEventListener('mousemove',move);
+  document.addEventListener('touchend',end); document.addEventListener('touchcancel',end); document.addEventListener('mouseup',end);
+  nav.addEventListener('contextmenu',function(e){ if(e.target.closest('.tile')) e.preventDefault(); });
+  nav.addEventListener('dragstart',function(e){ e.preventDefault(); });
+  nav.addEventListener('click',function(e){ if(blockClick){ e.preventDefault(); e.stopPropagation(); } },true);
+  reo.addEventListener('click',function(){ order=[]; try{ localStorage.removeItem('hub.order'); }catch(e){}
+    tiles.forEach(function(t){ nav.insertBefore(t,none); }); paint(); });
+  var basePaint=paint; paint=function(){ basePaint(); reo.hidden=!choosing||!order.length; };
   paint();
 })();
 </script>
