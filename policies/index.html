@@ -147,9 +147,9 @@ td:first-child{font-weight:600}
 .tblw th{background:var(--sunk)}
 @media (max-width:600px){.tblw thead{display:none}.tblw tr{display:block;border:1px solid var(--line);border-radius:10px;margin:0 0 8px;padding:4px 0}.tblw td{display:block;border:0;padding:3px 10px}.tblw td:before{content:attr(data-h)": ";font-weight:600}.tblw td:first-child{font-weight:700}.tblw td:first-child:before{content:""}}
 </style>
-<meta name="build" content="20261105t">
+<meta name="build" content="20261105v">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105t';
+(function(){var B='20261105v';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -235,7 +235,7 @@ var POL=[
  {t:'p',x:'If an employee reaches 3 strikes a second time within 12 months, the next step is a formal performance improvement plan. Termination is not automatic under this policy, but repeated violations combined with other performance issues may still be considered.'}]}];
 var app=document.getElementById('app'), S={doc:-1,name:'',signed:{},busy:false,err:'',done:null,inked:false};
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){return null;}}
-S.name=ls('pol.name')||'';
+S.name=ls('pol.name')||'';S.email=ls('pol.email')||ls('to.email')||'';
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function api(fn,args){return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({fn:fn,args:args})}).then(function(r){return r.json();}).then(function(j){if(!j.ok)throw new Error(j.error||'Error');return j.data;});}
 function vk(v){var d=Date.parse(v);return isNaN(d)?String(v):new Date(d).toDateString();}
@@ -261,13 +261,14 @@ function docView(){var p=POL[S.doc];if(!p){S.doc=-1;return homeView();}
     h+='<nav class="card toc"><h2>Jump to section</h2><ol>'+tc.join('')+'<li><button type="button" class="link" data-a="jump" data-to="sign">Sign the acknowledgment</button></li></ol>'+(p.pdf?'<a class="pdfl" href="'+esc(p.pdf)+'" target="_blank" rel="noopener">Download the PDF</a>':'')+'</nav>';}
   h+='<article class="card pol">'+p.blocks.map(block).join('')+'</article>';
   if(p.hb)h+='<p class="totop"><button type="button" class="link" data-a="jump" data-to="app">↑ Back to top</button></p>';
-  if(S.done){h+='<section class="card done"><h2>Signed</h2><p>Thanks, '+esc(S.name)+'. Your signed copy was saved on '+esc(S.done.when)+'.</p><a class="btn" href="#">Back to policies</a></section>';return h;}
+  if(S.done){h+='<section class="card done"><h2>Signed</h2><p>Thanks, '+esc(S.name)+'. Your signed copy was saved on '+esc(S.done.when)+'.'+(S.done.emailed?' A PDF copy was emailed to '+esc(S.done.email)+'.':' We could not email your copy, so ask the office for it.')+'</p><a class="btn" href="#">Back to policies</a></section>';return h;}
   h+='<section class="card signbox" id="sign"><h2>'+(p.hb?'Sign the acknowledgment':'Sign this policy')+'</h2>'+(on?'<p class="ok">You already signed this version on '+esc(on)+'. You can sign again if a manager asks you to.</p>':'')+
    '<label class="chk"><input type="checkbox" id="ack"><span>'+esc(p.ack)+'</span></label>'+
    '<label class="fld">Full name<input id="nm" autocomplete="name" placeholder="First and last name" value="'+esc(S.name)+'"></label>'+
+   '<label class="fld">Email for your signed copy<input id="em" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="'+esc(S.email)+'"></label>'+
    '<div class="fld">Signature<div class="pad"><canvas id="pad"></canvas><span class="hint" id="hint">Sign here with your finger</span></div><button type="button" class="link" data-a="clear">Clear signature</button></div>'+
    (S.err?'<p class="err">'+esc(S.err)+'</p>':'')+
-   '<button class="btn primary" data-a="sign" '+(S.busy?'disabled':'')+'>'+(S.busy?'Saving…':'Sign and submit')+'</button><p class="muted small">Date and time are added automatically. A PDF copy goes to the office.</p></section>';
+   '<button class="btn primary" data-a="sign" '+(S.busy?'disabled':'')+'>'+(S.busy?'Saving…':'Sign and submit')+'</button><p class="muted small">Date and time are added automatically. A PDF copy goes to the office and to your email.</p></section>';
   return h;}
 var pad=null,ctx=null,drawing=false;
 function setupPad(){var c=document.getElementById('pad');if(!c)return;pad=c;var r=c.getBoundingClientRect(),dpr=Math.max(1,window.devicePixelRatio||1);c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);ctx=c.getContext('2d');ctx.scale(dpr,dpr);ctx.lineWidth=2.4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#111';S.inked=false;
@@ -281,12 +282,12 @@ function route(){var m=/^#p(\d+)$/.exec(location.hash);S.doc=m?+m[1]:-1;S.done=n
 app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
   if(t.dataset.a==='jump'){var el=document.getElementById(t.dataset.to);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
   if(t.dataset.a==='clear'&&ctx){ctx.clearRect(0,0,pad.width,pad.height);S.inked=false;var h=document.getElementById('hint');if(h)h.hidden=false;}
-  if(t.dataset.a==='notme'){S.name='';S.signed={};ls('pol.name',null);render();}
-  if(t.dataset.a==='sign'){var p=POL[S.doc],nm=(document.getElementById('nm').value||'').replace(/\s+/g,' ').trim(),ack=document.getElementById('ack').checked;
-    if(!ack)S.err='Check the box to agree to the policy.';else if(nm.split(' ').length<2||nm.length<3)S.err='Enter your first and last name.';else if(!S.inked)S.err='Please sign in the box.';else S.err='';
-    if(S.err){var keep=nm,sig=S.inked?sigPng():null;render(true);document.getElementById('nm').value=keep;document.getElementById('ack').checked=ack;if(sig){var im=new Image();im.onload=function(){var r=pad.getBoundingClientRect();ctx.drawImage(im,0,0,r.width,r.height);S.inked=true;document.getElementById('hint').hidden=true;};im.src=sig;}return;}
+  if(t.dataset.a==='notme'){S.name='';S.email='';S.signed={};ls('pol.name',null);ls('pol.email',null);ls('to.email',null);render();}
+  if(t.dataset.a==='sign'){var p=POL[S.doc],nm=(document.getElementById('nm').value||'').replace(/\s+/g,' ').trim(),ack=document.getElementById('ack').checked,em=(document.getElementById('em').value||'').trim();
+    if(!ack)S.err='Check the box to agree to the policy.';else if(nm.split(' ').length<2||nm.length<3)S.err='Enter your first and last name.';else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))S.err='Enter your email to get your signed copy.';else if(!S.inked)S.err='Please sign in the box.';else S.err='';
+    if(S.err){var keep=nm,sig=S.inked?sigPng():null;render(true);document.getElementById('nm').value=keep;document.getElementById('em').value=em;document.getElementById('ack').checked=ack;if(sig){var im=new Image();im.onload=function(){var r=pad.getBoundingClientRect();ctx.drawImage(im,0,0,r.width,r.height);S.inked=true;document.getElementById('hint').hidden=true;};im.src=sig;}return;}
     var data=sigPng();S.busy=true;t.disabled=true;t.textContent='Saving…';
-    api('policySign',[{title:p.title,version:p.version,blocks:p.signBlocks||p.blocks,ackText:p.ack,name:nm,sig:data,ack:true}]).then(function(r){S.busy=false;S.name=nm;ls('pol.name',nm);S.signed[p.title+'|'+vk(p.version)]=Date.now();S.done=r;render();window.scrollTo(0,document.body.scrollHeight);})
+    api('policySign',[{title:p.title,version:p.version,blocks:p.signBlocks||p.blocks,ackText:p.ack,name:nm,email:em,sig:data,ack:true}]).then(function(r){S.busy=false;S.name=nm;ls('pol.name',nm);S.email=em;ls('pol.email',em);ls('to.email',em);S.signed[p.title+'|'+vk(p.version)]=Date.now();S.done=r;render();window.scrollTo(0,document.body.scrollHeight);})
       .catch(function(x){S.busy=false;S.err=String(x.message||x);t.disabled=false;t.textContent='Sign and submit';var er=app.querySelector('.signbox .err');if(!er){er=document.createElement('p');er.className='err';t.parentNode.insertBefore(er,t);}er.textContent=S.err;});}});
 window.addEventListener('hashchange',route);
 route(); loadSigned();
