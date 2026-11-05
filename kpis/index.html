@@ -64,6 +64,8 @@ h2{font:700 1.3rem/1.05 var(--display);letter-spacing:.04em;text-transform:upper
 .row .chg{display:block;text-align:right}
 .muted{color:var(--muted);margin:0}
 .when{display:block;font-size:.8rem;color:var(--muted);font-weight:400}
+.row .a.low{color:#b3261e}
+.flag{display:block;font-size:.8rem;font-weight:600;color:#b3261e;text-align:right}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 th,td{padding:8px 6px;border-top:1px solid var(--line);text-align:right}
 th:first-child,td:first-child{text-align:left}
@@ -72,9 +74,9 @@ tr.now td{font-weight:700;background:var(--accent-soft)}
 .foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
 .foot button{background:none;border:0;color:var(--ok);font-weight:600;cursor:pointer;padding:0}
 </style>
-<meta name="build" content="20261104k">
+<meta name="build" content="20261104l">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261104k';
+(function(){var B='20261104l';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -98,9 +100,9 @@ var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
 function dt(k){var p=k.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
 function wkLabel(k){var e=dt(k),s=new Date(e.getTime()-6*864e5);return MON[s.getMonth()]+' '+s.getDate()+' – '+MON[e.getMonth()]+' '+e.getDate()+(e.getFullYear()!==new Date().getFullYear()?', '+e.getFullYear():'');}
 function isMoney(g,s){return /revenue/i.test(g.name)||/revenue/i.test(s.label);}
-function lowGood(s,g){return /cancel|reservice|reschedule|standing/i.test(s.label+' '+g.name)||s.unit==='time';}
+function lowGood(s,g){return /cancel|reservice|reschedule|standing/i.test(s.label+' '+g.name);}
 function nm(t){return String(t).replace(/^Oustanding/i,'Outstanding');}
-function fmt(n,money,unit){if(n==null)return '—';if(money)return '$'+Math.round(n).toLocaleString();if(unit==='%')return (Math.round(n*10)/10)+'%';return (Math.round(n*10)/10).toLocaleString();}
+function fmt(n,money,unit){if(n==null)return '—';if(money)return '$'+Math.round(n).toLocaleString();if(unit==='%')return (Math.round(n*10)/10)+'%';if(unit==='time')return (Math.round(n*10)/10)+' min';return (Math.round(n*10)/10).toLocaleString();}
 function prevVal(s,k){var ks=Object.keys(s.pts).filter(function(x){return x<k;}).sort();return ks.length?s.pts[ks[ks.length-1]]:null;}
 function chg(now,prev,money,unit,low){if(now==null||prev==null)return '';var d=now-prev;if(Math.abs(d)<1e-9)return '<span class="chg">Same as last week</span>';
   var good=low?d<0:d>0, txt=(d>0?'▲ ':'▼ ')+(unit==='%'?(Math.round(Math.abs(d)*10)/10)+' pts':money?'$'+Math.round(Math.abs(d)).toLocaleString():(prev?Math.round(Math.abs(d)/Math.abs(prev)*100)+'%':Math.round(Math.abs(d)*10)/10));
@@ -126,7 +128,7 @@ function weekView(){var d=S.data,k=S.wk,ws=d.weeks,i=ws.indexOf(k),h='';
     var live2=g.series.map(function(s){var ks=Object.keys(s.pts).filter(function(x){return x<=k;}).sort();if(!ks.length)return null;var lk=ks[ks.length-1];
       return {s:s,k:lk,v:s.pts[lk],p:ks.length>1?s.pts[ks[ks.length-2]]:null};}).filter(Boolean);
     var old=live2.some(function(x){return x.k!==k;});
-    cards+='<section class="card"><h2>'+esc(g.name)+'</h2>'+(old?'<p class="muted">Not every tech has a number for this week, so each shows their latest week.</p>':'')+(live2.length?'<div class="rows">'+live2.map(function(x){return '<div class="row"><span>'+esc(x.s.label)+(x.k!==k?'<span class="when">Week of '+wkLabel(x.k)+'</span>':'')+'</span><span class="a">'+fmt(x.v,false,x.s.unit)+chg(x.v,x.p,false,x.s.unit,lowGood(x.s,g)).replace('vs last week','vs week before')+'</span></div>';}).join('')+'</div>':'<p class="muted">No numbers yet.</p>')+'</section>';
+    cards+='<section class="card"><h2>'+esc(g.name)+(g.series.some(function(s){return s.unit==='time';})?' (minutes per job)':'')+'</h2>'+(old?'<p class="muted">Not every tech has a number for this week, so each shows their latest week.</p>':'')+(live2.length?'<div class="rows">'+live2.map(function(x){return '<div class="row"><span>'+esc(x.s.label)+(x.k!==k?'<span class="when">Week of '+wkLabel(x.k)+'</span>':'')+'</span><span class="a'+(x.s.unit==='time'&&x.v<=14?' low':'')+'">'+fmt(x.v,false,x.s.unit)+(x.s.unit==='time'&&x.v<=14?'<span class="flag">Too short (14 min or less)</span>':'')+(x.s.unit==='time'?chg(x.v,x.p,false,'',false).replace(/chg (good|bad)/,'chg'):chg(x.v,x.p,false,x.s.unit,lowGood(x.s,g))).replace('vs last week','vs week before')+'</span></div>';}).join('')+'</div>':'<p class="muted">No numbers yet.</p>')+'</section>';
   });
   h+='<div class="stats">'+stats+'</div>'+cards;
   if(d.years&&d.years.rows.length){var cm=MON[dt(k).getMonth()];
