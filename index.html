@@ -83,9 +83,9 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .crumb h2{font:700 1.9rem/1 var(--display);letter-spacing:.02em;text-transform:uppercase;margin:0}
 footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
-<meta name="build" content="20261105mg4">
+<meta name="build" content="20261105ob">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105mg4';
+(function(){var B='20261105ob';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -163,9 +163,9 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M4 18l20-10 20 10-20 10z" fill="currentColor"/><path d="M12 22v9c0 3 6 6 12 6s12-3 12-6v-9l-12 6z" fill="var(--accent)" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M42 19v11" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div>
       <div><b>Training</b><span>Coming soon · Tech training and sign-offs</span></div>
     </a>
-    <a class="tile" href="/soon/?t=onboarding" data-g="ops" data-k="onboarding new hire hiring first day checklist paperwork employee coming soon">
+    <a class="tile" href="/onboarding/" data-g="ops" data-k="onboarding new hire hiring first day checklist paperwork employee sign off ride along">
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="20" cy="15" r="8" fill="currentColor"/><path d="M5 40c1-8 7-13 15-13s14 5 15 13z" fill="currentColor"/><circle cx="36" cy="32" r="9" fill="var(--accent)" stroke="currentColor" stroke-width="2.4"/><path d="M36 27v10M31 32h10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div>
-      <div><b>Onboarding</b><span>Coming soon · New hire checklists</span></div>
+      <div><b>Onboarding</b><span>New tech checklist and supervisor sign-off</span></div>
     </a>
     <a class="tile" href="/soon/?t=admin" data-g="mgmt" data-k="admin manager settings records owner management office coming soon">
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 4l16 6v12c0 10-7 18-16 22C15 40 8 32 8 22V10z" fill="currentColor"/><path d="M17 23l5 5 9-10" fill="none" stroke="var(--accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -256,7 +256,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     list.forEach(function(t){ nav.insertBefore(t,none); }); }
   function saveOrder(){ order=[].filter.call(nav.querySelectorAll('.tile'),function(t){ return !t.hidden; }).map(function(t){ return t.getAttribute('href'); });
     try{ localStorage.setItem(okey(),JSON.stringify(order)); }catch(e){} }
-  var DEF={"ops": ["/field-guide/", "/sops/", "/mix/", "/sds/", "/traps/", "https://webapp.spypoint.com/", "/equipment/", "/shop/", "/measure/", "/licenses/", "/directory/", "/policies/", "/time-off/", "/soon/?t=onboarding", "/soon/?t=training"], "office": ["/manual/", "/csr/", "/pricing/", "/measure/", "/commission/", "/sops/", "/field-guide/", "/directory/", "/soon/?t=sales", "/policies/", "/time-off/"], "mgmt": ["/kpis/", "/commission/", "/licenses/", "/time-off-tracker/", "/signatures/", "/time-off/", "/directory/", "/soon/?t=admin"]};
+  var DEF={"ops": ["/field-guide/", "/sops/", "/mix/", "/sds/", "/traps/", "https://webapp.spypoint.com/", "/equipment/", "/shop/", "/measure/", "/licenses/", "/directory/", "/policies/", "/time-off/", "/onboarding/", "/soon/?t=training"], "office": ["/manual/", "/csr/", "/pricing/", "/measure/", "/commission/", "/sops/", "/field-guide/", "/directory/", "/soon/?t=sales", "/policies/", "/time-off/"], "mgmt": ["/kpis/", "/commission/", "/licenses/", "/time-off-tracker/", "/signatures/", "/time-off/", "/directory/", "/soon/?t=admin"]};
   var press=null, drag=null, blockClick=false;
   function pt(e){ var p=e.touches&&e.touches[0]||e.changedTouches&&e.changedTouches[0]||e; return {x:p.clientX,y:p.clientY}; }
   function start(e){ if(e.button>0) return; var t=e.target.closest('.tile'); if(!t||q.value.trim()||!G) return;
@@ -286,7 +286,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     var gated=G==='mgmt'&&!mgmtOpen&&!q.value.trim(); gate.hidden=!gated; if(gated){ nav.hidden=true; bar.hidden=true; } };
   gate.addEventListener('submit',function(e){ e.preventDefault(); var pin=gpin.value.trim(); if(!pin) return; gbtn.disabled=true; gbtn.textContent='Checking…'; gerr.hidden=true;
     fetch(MGMT_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({fn:'mgmtUnlock',args:[pin]})}).then(function(r){ return r.json(); }).then(function(j){ if(!j.ok) throw new Error(j.error||'Wrong PIN.');
-      mgmtOpen=true; try{ sessionStorage.setItem('hub.mgmt','1'); }catch(x){} gpin.value=''; paint(); }).catch(function(x){ gerr.textContent=/fetch|network/i.test(String(x.message))?'Could not check the PIN. Check your connection and try again.':String(x.message||x); gerr.hidden=false; gpin.value=''; })
+      mgmtOpen=true; try{ sessionStorage.setItem('hub.mgmt','1'); sessionStorage.setItem('hub.mgmtpin',pin); }catch(x){} gpin.value=''; paint(); }).catch(function(x){ gerr.textContent=/fetch|network/i.test(String(x.message))?'Could not check the PIN. Check your connection and try again.':String(x.message||x); gerr.hidden=false; gpin.value=''; })
       .then(function(){ gbtn.disabled=false; gbtn.textContent='Open Management'; }); });
   function route(){ var g=(location.hash||'').slice(1); G=GROUPS[g]?g:''; if(choosing) pick.click(); q.value=''; loadOrder(); applyOrder(); paint(); window.scrollTo(0,0);}
   window.addEventListener('hashchange',route);
