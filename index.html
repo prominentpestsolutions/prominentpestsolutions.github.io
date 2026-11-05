@@ -45,14 +45,25 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .tile:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .ico{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);flex:none}
 .ico svg{width:42px;height:42px}
-.tile b{display:block;font:700 1.45rem/1.05 var(--display);letter-spacing:.02em;text-transform:uppercase}
+.tile b{display:block;font:700 clamp(1.1rem,5vw,1.45rem)/1.05 var(--display);letter-spacing:.02em;text-transform:uppercase}
 .tile span{display:block;color:var(--muted);font-size:.92rem;margin-top:4px;line-height:1.3}
 .none{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px 0}
+.tile{position:relative}
+.tile.off{display:none}
+.choosing .tile.off{display:flex;opacity:.45}
+.chk{display:none;position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface)}
+.choosing .chk{display:grid;place-items:center}
+.choosing .tile:not(.off) .chk{background:var(--accent);border-color:var(--accent)}
+.choosing .tile:not(.off) .chk::after{content:"";width:10px;height:6px;border-left:3px solid var(--accent-ink);border-bottom:3px solid var(--accent-ink);transform:rotate(-45deg) translate(1px,-1px)}
+.choose{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.choose button{min-height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .95rem var(--body);cursor:pointer}
+.choose button.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hint{text-align:center;color:var(--muted);font-size:.9rem;margin:-8px 0 0}
 footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
-<meta name="build" content="20261103g">
+<meta name="build" content="20261104b">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261103g';
+(function(){var B='20261104b';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -69,6 +80,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     <div><h1>Prominent Hub</h1><div class="sub">Prominent Pest Solutions</div></div>
   </header>
   <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Search anything in Prominent Hub…" autocomplete="off" aria-label="Search tools"></label>
+  <p class="hint" id="hint" hidden>Tap a tool to show or hide it on this phone, then tap Done.</p>
   <nav class="tiles" aria-label="Tools">
     <a class="tile" href="/field-guide/" data-k="raccoon skunk squirrel bat mouse mice rat vole mole gopher bird pigeon snake marmot rabbit deer wasp hornet ant spider bed bug cockroach termite attic crawlspace treatment sop guide policy problem">
       <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-2-3-4-5-7-6M27 12c2-3 4-5 7-6"/><path d="M21 22l-7-3-4 2M27 22l7-3 4 2"/><path d="M21 24l-8 2-3 5M27 24l8 2 3 5"/><path d="M21 26l-6 6-1 6M27 26l6 6 1 6"/></g><g fill="currentColor"><ellipse cx="24" cy="14" rx="4.6" ry="4.2"/><ellipse cx="24" cy="23.5" rx="3.4" ry="4.6"/><ellipse cx="24" cy="35" rx="6.4" ry="8"/></g><g fill="var(--accent)"><circle cx="22.2" cy="13" r="1.1"/><circle cx="25.8" cy="13" r="1.1"/></g><path d="M20 33c2.5 1.2 5.5 1.2 8 0M19.5 37c2.8 1.3 6.2 1.3 9 0" stroke="var(--accent)" stroke-width="1" fill="none" stroke-linecap="round" opacity=".7"/></svg></div>
@@ -112,14 +124,33 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     </a>
     <p class="none" id="none" hidden>Nothing matches. Try the Field Guide for problems and treatments.</p>
   </nav>
+  <div class="choose"><button type="button" id="pick">Choose tools</button><button type="button" id="all" hidden>Show all</button></div>
   <footer>Internal tools for the Prominent team</footer>
 </main>
 <script>
-(function(){ var q=document.getElementById('q'), tiles=[].slice.call(document.querySelectorAll('.tile')), none=document.getElementById('none');
-  q.addEventListener('input',function(){ var words=q.value.toLowerCase().trim().split(/\s+/).filter(String), shown=0;
-    tiles.forEach(function(t){ var hay=(t.textContent+' '+t.getAttribute('data-k')).toLowerCase();
-      var ok=words.every(function(w){ return hay.indexOf(w)>=0 || hay.indexOf(w.replace(/s$/,''))>=0; }); t.hidden=!ok; if(ok) shown++; });
-    none.hidden=shown>0; });
+(function(){ var q=document.getElementById('q'), nav=document.querySelector('.tiles'), tiles=[].slice.call(document.querySelectorAll('.tile')), none=document.getElementById('none');
+  var pick=document.getElementById('pick'), all=document.getElementById('all'), hint=document.getElementById('hint'), choosing=false, hide=[];
+  try{ hide=JSON.parse(localStorage.getItem('hub.hide')||'[]')||[]; }catch(e){ hide=[]; }
+  tiles.forEach(function(t){ var c=document.createElement('i'); c.className='chk'; c.setAttribute('aria-hidden','true'); t.appendChild(c); });
+  function save(){ try{ localStorage.setItem('hub.hide',JSON.stringify(hide)); }catch(e){} }
+  function paint(){ var words=q.value.toLowerCase().trim().split(/\s+/).filter(String), shown=0;
+    tiles.forEach(function(t){ var key=t.getAttribute('href'), off=hide.indexOf(key)>=0;
+      var hay=(t.textContent+' '+t.getAttribute('data-k')).toLowerCase();
+      var ok=words.every(function(w){ return hay.indexOf(w)>=0 || hay.indexOf(w.replace(/s$/,''))>=0; });
+      t.hidden=!ok; t.classList.toggle('off', off && !words.length);
+      if(choosing) t.setAttribute('aria-pressed', String(!off)); else t.removeAttribute('aria-pressed');
+      if(ok && (choosing || !off || words.length)) shown++; });
+    none.hidden=shown>0;
+    if(!choosing && !words.length && shown===0){ none.hidden=false; none.textContent='All tools are hidden. Tap Choose tools to bring some back.'; }
+    else none.textContent='Nothing matches. Try the Field Guide for problems and treatments.';
+    all.hidden=!choosing || !hide.length; }
+  pick.addEventListener('click',function(){ choosing=!choosing; nav.classList.toggle('choosing',choosing); hint.hidden=!choosing;
+    pick.textContent=choosing?'Done':'Choose tools'; pick.classList.toggle('primary',choosing); if(choosing){ q.value=''; } paint(); });
+  all.addEventListener('click',function(){ hide=[]; save(); paint(); });
+  nav.addEventListener('click',function(e){ if(!choosing) return; var t=e.target.closest('.tile'); if(!t) return; e.preventDefault();
+    var key=t.getAttribute('href'), i=hide.indexOf(key); if(i>=0) hide.splice(i,1); else hide.push(key); save(); paint(); });
+  q.addEventListener('input',paint);
+  paint();
 })();
 </script>
 </body>
