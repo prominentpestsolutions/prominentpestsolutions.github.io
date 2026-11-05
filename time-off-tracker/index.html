@@ -168,9 +168,9 @@ td:first-child{font-weight:600}
 .chk.fr{margin-top:6px;padding:10px 12px;border-radius:10px;background:var(--sunk)}
 .fld textarea{padding:10px 12px;resize:vertical}
 </style>
-<meta name="build" content="20261105v">
+<meta name="build" content="20261105nopw">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105v';
+(function(){var B='20261105nopw';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -228,13 +228,13 @@ function card(r){var late=r.notice<3,h='<div class="card req"><div class="row"><
   h+='<div class="acts">'+(r.status!=='Approved'?'<button class="btn primary" data-d="Approved" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Approve</button>':'')+(r.status!=='Denied'?'<button class="btn deny" data-a="denyask" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Deny</button>':'')+'</div></div>';
   return h;}
 function trackView(){var h=head('Approve and track requests');
-  if(!S.list){h+='<form class="lock" id="lf"><h2>Managers</h2><label class="fld">Your name<input id="by" autocomplete="name" value="'+esc(S.by)+'"></label><label class="fld">Management password<input id="pw" type="password" autocomplete="current-password"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary" '+(S.busy?'disabled':'')+'>'+(S.busy?'Opening…':'Open tracker')+'</button></form>';return h;}
+  if(!S.list){h+='<form class="lock" id="lf"><h2>Managers</h2><label class="fld">Your name<input id="by" autocomplete="name" value="'+esc(S.by)+'"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary" '+(S.busy?'disabled':'')+'>'+(S.busy?'Opening…':'Open tracker')+'</button></form>';return h;}
   var c=counts(),F=[['pending','Needs approval'],['block','Block in FieldRoutes'],['approved','Approved'],['denied','Denied'],['all','All']];
   h+='<div class="chips">'+F.map(function(x){return '<button class="chip" data-f="'+x[0]+'" aria-pressed="'+(S.f===x[0])+'">'+x[1]+' ('+c[x[0]]+')</button>';}).join('')+'</div>';
   if(S.err)h+='<p class="err">'+esc(S.err)+'</p>';
   var l=S.list.filter(match);
   h+=l.length?'<div class="list">'+l.map(card).join('')+'</div>':'<p class="muted">Nothing here.</p>';
-  h+='<p class="muted small"><button class="link" data-a="lock">Lock</button></p>';
+  h+='<p class="muted small"><button class="link" data-a="lock">Change name</button></p>';
   return h;}
 function render(){var y=window.scrollY;app.innerHTML=MODE==='req'?reqView():trackView();window.scrollTo(0,y);}
 function loadMine(){if(!S.name)return;api('toMine',[S.name]).then(function(l){S.mine=l;render();}).catch(function(){});}
@@ -248,11 +248,11 @@ app.addEventListener('submit',function(e){e.preventDefault();
     if(S.err){render();return;}S.busy=true;render();
     ls('to.email',S.email);ls('pol.email',S.email);api('toSubmit',[{name:S.name,email:S.email,start:f.start,end:f.end,hours:+f.hours,pay:f.pay}]).then(function(r){S.busy=false;S.done={span:span(f),late:r.late};S.form={start:'',end:'',hours:'',pay:''};loadMine();render();window.scrollTo(0,0);})
       .catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}
-  if(e.target.id==='lf'){var by=document.getElementById('by').value.trim(),pw=document.getElementById('pw').value;S.by=by;if(!by||!pw){S.err='Enter your name and the password.';render();return;}S.busy=true;S.err='';render();
-    api('toAdmin',[pw]).then(function(l){S.pw=pw;S.list=l;S.busy=false;ls('to.by',by);ss('to.pw',pw);render();}).catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}});
+  if(e.target.id==='lf'){var by=document.getElementById('by').value.trim();S.by=by;if(!by){S.err='Enter your name.';render();return;}S.busy=true;S.err='';render();
+    api('toAdmin',['']).then(function(l){S.list=l;S.busy=false;ls('to.by',by);render();}).catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}});
 app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
   if(t.dataset.a==='again'){S.done=null;render();}
-  if(t.dataset.a==='lock'){S.pw='';S.list=null;ss('to.pw',null);render();}
+  if(t.dataset.a==='lock'){S.list=null;render();}
   if(t.dataset.f){S.f=t.dataset.f;render();}
   if(t.dataset.a==='denyask'){S.denying=t.dataset.id;render();var w=document.getElementById('why');if(w)w.focus();}
   if(t.dataset.a==='denyno'){S.denying='';render();}
@@ -260,7 +260,7 @@ app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)
   if(t.dataset.d)act('toDecide',[S.pw,t.dataset.id,t.dataset.d,S.by,'']);});
 if(MODE==='req'){S.name=ls('to.name')||'';S.email=ls('to.email')||ls('pol.email')||'';render();
   api('getDirectory',[]).then(function(d){var skip=/vendor|supplier|partner/i,seen={};S.people=d.people.filter(function(p){return !skip.test(p.section||'');}).map(function(p){return p.name;}).filter(function(n){if(seen[n])return false;seen[n]=1;return true;}).sort();if(S.people.indexOf(S.name)<0)S.name='';S.loading=false;render();loadMine();}).catch(function(){S.loading=false;S.err='Could not load names. Check your connection and try again.';render();});
-}else{S.by=ls('to.by')||'';var p=ss('to.pw');if(p){S.busy=true;render();api('toAdmin',[p]).then(function(l){S.pw=p;S.list=l;S.busy=false;render();}).catch(function(){ss('to.pw',null);S.busy=false;render();});}else render();}
+}else{S.by=ls('to.by')||'';if(S.by){S.busy=true;render();api('toAdmin',['']).then(function(l){S.list=l;S.busy=false;render();}).catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}else render();}
 })();
 </script>
 </body>
