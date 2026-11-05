@@ -83,9 +83,9 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .crumb h2{font:700 1.9rem/1 var(--display);letter-spacing:.02em;text-transform:uppercase;margin:0}
 footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
-<meta name="build" content="20261105ob">
+<meta name="build" content="20261105lock">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105ob';
+(function(){var B='20261105lock';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -218,7 +218,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
   var sect=document.getElementById('sect'), crumb=document.getElementById('crumb'), gname=document.getElementById('gname'), bar=document.querySelector('.choose');
   var GROUPS={ops:'Operations',office:'Office Staff',mgmt:'Management'}, G='';
   var MGMT_API='https://script.google.com/macros/s/AKfycbxo4fckh7oI-qBhFa1qK_7597w_yS4p43mspjgEG7k0DzNAUEFPfAtTxGfDWJM3GNG6Xw/exec', gate=document.getElementById('gate'), gpin=document.getElementById('gpin'), gerr=document.getElementById('gerr'), gbtn=document.getElementById('gbtn'), mgmtOpen=false;
-  try{ mgmtOpen=sessionStorage.getItem('hub.mgmt')==='1'; }catch(e){}
+  try{ sessionStorage.removeItem('hub.mgmt'); sessionStorage.removeItem('hub.mgmtpin'); }catch(e){}
   try{ hide=JSON.parse(localStorage.getItem('hub.hide')||'[]')||[]; }catch(e){ hide=[]; }
   tiles.forEach(function(t){ var c=document.createElement('i'); c.className='chk'; c.setAttribute('aria-hidden','true'); t.appendChild(c); });
   var base=tiles.slice();
@@ -286,9 +286,9 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     var gated=G==='mgmt'&&!mgmtOpen&&!q.value.trim(); gate.hidden=!gated; if(gated){ nav.hidden=true; bar.hidden=true; } };
   gate.addEventListener('submit',function(e){ e.preventDefault(); var pin=gpin.value.trim(); if(!pin) return; gbtn.disabled=true; gbtn.textContent='Checking…'; gerr.hidden=true;
     fetch(MGMT_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({fn:'mgmtUnlock',args:[pin]})}).then(function(r){ return r.json(); }).then(function(j){ if(!j.ok) throw new Error(j.error||'Wrong PIN.');
-      mgmtOpen=true; try{ sessionStorage.setItem('hub.mgmt','1'); sessionStorage.setItem('hub.mgmtpin',pin); }catch(x){} gpin.value=''; paint(); }).catch(function(x){ gerr.textContent=/fetch|network/i.test(String(x.message))?'Could not check the PIN. Check your connection and try again.':String(x.message||x); gerr.hidden=false; gpin.value=''; })
+      mgmtOpen=true; gpin.value=''; paint(); }).catch(function(x){ gerr.textContent=/fetch|network/i.test(String(x.message))?'Could not check the PIN. Check your connection and try again.':String(x.message||x); gerr.hidden=false; gpin.value=''; })
       .then(function(){ gbtn.disabled=false; gbtn.textContent='Open Management'; }); });
-  function route(){ var g=(location.hash||'').slice(1); G=GROUPS[g]?g:''; if(choosing) pick.click(); q.value=''; loadOrder(); applyOrder(); paint(); window.scrollTo(0,0);}
+  function route(){ var g=(location.hash||'').slice(1); G=GROUPS[g]?g:''; if(G!=='mgmt') mgmtOpen=false; if(choosing) pick.click(); q.value=''; loadOrder(); applyOrder(); paint(); window.scrollTo(0,0);}
   window.addEventListener('hashchange',route);
   route();
 })();
