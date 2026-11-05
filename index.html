@@ -47,6 +47,12 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .ico svg{width:42px;height:42px}
 .tile b{display:block;font:700 clamp(1.1rem,5vw,1.45rem)/1.05 var(--display);letter-spacing:.02em;text-transform:uppercase}
 .tile span{display:block;color:var(--muted);font-size:.92rem;margin-top:4px;line-height:1.3}
+.gate{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 16px;display:grid;gap:12px;max-width:420px;width:100%;margin:0 auto}
+.gate[hidden]{display:none}
+.gate h3{margin:0;font:700 1.3rem/1.1 var(--display);letter-spacing:.03em;text-transform:uppercase}
+.gate input{width:100%;min-height:52px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 1.2rem var(--body)}
+.gate button{min-height:50px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);font:600 1rem var(--body);cursor:pointer}
+.gate .gerr{margin:0;color:#b3261e;font-weight:600}
 .none{grid-column:1/-1;text-align:center;color:var(--muted);padding:24px 0}
 .tile{position:relative}
 .tile.off{display:none}
@@ -77,9 +83,9 @@ h1{font:700 2.2rem/1 var(--display);letter-spacing:.02em;text-transform:uppercas
 .crumb h2{font:700 1.9rem/1 var(--display);letter-spacing:.02em;text-transform:uppercase;margin:0}
 footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
 </style>
-<meta name="build" content="20261105u">
+<meta name="build" content="20261105mgmt">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105u';
+(function(){var B='20261105mgmt';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -102,6 +108,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
     <a href="#mgmt"><div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="6" y="26" width="8" height="16" rx="2" fill="currentColor"/><rect x="20" y="18" width="8" height="24" rx="2" fill="currentColor"/><rect x="34" y="10" width="8" height="32" rx="2" fill="currentColor"/><path d="M6 20l14-10 8 6 14-10" fill="none" stroke="var(--accent)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>Management</b><span>KPIs, licenses, inventory, admin</span></div><i class="go" aria-hidden="true">›</i></a>
   </nav>
   <div class="crumb" id="crumb" hidden><a href="#">← All sections</a><h2 id="gname"></h2></div>
+  <form class="gate" id="gate" hidden><h3>Managers only</h3><input id="gpin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN" aria-label="Management PIN"><p class="gerr" id="gerr" hidden></p><button id="gbtn">Open Management</button></form>
   <p class="hint" id="hint" hidden>Tap a tool to show or hide it on this phone, then tap Done.</p>
   <nav class="tiles" aria-label="Tools">
     <a class="tile" href="/field-guide/" data-g="ops office" data-k="raccoon skunk squirrel bat mouse mice rat vole mole gopher bird pigeon snake marmot rabbit deer wasp hornet ant spider bed bug cockroach termite attic crawlspace treatment sop guide policy problem">
@@ -206,6 +213,8 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
   var pick=document.getElementById('pick'), all=document.getElementById('all'), hint=document.getElementById('hint'), choosing=false, hide=[];
   var sect=document.getElementById('sect'), crumb=document.getElementById('crumb'), gname=document.getElementById('gname'), bar=document.querySelector('.choose');
   var GROUPS={ops:'Operations',office:'Office Staff',mgmt:'Management'}, G='';
+  var MGMT_API='https://script.google.com/macros/s/AKfycbxo4fckh7oI-qBhFa1qK_7597w_yS4p43mspjgEG7k0DzNAUEFPfAtTxGfDWJM3GNG6Xw/exec', gate=document.getElementById('gate'), gpin=document.getElementById('gpin'), gerr=document.getElementById('gerr'), gbtn=document.getElementById('gbtn'), mgmtOpen=false;
+  try{ mgmtOpen=sessionStorage.getItem('hub.mgmt')==='1'; }catch(e){}
   try{ hide=JSON.parse(localStorage.getItem('hub.hide')||'[]')||[]; }catch(e){ hide=[]; }
   tiles.forEach(function(t){ var c=document.createElement('i'); c.className='chk'; c.setAttribute('aria-hidden','true'); t.appendChild(c); });
   var base=tiles.slice();
@@ -218,6 +227,7 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
       var hay=(t.textContent+' '+t.getAttribute('data-k')).toLowerCase();
       var ok=(home||words.length||inG(t)) && words.every(function(w){ return hay.indexOf(w)>=0 || hay.indexOf(w.replace(/s$/,''))>=0; });
       if(home&&!words.length) ok=false;
+      if(!mgmtOpen&&(t.getAttribute('data-g')||'').trim()==='mgmt') ok=false;
       t.hidden=!ok; t.classList.toggle('off', off && !words.length);
       if(choosing) t.setAttribute('aria-pressed', String(!off)); else t.removeAttribute('aria-pressed');
       if(ok && (choosing || !off || words.length)) shown++; });
@@ -268,7 +278,12 @@ footer{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center}
   nav.addEventListener('dragstart',function(e){ e.preventDefault(); });
   nav.addEventListener('click',function(e){ if(blockClick){ e.preventDefault(); e.stopPropagation(); } },true);
   reo.addEventListener('click',function(){ order=[]; try{ localStorage.removeItem(okey()); }catch(e){} applyOrder(); paint(); });
-  var basePaint=paint; paint=function(){ basePaint(); reo.hidden=!choosing||!order.length; };
+  var basePaint=paint; paint=function(){ basePaint(); reo.hidden=!choosing||!order.length;
+    var gated=G==='mgmt'&&!mgmtOpen&&!q.value.trim(); gate.hidden=!gated; if(gated){ nav.hidden=true; bar.hidden=true; } };
+  gate.addEventListener('submit',function(e){ e.preventDefault(); var pin=gpin.value.trim(); if(!pin) return; gbtn.disabled=true; gbtn.textContent='Checking…'; gerr.hidden=true;
+    fetch(MGMT_API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({fn:'mgmtUnlock',args:[pin]})}).then(function(r){ return r.json(); }).then(function(j){ if(!j.ok) throw new Error(j.error||'Wrong PIN.');
+      mgmtOpen=true; try{ sessionStorage.setItem('hub.mgmt','1'); }catch(x){} gpin.value=''; paint(); }).catch(function(x){ gerr.textContent=/fetch|network/i.test(String(x.message))?'Could not check the PIN. Check your connection and try again.':String(x.message||x); gerr.hidden=false; gpin.value=''; })
+      .then(function(){ gbtn.disabled=false; gbtn.textContent='Open Management'; }); });
   function route(){ var g=(location.hash||'').slice(1); G=GROUPS[g]?g:''; if(choosing) pick.click(); q.value=''; loadOrder(); applyOrder(); paint(); window.scrollTo(0,0);}
   window.addEventListener('hashchange',route);
   route();
