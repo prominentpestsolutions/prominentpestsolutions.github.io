@@ -146,9 +146,9 @@ td:first-child{font-weight:600}
 .tblw th,.tblw td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
 .tblw th{background:var(--sunk)}
 @media (max-width:600px){.tblw thead{display:none}.tblw tr{display:block;border:1px solid var(--line);border-radius:10px;margin:0 0 8px;padding:4px 0}.tblw td{display:block;border:0;padding:3px 10px}.tblw td:before{content:attr(data-h)": ";font-weight:600}.tblw td:first-child{font-weight:700}.tblw td:first-child:before{content:""}}
-.fld select,.fld input{width:100%;min-height:50px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 1.05rem var(--body)}
+.fld select,.fld input,.fld textarea{width:100%;min-height:50px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 1.05rem var(--body)}
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.two .fld{min-width:0}
+.two .fld,.two input{min-width:0;max-width:100%}
 .form{gap:14px}
 .warnbox{border-left:4px solid #b3261e;background:var(--sunk);border-radius:0 10px 10px 0;padding:10px 12px;font-size:.95rem}
 .okbox{border-left:4px solid var(--accent);background:var(--sunk);border-radius:0 10px 10px 0;padding:10px 12px;font-size:.95rem}
@@ -166,10 +166,11 @@ td:first-child{font-weight:600}
 .lock h2{margin:0}
 .list{display:grid;gap:10px}
 .chk.fr{margin-top:6px;padding:10px 12px;border-radius:10px;background:var(--sunk)}
+.fld textarea{padding:10px 12px;resize:vertical}
 </style>
-<meta name="build" content="20261105u">
+<meta name="build" content="20261105v">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105u';
+(function(){var B='20261105v';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -186,7 +187,7 @@ var MARK='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAA
 (function(){
 var API_URL='https://script.google.com/macros/s/AKfycbxo4fckh7oI-qBhFa1qK_7597w_yS4p43mspjgEG7k0DzNAUEFPfAtTxGfDWJM3GNG6Xw/exec';
 var MODE='track';
-var app=document.getElementById('app'),S={people:[],name:'',mine:[],busy:false,err:'',done:null,loading:true,pw:'',by:'',list:null,f:'pending',form:{start:'',end:'',hours:'',pay:''}};
+var app=document.getElementById('app'),S={denying:'',people:[],name:'',email:'',mine:[],busy:false,err:'',done:null,loading:true,pw:'',by:'',list:null,f:'pending',form:{start:'',end:'',hours:'',pay:''}};
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){return null;}}
 function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);if(v===null)sessionStorage.removeItem(k);else sessionStorage.setItem(k,v);}catch(e){return null;}}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
@@ -202,11 +203,12 @@ function noticeBox(){var s=S.form.start;if(!s)return '';var n=Math.round((dt(s)-
   if(n<3)return '<div class="warnbox"><b>Under 3 days\' notice.</b> This may count as a strike unless an exception applies, like illness or an emergency. Tell your manager the reason.</div>';
   return '<div class="okbox">'+n+' days\' notice. Remember the request must reach your manager at least 72 hours before your shift starts.</div>';}
 function reqView(){var h=head('Request time off');
-  if(S.done){h+='<section class="card done"><h2>Request sent</h2><p>Management has your request for '+esc(S.done.span)+'. You\'ll see the answer below'+(S.done.email?' and get an email.':'.')+'</p>'+(S.done.late?'<div class="warnbox">This was under 3 days\' notice, so it may count as a strike unless an exception applies.</div>':'')+'<button class="btn" data-a="again">Make another request</button></section>';}
+  if(S.done){h+='<section class="card done"><h2>Request sent</h2><p>Management has your request for '+esc(S.done.span)+'. You\'ll see the answer below and get an email at '+esc(S.email)+'.</p>'+(S.done.late?'<div class="warnbox">This was under 3 days\' notice, so it may count as a strike unless an exception applies.</div>':'')+'<button class="btn" data-a="again">Make another request</button></section>';}
   else if(S.loading){h+='<p class="muted">Loading…</p>';}
   else{var f=S.form,min=today();
   h+='<form class="card form" id="rf"><h2>New request</h2>'+
    '<label class="fld">Your name<select id="nm"><option value="">Choose your name</option>'+S.people.map(function(p){return '<option'+(p===S.name?' selected':'')+'>'+esc(p)+'</option>';}).join('')+'</select></label>'+
+   '<label class="fld">Your email<input type="email" id="em" autocomplete="email" inputmode="email" placeholder="you@example.com" value="'+esc(S.email)+'"></label>'+
    '<div class="two"><label class="fld">First day off<input type="date" id="st" min="'+min+'" value="'+esc(f.start)+'"></label><label class="fld">Last day off<input type="date" id="en" min="'+esc(f.start||min)+'" value="'+esc(f.end)+'"></label></div>'+
    '<div id="nb">'+noticeBox()+'</div>'+
    '<div class="two"><label class="fld">Hours you\'ll miss<input type="number" id="hr" min="0.5" step="0.5" inputmode="decimal" value="'+esc(f.hours)+'"></label><label class="fld">Paid or unpaid<select id="py"><option value="">Choose one</option><option'+(f.pay==='Paid'?' selected':'')+'>Paid</option><option'+(f.pay==='Unpaid'?' selected':'')+'>Unpaid</option></select></label></div>'+
@@ -220,8 +222,10 @@ function match(r){var f=S.f;if(f==='all')return true;if(f==='pending')return r.s
 function card(r){var late=r.notice<3,h='<div class="card req"><div class="row"><b>'+esc(r.name)+'</b>'+pill(r.status)+'</div><span class="meta">'+esc(span(r))+'</span><span class="meta">'+[r.branch,hrs(r.hours),r.pay,r.notice+' day'+(r.notice===1?'':'s')+' notice'].filter(Boolean).map(esc).join(' · ')+'</span>';
   if(late)h+='<span class="strike">Possible strike: under 3 days\' notice. Check the exceptions first.</span>';
   if(r.status!=='Pending')h+='<span class="meta">'+esc(r.status)+' by '+esc(r.by)+'</span>';
+  if(r.reason)h+='<span class="meta"><b>Reason:</b> '+esc(r.reason)+'</span>';
   if(r.status==='Approved')h+='<label class="chk fr"><input type="checkbox" data-b="'+esc(r.id)+'"'+(r.blocked?' checked':'')+(S.busy?' disabled':'')+'><span>Blocked in FieldRoutes</span></label>';
-  h+='<div class="acts">'+(r.status!=='Approved'?'<button class="btn primary" data-d="Approved" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Approve</button>':'')+(r.status!=='Denied'?'<button class="btn deny" data-d="Denied" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Deny</button>':'')+'</div></div>';
+  if(S.denying===r.id){h+='<label class="fld">Reason for denial (optional, sent to the employee)<textarea id="why" rows="3" maxlength="500"></textarea></label><div class="acts"><button class="btn primary" data-a="denyyes" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Confirm denial</button><button class="btn deny" data-a="denyno">Cancel</button></div></div>';return h;}
+  h+='<div class="acts">'+(r.status!=='Approved'?'<button class="btn primary" data-d="Approved" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Approve</button>':'')+(r.status!=='Denied'?'<button class="btn deny" data-a="denyask" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Deny</button>':'')+'</div></div>';
   return h;}
 function trackView(){var h=head('Approve and track requests');
   if(!S.list){h+='<form class="lock" id="lf"><h2>Managers</h2><label class="fld">Your name<input id="by" autocomplete="name" value="'+esc(S.by)+'"></label><label class="fld">Management password<input id="pw" type="password" autocomplete="current-password"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary" '+(S.busy?'disabled':'')+'>'+(S.busy?'Opening…':'Open tracker')+'</button></form>';return h;}
@@ -234,15 +238,15 @@ function trackView(){var h=head('Approve and track requests');
   return h;}
 function render(){var y=window.scrollY;app.innerHTML=MODE==='req'?reqView():trackView();window.scrollTo(0,y);}
 function loadMine(){if(!S.name)return;api('toMine',[S.name]).then(function(l){S.mine=l;render();}).catch(function(){});}
-function grab(){var g=function(i){var e=document.getElementById(i);return e?e.value:'';};S.form={start:g('st'),end:g('en'),hours:g('hr'),pay:g('py')};var n=g('nm');if(n!==S.name){S.name=n;S.mine=[];if(n){ls('to.name',n);loadMine();}else ls('to.name',null);}}
+function grab(){var g=function(i){var e=document.getElementById(i);return e?e.value:'';};S.form={start:g('st'),end:g('en'),hours:g('hr'),pay:g('py')};S.email=g('em').trim();var n=g('nm');if(n!==S.name){S.name=n;S.mine=[];if(n){ls('to.name',n);loadMine();}else ls('to.name',null);}}
 function act(fn,args){S.busy=true;S.err='';render();api(fn,args).then(function(l){S.list=l;S.busy=false;render();}).catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}
 app.addEventListener('change',function(e){if(MODE==='req'&&e.target.closest('#rf')){var had=S.form.start;grab();if(e.target.id==='st'){if(S.form.start&&(!S.form.end||S.form.end<S.form.start))S.form.end=S.form.start;render();}}
   var b=e.target.getAttribute&&e.target.getAttribute('data-b');if(b)act('toBlocked',[S.pw,b,e.target.checked]);});
 app.addEventListener('submit',function(e){e.preventDefault();
   if(e.target.id==='rf'){grab();var f=S.form;
-    S.err=!S.name?'Pick your name from the list.':!f.start||!f.end?'Pick your first and last day off.':f.end<f.start?'The last day can\'t be before the first day.':!(+f.hours>0)?'Enter the hours you\'ll miss.':!f.pay?'Choose paid or unpaid.':'';
+    S.err=!S.name?'Pick your name from the list.':!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email)?'Enter your email so you get the answer.':!f.start||!f.end?'Pick your first and last day off.':f.end<f.start?'The last day can\'t be before the first day.':!(+f.hours>0)?'Enter the hours you\'ll miss.':!f.pay?'Choose paid or unpaid.':'';
     if(S.err){render();return;}S.busy=true;render();
-    api('toSubmit',[{name:S.name,start:f.start,end:f.end,hours:+f.hours,pay:f.pay}]).then(function(r){S.busy=false;S.done={span:span(f),late:r.late,email:S.hasEmail&&S.hasEmail[S.name]};S.form={start:'',end:'',hours:'',pay:''};loadMine();render();window.scrollTo(0,0);})
+    ls('to.email',S.email);ls('pol.email',S.email);api('toSubmit',[{name:S.name,email:S.email,start:f.start,end:f.end,hours:+f.hours,pay:f.pay}]).then(function(r){S.busy=false;S.done={span:span(f),late:r.late};S.form={start:'',end:'',hours:'',pay:''};loadMine();render();window.scrollTo(0,0);})
       .catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}
   if(e.target.id==='lf'){var by=document.getElementById('by').value.trim(),pw=document.getElementById('pw').value;S.by=by;if(!by||!pw){S.err='Enter your name and the password.';render();return;}S.busy=true;S.err='';render();
     api('toAdmin',[pw]).then(function(l){S.pw=pw;S.list=l;S.busy=false;ls('to.by',by);ss('to.pw',pw);render();}).catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}});
@@ -250,9 +254,12 @@ app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)
   if(t.dataset.a==='again'){S.done=null;render();}
   if(t.dataset.a==='lock'){S.pw='';S.list=null;ss('to.pw',null);render();}
   if(t.dataset.f){S.f=t.dataset.f;render();}
-  if(t.dataset.d)act('toDecide',[S.pw,t.dataset.id,t.dataset.d,S.by]);});
-if(MODE==='req'){S.name=ls('to.name')||'';render();
-  api('getDirectory',[]).then(function(d){var skip=/vendor|supplier|partner/i,seen={};S.hasEmail={};S.people=d.people.filter(function(p){return !skip.test(p.section||'');}).map(function(p){S.hasEmail[p.name]=!!p.email;return p.name;}).filter(function(n){if(seen[n])return false;seen[n]=1;return true;}).sort();if(S.people.indexOf(S.name)<0)S.name='';S.loading=false;render();loadMine();}).catch(function(){S.loading=false;S.err='Could not load names. Check your connection and try again.';render();});
+  if(t.dataset.a==='denyask'){S.denying=t.dataset.id;render();var w=document.getElementById('why');if(w)w.focus();}
+  if(t.dataset.a==='denyno'){S.denying='';render();}
+  if(t.dataset.a==='denyyes'){var why=(document.getElementById('why').value||'').trim();S.denying='';act('toDecide',[S.pw,t.dataset.id,'Denied',S.by,why]);}
+  if(t.dataset.d)act('toDecide',[S.pw,t.dataset.id,t.dataset.d,S.by,'']);});
+if(MODE==='req'){S.name=ls('to.name')||'';S.email=ls('to.email')||ls('pol.email')||'';render();
+  api('getDirectory',[]).then(function(d){var skip=/vendor|supplier|partner/i,seen={};S.people=d.people.filter(function(p){return !skip.test(p.section||'');}).map(function(p){return p.name;}).filter(function(n){if(seen[n])return false;seen[n]=1;return true;}).sort();if(S.people.indexOf(S.name)<0)S.name='';S.loading=false;render();loadMine();}).catch(function(){S.loading=false;S.err='Could not load names. Check your connection and try again.';render();});
 }else{S.by=ls('to.by')||'';var p=ss('to.pw');if(p){S.busy=true;render();api('toAdmin',[p]).then(function(l){S.pw=p;S.list=l;S.busy=false;render();}).catch(function(){ss('to.pw',null);S.busy=false;render();});}else render();}
 })();
 </script>
