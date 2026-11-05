@@ -149,11 +149,19 @@ select{font:inherit;color:var(--ink)}
 .me input{min-height:46px}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .signbox .fld input{width:100%}
+.rmbox{border-style:dashed}
+.rmrow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.btn.danger{background:#b3261e;color:#fff}
+.btn.ghost{background:none;border:1px solid var(--line);color:#b3261e}
 .fld input{width:100%}
+.rmbox{border-style:dashed}
+.rmrow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.btn.danger{background:#b3261e;color:#fff}
+.btn.ghost{background:none;border:1px solid var(--line);color:#b3261e}
 </style>
-<meta name="build" content="20261105b">
+<meta name="build" content="20261105c">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105b';
+(function(){var B='20261105c';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -171,7 +179,7 @@ var MARK='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAA
 var API_URL='https://script.google.com/macros/s/AKfycbxo4fckh7oI-qBhFa1qK_7597w_yS4p43mspjgEG7k0DzNAUEFPfAtTxGfDWJM3GNG6Xw/exec';
 var BR={IF:'Idaho Falls',WY:'Wyoming',BZ:'Bozeman'};
 var POLS={t_hb:'Employee Handbook',t_drive:'Driving Policy',t_card:'Company Credit Card Policy'};
-var app=document.getElementById('app'),S={data:null,loading:true,err:'',view:'',me:'',pol:{},busy:false,signErr:'',done:null,showDone:false,formErr:''};
+var app=document.getElementById('app'),S={data:null,loading:true,err:'',view:'',me:'',pol:{},busy:false,signErr:'',done:null,showDone:false,formErr:'',rm:false,rmErr:'',rmBusy:false};
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){return null;}}
 S.me=ls('ob.me')||ls('pol.name')||'';
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
@@ -237,7 +245,11 @@ function hireView(){var h=hire();if(!h){return head()+'<p class="muted">'+(S.loa
       '<label class="fld">Management PIN<input id="s_pin" type="password" inputmode="numeric" autocomplete="off"></label>'+
       (S.signErr?'<p class="err">'+esc(S.signErr)+'</p>':'')+
       '<button class="btn primary" data-a="sign"'+(left||S.busy?' disabled':'')+'>'+(S.busy?'Saving…':'Sign off and clear to work alone')+'</button>'+
-      '<p class="muted small">Today\'s date is added automatically. A signed PDF is saved to the tech\'s employee folder.</p></section>';}
+      '<p class="muted small">Today\'s date is added automatically. A signed PDF is saved to the tech\'s employee folder.</p></section>';
+    out+='<section class="card rmbox"><h2>Remove this checklist</h2><p class="muted">Use this if the new hire doesn\'t finish onboarding. It comes off this page, and the office keeps a record in the Sheet.</p>'+
+      (S.rm?'<label class="fld">Management PIN<input id="rm_pin" type="password" inputmode="numeric" autocomplete="off"></label>'+(S.rmErr?'<p class="err">'+esc(S.rmErr)+'</p>':'')+
+        '<div class="rmrow"><button class="btn danger" data-a="rmgo"'+(S.rmBusy?' disabled':'')+'>'+(S.rmBusy?'Removing…':'Remove '+esc(h.tech))+'</button><button class="link" data-a="rmcancel">Cancel</button></div>'
+      :'<button class="btn ghost" data-a="rm">Remove this checklist</button>')+'</section>';}
   return out;}
 
 var pads={};
@@ -250,7 +262,7 @@ function setupPad(id){var c=document.getElementById('pad'+id);if(!c)return;var r
 function png(id){var c=pads[id].c,s=Math.min(1,600/c.width),o=document.createElement('canvas');o.width=Math.round(c.width*s);o.height=Math.round(c.height*s);var x=o.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,o.width,o.height);x.drawImage(c,0,0,o.width,o.height);return o.toDataURL('image/png');}
 
 function render(keep){var y=window.scrollY,keepIn={};
-  ['s_name','s_ini','s_pin','f_tech','f_br','f_start','f_sup'].forEach(function(k){var e=document.getElementById(k);if(e)keepIn[k]=e.value;});
+  ['s_name','s_ini','s_pin','f_tech','f_br','f_start','f_sup','rm_pin'].forEach(function(k){var e=document.getElementById(k);if(e)keepIn[k]=e.value;});
   var sigs={};['T','S'].forEach(function(k){if(pads[k]&&pads[k].ink&&document.getElementById('pad'+k))sigs[k]=pads[k].c.toDataURL();});
   app.innerHTML=S.view?hireView():homeView();
   Object.keys(keepIn).forEach(function(k){var e=document.getElementById(k);if(e&&keepIn[k])e.value=keepIn[k];});
@@ -259,7 +271,7 @@ function render(keep){var y=window.scrollY,keepIn={};
   if(keep===true)window.scrollTo(0,y);}
 function loadPol(){var h=hire();if(!h)return;api('policySigned',[h.tech]).then(function(l){var m={};l.forEach(function(x){if(!m[x.policy]||x.when>m[x.policy])m[x.policy]=x.when;});S.pol={};Object.keys(m).forEach(function(k){S.pol[k]=new Date(m[k]).toLocaleDateString([], {month:'short',day:'numeric',year:'numeric'});});render(true);}).catch(function(){});}
 function load(keep){S.loading=true;return api('obList',[]).then(function(d){S.data=d;S.loading=false;S.err='';render(keep);loadPol();}).catch(function(e){S.loading=false;S.err=String(e.message||e);render(keep);});}
-function route(){var m=/^#h([\w-]+)$/.exec(location.hash);S.view=m?m[1]:'';S.signErr='';S.pol={};pads={};render();window.scrollTo(0,0);if(S.data)loadPol();}
+function route(){var m=/^#h([\w-]+)$/.exec(location.hash);S.view=m?m[1]:'';S.signErr='';S.rm=false;S.rmErr='';S.pol={};pads={};render();window.scrollTo(0,0);if(S.data)loadPol();}
 
 app.addEventListener('change',function(e){var t=e.target;
   if(t.id==='me'){S.me=t.value.replace(/\s+/g,' ').trim();ls('ob.me',S.me||null);return;}
@@ -268,6 +280,13 @@ app.addEventListener('change',function(e){var t=e.target;
   api('obCheck',[h.id,k,on,S.me]).then(function(c){h.checks=c;render(true);}).catch(function(x){if(old)h.checks[k]=old;else delete h.checks[k];render(true);alert('Not saved: '+(x.message||x));});});
 app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;var a=t.dataset.a;
   if(a==='reload')load();
+  if(a==='rm'){S.rm=true;S.rmErr='';render(true);var ip=document.getElementById('rm_pin');if(ip)ip.focus();}
+  if(a==='rmcancel'){S.rm=false;S.rmErr='';render(true);}
+  if(a==='rmgo'){var hr=hire(),rp=(document.getElementById('rm_pin').value||'').trim();if(!rp){S.rmErr='Enter the management PIN.';return render(true);}
+    if(!confirm('Remove the onboarding checklist for '+hr.tech+'? This cannot be undone from the app.'))return;
+    S.rmBusy=true;S.rmErr='';render(true);
+    api('obRemove',[hr.id,rp]).then(function(){S.rmBusy=false;S.rm=false;S.data.hires=S.data.hires.filter(function(x){return x.id!==hr.id;});location.hash='';load();})
+      .catch(function(x){S.rmBusy=false;S.rmErr=String(x.message||x);render(true);var ip=document.getElementById('rm_pin');if(ip)ip.value=rp;});}
   if(a==='showdone'){S.showDone=true;render(true);}
   if(a==='clear'){var P=pads[t.dataset.p];if(P){P.x.clearRect(0,0,P.c.width,P.c.height);P.ink=false;var hh=document.getElementById('hint'+t.dataset.p);if(hh)hh.hidden=false;}}
   if(a==='start'){var v=function(id){return (document.getElementById(id).value||'').replace(/\s+/g,' ').trim();};
