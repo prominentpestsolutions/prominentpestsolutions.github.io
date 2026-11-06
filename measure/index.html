@@ -74,9 +74,9 @@ form.search input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radiu
 .lbl{background:rgba(17,20,16,.85);color:#fff;border:0;border-radius:6px;padding:2px 6px;font:600 12px var(--body);box-shadow:none;white-space:nowrap}
 .lbl:before{display:none}
 </style>
-<meta name="build" content="20261106c">
+<meta name="build" content="20261106d">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261106c';
+(function(){var B='20261106d';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -141,7 +141,7 @@ map.on('moveend',function(){ if(!gSess) return; clearTimeout(gTimer); gTimer=set
 if(GKEY){ document.querySelector('.layers').hidden=true; gStart(false); } else esriOn();
 if(window.ResizeObserver) new ResizeObserver(function(){ map.invalidateSize(); }).observe(document.getElementById('map'));
 var labels=L.layerGroup().addTo(map);
-var areas=[], draw=null, pin=null, place='', n=0;
+var areas=[], draw=null, pin=null, place='', n=0, nL=0;
 function store(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
 function toast(t){ var el=document.getElementById('toast'); el.textContent=t; el.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(function(){el.hidden=true;},2600); }
@@ -183,51 +183,62 @@ document.querySelector('.layers').addEventListener('click',function(e){ var b=e.
   [].forEach.call(document.querySelectorAll('.layers button'),function(x){ x.setAttribute('aria-pressed',x.getAttribute('data-l')===cur); }); });
 
 /* ---------- drawing ---------- */
-function startDraw(){ n++; var color=COLORS[(n-1)%COLORS.length];
-  draw={name:'Area '+n,color:color,sub:false,pts:[],markers:[],shape:L.polygon([],{color:color,weight:3,fillOpacity:.25,interactive:false}).addTo(map)};
+function yd(ft){ var y=ft/3; return (y<100?y.toFixed(1):fmt(y))+' yd'; }
+function len(ft){ return fmt(ft)+' ft · '+yd(ft); }
+function startDraw(line){ if(line) nL++; else n++; var color=COLORS[(n+nL-1)%COLORS.length];
+  draw={name:line?'Line '+nL:'Area '+n,line:!!line,color:color,sub:false,pts:[],markers:[],shape:(line?L.polyline([],{color:color,weight:4,interactive:false}):L.polygon([],{color:color,weight:3,fillOpacity:.25,interactive:false})).addTo(map)};
   map.doubleClickZoom.disable(); areas.forEach(function(a){ a.shape.setStyle({opacity:.6}); }); render(); }
 function vIcon(first){ return L.divIcon({className:'vx'+(first?' first':''),iconSize:null}); }
 map.on('click',function(e){ if(!draw) return; addPt(e.latlng); });
 function addPt(ll){ var i=draw.pts.length; draw.pts.push(ll);
   var m=L.marker(ll,{icon:vIcon(i===0),draggable:true,keyboard:false}).addTo(map);
   m.on('drag',function(){ draw.pts[draw.markers.indexOf(m)]=m.getLatLng(); redraw(); });
-  m.on('click',function(){ if(draw&&draw.markers.indexOf(m)===0&&draw.pts.length>=3) finish(); });
+  m.on('click',function(){ if(draw&&!draw.line&&draw.markers.indexOf(m)===0&&draw.pts.length>=3) finish(); });
   draw.markers.push(m); redraw(); }
 function redraw(){ if(!draw) return; draw.shape.setLatLngs(draw.pts); render(); }
 function undo(){ if(!draw||!draw.pts.length) return; draw.pts.pop(); map.removeLayer(draw.markers.pop()); redraw(); }
-function cancel(){ if(!draw) return; draw.markers.forEach(function(m){ map.removeLayer(m); }); map.removeLayer(draw.shape); draw=null; n--; map.doubleClickZoom.enable(); restyle(); render(); }
-function finish(){ if(!draw||draw.pts.length<3) return; draw.markers.forEach(function(m){ map.removeLayer(m); });
-  var a={name:draw.name,color:draw.color,sub:false,pts:draw.pts.slice(),shape:draw.shape};
+function cancel(){ if(!draw) return; draw.markers.forEach(function(m){ map.removeLayer(m); }); map.removeLayer(draw.shape); if(draw.line) nL--; else n--; draw=null; map.doubleClickZoom.enable(); restyle(); render(); }
+function finish(){ if(!draw||draw.pts.length<(draw.line?2:3)) return; draw.markers.forEach(function(m){ map.removeLayer(m); });
+  var a={name:draw.name,line:draw.line,color:draw.color,sub:false,pts:draw.pts.slice(),shape:draw.shape};
   a.shape.setStyle({interactive:false}); areas.push(a); draw=null; map.doubleClickZoom.enable(); restyle(); render(); }
 function restyle(){ labels.clearLayers();
-  areas.forEach(function(a){ a.shape.setStyle({color:a.sub?'#e53935':a.color,opacity:1,fillOpacity:a.sub?.35:.25,dashArray:a.sub?'6 6':null});
+  areas.forEach(function(a){ if(a.line){ a.shape.setStyle({color:a.color,opacity:1});
+      labels.addLayer(L.tooltip({permanent:true,direction:'center',className:'lbl',interactive:false}).setLatLng(a.shape.getCenter()).setContent(len(perimM(a.pts,false)*FT))); return; }
+    a.shape.setStyle({color:a.sub?'#e53935':a.color,opacity:1,fillOpacity:a.sub?.35:.25,dashArray:a.sub?'6 6':null});
     labels.addLayer(L.tooltip({permanent:true,direction:'center',className:'lbl',interactive:false}).setLatLng(a.shape.getBounds().getCenter()).setContent((a.sub?'−':'')+fmt(areaM2(a.pts)*SQFT)+' sq ft')); }); }
 
 /* ---------- panel ---------- */
 var panel=document.getElementById('panel');
-function total(){ return areas.reduce(function(t,a){ return t+(a.sub?-1:1)*areaM2(a.pts)*SQFT; },0); }
+function total(){ return areas.reduce(function(t,a){ return a.line?t:t+(a.sub?-1:1)*areaM2(a.pts)*SQFT; },0); }
+function lineFt(){ return areas.reduce(function(t,a){ return a.line?t+perimM(a.pts,false)*FT:t; },0); }
 function render(){
+  if(draw&&draw.line){ var D=draw.pts.length>1?perimM(draw.pts,false)*FT:0;
+    panel.innerHTML='<div class="drawing">Tap along the path for '+esc(draw.name)+'. '+(draw.pts.length<2?'At least 2 points.':'Tap Done when you reach the end.')+'</div>'+
+      '<div class="total"><div><span class="eyebrow">'+esc(draw.name)+'</span><div class="v">'+len(D)+'</div></div><span class="s">'+draw.pts.length+' points</span></div>'+
+      '<div class="bar"><button class="btn" data-a="undo"'+(draw.pts.length?'':' disabled')+'>Undo point</button><button class="btn" data-a="cancel">Cancel</button><button class="btn primary" data-a="done" style="margin-left:auto"'+(draw.pts.length>=2?'':' disabled')+'>Done</button></div>';
+    return; }
   if(draw){ var A=areaM2(draw.pts)*SQFT, P=perimM(draw.pts,draw.pts.length>2)*FT;
     panel.innerHTML='<div class="drawing">Tap each corner of '+esc(draw.name)+'. '+(draw.pts.length<3?'At least 3 points.':'Tap the yellow first point or Done to close it.')+'</div>'+
-      '<div class="total"><div><span class="eyebrow">'+esc(draw.name)+'</span><div class="v">'+fmt(A)+' sq ft</div></div><span class="s">'+draw.pts.length+' points · '+fmt(P)+' ft around</span></div>'+
+      '<div class="total"><div><span class="eyebrow">'+esc(draw.name)+'</span><div class="v">'+fmt(A)+' sq ft</div></div><span class="s">'+draw.pts.length+' points · '+len(P)+' around</span></div>'+
       '<div class="bar"><button class="btn" data-a="undo"'+(draw.pts.length?'':' disabled')+'>Undo point</button><button class="btn" data-a="cancel">Cancel</button><button class="btn primary" data-a="done" style="margin-left:auto"'+(draw.pts.length>=3?'':' disabled')+'>Done</button></div>';
     return; }
-  var t=total(), pf=areas.filter(function(a){return !a.sub;}).reduce(function(s,a){ return s+perimM(a.pts,true)*FT; },0);
+  var t=total(), lf=lineFt(), polys=areas.filter(function(a){return !a.line;}), pf=polys.filter(function(a){return !a.sub;}).reduce(function(s,a){ return s+perimM(a.pts,true)*FT; },0);
   panel.innerHTML=(areas.length?
-    '<div class="total"><div><span class="eyebrow">'+(place?esc(place):'Total')+'</span><div class="v">'+fmt(t)+' sq ft</div></div><span class="s">'+(t/43560).toFixed(2)+' acres · '+fmt(pf)+' ft around</span></div>'+
+    '<div class="total"><div><span class="eyebrow">'+(place?esc(place):'Total')+'</span><div class="v">'+(polys.length?fmt(t)+' sq ft':len(lf))+'</div></div><span class="s">'+(polys.length?(t/43560).toFixed(2)+' acres · '+len(pf)+' around':'Total distance')+'</span></div>'+
+    (polys.length&&polys.length<areas.length?'<div class="s" style="color:var(--muted);font-size:.9rem">Lines total: '+len(lf)+'</div>':'')+
     '<div class="areas">'+areas.map(function(a,i){ return '<div class="area'+(a.sub?' sub':'')+'"><span class="sw" style="background:'+(a.sub?'#e53935':a.color)+'"></span>'+
-      '<input data-i="'+i+'" value="'+esc(a.name)+'" aria-label="Area name"><button class="tog" data-a="tog" data-i="'+i+'" title="Add or subtract this area">'+(a.sub?'− Subtract':'+ Add')+'</button>'+
-      '<span class="bar" style="gap:4px;flex-wrap:nowrap"><span class="n">'+fmt(areaM2(a.pts)*SQFT)+'</span><button class="x" data-a="del" data-i="'+i+'" aria-label="Delete area">×</button></span></div>'; }).join('')+'</div>':
-    '<p class="hint">'+(place?'Zoom in on the property, then tap <b>New area</b> and tap each corner of the lawn.':'Search an address, then tap <b>New area</b> and tap each corner of the lawn or property.')+'</p>')+
-    '<div class="bar"><button class="btn primary" data-a="new">+ New area</button>'+(areas.length?'<button class="btn" data-a="copy">Copy</button><button class="btn" data-a="clear" style="margin-left:auto">Clear all</button>':'')+'</div>'+
-    (areas.length?'<p class="hint" style="font-size:.82rem">Tip: draw the whole yard, then draw the house, driveway or patio and switch it to <b>Subtract</b>.</p>':'');
+      '<input data-i="'+i+'" value="'+esc(a.name)+'" aria-label="'+(a.line?'Line':'Area')+' name">'+(a.line?'<span></span>':'<button class="tog" data-a="tog" data-i="'+i+'" title="Add or subtract this area">'+(a.sub?'− Subtract':'+ Add')+'</button>')+
+      '<span class="bar" style="gap:4px;flex-wrap:nowrap"><span class="n">'+(a.line?len(perimM(a.pts,false)*FT):fmt(areaM2(a.pts)*SQFT))+'</span><button class="x" data-a="del" data-i="'+i+'" aria-label="Delete '+(a.line?'line':'area')+'">×</button></span></div>'; }).join('')+'</div>':
+    '<p class="hint">'+(place?'Zoom in on the property, then tap <b>New area</b> or <b>New distance</b> and tap the points.':'Search an address, then tap <b>New area</b> or <b>New distance</b> and tap the points.')+'</p>')+
+    '<div class="bar"><button class="btn primary" data-a="new">+ New area</button><button class="btn primary" data-a="newline">+ New distance</button>'+(areas.length?'<button class="btn" data-a="copy">Copy</button><button class="btn" data-a="clear" style="margin-left:auto">Clear all</button>':'')+'</div>'+
+    (polys.length?'<p class="hint" style="font-size:.82rem">Tip: draw the whole yard, then draw the house, driveway or patio and switch it to <b>Subtract</b>.</p>':'');
 }
 panel.addEventListener('click',function(e){ var b=e.target.closest('[data-a]'); if(!b||b.disabled) return; var a=b.getAttribute('data-a'), i=+b.getAttribute('data-i');
-  if(a==='new') startDraw(); else if(a==='undo') undo(); else if(a==='cancel') cancel(); else if(a==='done') finish();
+  if(a==='new') startDraw(); else if(a==='newline') startDraw(true); else if(a==='undo') undo(); else if(a==='cancel') cancel(); else if(a==='done') finish();
   else if(a==='tog'){ areas[i].sub=!areas[i].sub; restyle(); render(); }
   else if(a==='del'){ map.removeLayer(areas[i].shape); areas.splice(i,1); restyle(); render(); }
-  else if(a==='clear'){ if(clear.armed){ areas.forEach(function(x){ map.removeLayer(x.shape); }); areas=[]; n=0; clear.armed=false; restyle(); render(); } else { clear.armed=true; b.textContent='Tap again to clear'; setTimeout(function(){ clear.armed=false; if(!draw) render(); },3000); } }
-  else if(a==='copy'){ var txt=(place?place+'\n':'')+areas.map(function(x){ return (x.sub?'− ':'')+x.name+': '+fmt(areaM2(x.pts)*SQFT)+' sq ft'; }).join('\n')+'\nTotal: '+fmt(total())+' sq ft ('+(total()/43560).toFixed(2)+' acres)';
+  else if(a==='clear'){ if(clear.armed){ areas.forEach(function(x){ map.removeLayer(x.shape); }); areas=[]; n=0; nL=0; clear.armed=false; restyle(); render(); } else { clear.armed=true; b.textContent='Tap again to clear'; setTimeout(function(){ clear.armed=false; if(!draw) render(); },3000); } }
+  else if(a==='copy'){ var txt=(place?place+'\n':'')+areas.map(function(x){ if(x.line){ var f=perimM(x.pts,false)*FT; return x.name+': '+fmt(f)+' ft ('+yd(f)+')'; } return (x.sub?'− ':'')+x.name+': '+fmt(areaM2(x.pts)*SQFT)+' sq ft'; }).join('\n')+(areas.some(function(x){return !x.line;})?'\nTotal: '+fmt(total())+' sq ft ('+(total()/43560).toFixed(2)+' acres)':'')+(areas.some(function(x){return x.line;})?'\nLines total: '+fmt(lineFt())+' ft ('+yd(lineFt())+')':'');
     (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){ toast('Copied'); },function(){ prompt('Copy this:',txt); }); }
 });
 function clear(){}
