@@ -67,15 +67,16 @@ form.search input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radiu
 .layers{position:absolute;top:10px;right:10px;z-index:500;display:flex;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,.3);box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .layers button{background:#fff;color:#111;padding:8px 10px;font-size:.82rem;font-weight:600}
 .layers button[aria-pressed="true"]{background:#111;color:#fff}
+.gm{position:absolute;left:10px;bottom:5px;z-index:500;line-height:0;pointer-events:none}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;z-index:1000;font-weight:600;max-width:calc(100% - 32px)}
 .vx{width:18px!important;height:18px!important;margin:-9px 0 0 -9px!important;border-radius:50%;background:#fff;border:3px solid #111;box-shadow:0 1px 4px rgba(0,0,0,.5)}
 .vx.first{background:#ffd23f}
 .lbl{background:rgba(17,20,16,.85);color:#fff;border:0;border-radius:6px;padding:2px 6px;font:600 12px var(--body);box-shadow:none;white-space:nowrap}
 .lbl:before{display:none}
 </style>
-<meta name="build" content="20261106a">
+<meta name="build" content="20261106b">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261106a';
+(function(){var B='20261106b';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -91,10 +92,11 @@ form.search input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radiu
   <form class="search" id="sf"><input id="addr" type="search" placeholder="Type an address" autocomplete="street-address" enterkeyhint="search" aria-label="Address"><button class="btn primary" type="submit">Go</button><button class="btn" type="button" id="gps" aria-label="Use my location" title="Use my location">&#9678;</button></form>
   <div class="results" id="res" hidden></div>
 </div>
-<div id="map" style="position:relative"><div class="layers"><button data-l="sat" aria-pressed="true">Satellite</button><button data-l="alt" aria-pressed="false">Alt imagery</button></div></div>
+<div id="map" style="position:relative"><div class="layers"><button data-l="sat" aria-pressed="true">Satellite</button><button data-l="alt" aria-pressed="false">Alt imagery</button></div><div class="gm" id="gm" hidden><img src="data:image/png;base64,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" alt="Google Maps" height="18"></div></div>
 <div class="panel" id="panel"></div>
 <div id="toast" class="toast" hidden></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="/measure/google-key.js"></script>
 <script>
 (function(){
 var COLORS=['#ffd23f','#4fc3f7','#ff8a65','#ba68c8','#81c784','#f06292'];
@@ -107,7 +109,34 @@ var LAYERS={
   sat:imagery('https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Imagery &copy; Esri, Vantor, Earthstar Geographics'),
   alt:imagery('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Imagery &copy; Esri, Maxar, Earthstar Geographics')
 };
-var cur='sat'; LAYERS.sat.addTo(map);
+var cur='sat';
+function esriOn(){ cur='sat'; LAYERS.sat.addTo(map); document.querySelector('.layers').hidden=false; }
+/* Google Map Tiles: with a key in google-key.js, Google is the only imagery shown. Esri returns only if Google can't load. */
+var GKEY=window.GOOGLE_KEY||'', GT='https://tile.googleapis.com', gSess=null, gl=null, gMax=19, gAttr='', gErr=0, gRetried=false, gTimer=null;
+function gLayer(){ var l=L.tileLayer(GT+'/v1/2dtiles/{z}/{x}/{y}?session='+gSess+'&key='+GKEY,{maxZoom:22,maxNativeZoom:gMax});
+  l.on('tileerror',function(e){ if(e.coords.z<=19&&++gErr>8) gFail(); }); return l; }
+function gSession(fresh){ var s=null; try{ s=JSON.parse(store('gSession')||'null'); }catch(_){}
+  if(!fresh&&s&&s.expiry*1000>Date.now()+36e5) return Promise.resolve(s.session);
+  var body={mapType:'satellite',language:'en-US',region:'US'}; if(HD){ body.scale='scaleFactor2x'; body.highDpi=true; }
+  return fetch(GT+'/v1/createSession?key='+GKEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(function(r){ if(!r.ok) throw new Error('session'); return r.json(); })
+    .then(function(j){ store('gSession',JSON.stringify({session:j.session,expiry:+j.expiry})); return j.session; }); }
+function gStart(fresh){ gSession(fresh).then(function(s){ gSess=s; gErr=0; gl=gLayer().addTo(map); document.getElementById('gm').hidden=false; gView(); })
+  .catch(function(){ toast('Google imagery unavailable. Showing Esri.'); esriOn(); }); }
+function gFail(){ if(!gSess) return; gSess=null; clearTimeout(gTimer); map.removeLayer(gl); document.getElementById('gm').hidden=true;
+  if(gAttr){ map.attributionControl.removeAttribution(gAttr); gAttr=''; }
+  if(!gRetried){ gRetried=true; gStart(true); } else { toast('Google imagery unavailable. Showing Esri.'); esriOn(); } }
+/* Google requires its current data attribution, and reports how deep imagery goes here. */
+function gView(){ if(!gSess) return; var b=map.getBounds(), c=map.getCenter(), z=map.getZoom(), s=gSess;
+  fetch(GT+'/tile/v1/viewport?session='+s+'&key='+GKEY+'&zoom='+z+'&north='+Math.min(b.getNorth(),89.9)+'&south='+Math.max(b.getSouth(),-89.9)+'&east='+Math.min(b.getEast(),179.9)+'&west='+Math.max(b.getWest(),-179.9))
+    .then(function(r){ if(r.status>=400&&r.status<500){ gFail(); throw new Error('viewport'); } return r.json(); })
+    .then(function(v){ if(s!==gSess) return; var m=0;
+      (v.maxZoomRects||[]).forEach(function(r){ if(c.lat<=r.north&&c.lat>=r.south&&c.lng<=r.east&&c.lng>=r.west&&r.maxZoom>m) m=r.maxZoom; });
+      if(m&&m!==gMax){ var swap=map.getZoom()>Math.min(m,gMax); gMax=m; if(swap){ map.removeLayer(gl); gl=gLayer().addTo(map); } else gl.options.maxNativeZoom=m; }
+      var a=esc('Google Maps · '+(v.copyright||'')); if(a!==gAttr){ if(gAttr) map.attributionControl.removeAttribution(gAttr); map.attributionControl.addAttribution(a); gAttr=a; } })
+    .catch(function(){}); }
+map.on('moveend',function(){ if(!gSess) return; clearTimeout(gTimer); gTimer=setTimeout(gView,400); });
+if(GKEY){ document.querySelector('.layers').hidden=true; gStart(false); } else esriOn();
 if(window.ResizeObserver) new ResizeObserver(function(){ map.invalidateSize(); }).observe(document.getElementById('map'));
 var labels=L.layerGroup().addTo(map);
 var areas=[], draw=null, pin=null, place='', n=0;
