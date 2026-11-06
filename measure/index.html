@@ -73,9 +73,9 @@ form.search input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radiu
 .lbl{background:rgba(17,20,16,.85);color:#fff;border:0;border-radius:6px;padding:2px 6px;font:600 12px var(--body);box-shadow:none;white-space:nowrap}
 .lbl:before{display:none}
 </style>
-<meta name="build" content="20261103b">
+<meta name="build" content="20261106a">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261103b';
+(function(){var B='20261106a';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -100,9 +100,12 @@ form.search input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radiu
 var COLORS=['#ffd23f','#4fc3f7','#ff8a65','#ba68c8','#81c784','#f06292'];
 var SQFT=10.7639104, FT=3.2808399;
 var map=L.map('map',{zoomControl:true,attributionControl:true,tap:true}).setView([43.4917,-112.0339],13);
+/* Both sources stop at zoom 19 here. High-DPI screens show half-size tiles from one level deeper, so a z18 view already uses z19 detail. */
+var HD=(window.devicePixelRatio||1)>=1.5;
+function imagery(url,attribution){ return L.tileLayer(url,{maxZoom:22,maxNativeZoom:HD?18:19,tileSize:HD?128:256,zoomOffset:HD?1:0,attribution:attribution}); }
 var LAYERS={
-  sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:22,maxNativeZoom:19,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics'}),
-  alt:L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',{maxZoom:22,maxNativeZoom:16,attribution:'Imagery: USGS National Map'})
+  sat:imagery('https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Imagery &copy; Esri, Vantor, Earthstar Geographics'),
+  alt:imagery('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Imagery &copy; Esri, Maxar, Earthstar Geographics')
 };
 var cur='sat'; LAYERS.sat.addTo(map);
 if(window.ResizeObserver) new ResizeObserver(function(){ map.invalidateSize(); }).observe(document.getElementById('map'));
