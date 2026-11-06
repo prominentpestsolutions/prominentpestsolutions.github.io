@@ -169,9 +169,9 @@ td:first-child{font-weight:600}
 .fld textarea{padding:10px 12px;resize:vertical}
 .sum{display:grid;gap:2px}.sum b{font:700 2rem/1 var(--display)}.dl{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}.dr{display:flex;justify-content:space-between;gap:12px;margin:0;font-size:.95rem}.dr .s{flex:none;font-weight:600;text-align:right;max-width:50%}.s.ok,.s.ok a{color:var(--ok)}.s.no{color:#b3261e}.s.old,.s.old a{color:#a96d12}
 </style>
-<meta name="build" content="20261105sig2">
+<meta name="build" content="20261105lock1">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105sig2';
+(function(){var B='20261105lock1';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -190,6 +190,7 @@ var API_URL='https://script.google.com/macros/s/AKfycbxo4fckh7oI-qBhFa1qK_7597w_
 var app=document.getElementById('app'),S={docs:null,people:null,others:[],f:'missing',err:'',busy:false};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function api(fn,args){return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({fn:fn,args:args})}).then(function(r){return r.json();}).then(function(j){if(!j.ok)throw new Error(j.error||'Error');return j.data;});}
+function ss(k,v){try{if(v===undefined)return sessionStorage.getItem(k);if(v===null)sessionStorage.removeItem(k);else sessionStorage.setItem(k,v);}catch(e){return null;}}
 function vk(v){var d=Date.parse(v);return isNaN(d)?String(v):new Date(d).toDateString();}
 function nk(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
 function day(ms){return ms?new Date(ms).toLocaleDateString([], {month:'short',day:'numeric',year:'numeric'}):'';}
@@ -203,13 +204,13 @@ function build(docs,d){var skip=/vendor|supplier|partner/i,seen={},known={},byNa
   people.sort(function(a,b){return (b.missing-a.missing)||a.name.localeCompare(b.name);});
   var others={};d.sigs.forEach(function(x){var k=nk(x.name);if(known[k])return;var o=others[k]=others[k]||{name:x.name,sigs:[]};o.sigs.push(x);});
   S.docs=docs;S.people=people;S.others=Object.keys(others).map(function(k){return others[k];});}
-function load(){S.busy=true;S.err='';render();Promise.all([policies(),api('polStatus',[])]).then(function(r){build(r[0],r[1]);S.busy=false;render();}).catch(function(x){S.busy=false;S.err=String(x.message||x);render();});}
+function load(pin,quiet){S.busy=true;S.err='';render();Promise.all([policies(),api('polStatus',[pin])]).then(function(r){build(r[0],r[1]);ss('mgmt.pin',pin);S.busy=false;render();}).catch(function(x){ss('mgmt.pin',null);S.busy=false;S.err=quiet?'':String(x.message||x);render();});}
 function row(r){var txt=r.state==='ok'?'Signed '+day(r.sig.when):r.state==='old'?'Old version, signed '+day(r.sig.when):'Not signed';
   var inner=r.sig&&r.sig.url?'<a href="'+esc(r.sig.url)+'" target="_blank" rel="noopener">'+esc(txt)+'</a>':esc(txt);
   return '<li class="dr"><span>'+esc(r.title)+'</span><span class="s '+r.state+'">'+inner+'</span></li>';}
 function person(p){return '<section class="card req"><div class="row"><b>'+esc(p.name)+'</b><span class="st '+(p.missing?'Denied':'Approved')+'">'+(p.missing?p.missing+' to sign':'All signed')+'</span></div>'+(p.role||p.branch?'<span class="meta">'+esc([p.role,p.branch].filter(Boolean).join(' · '))+'</span>':'')+'<ul class="dl">'+p.rows.map(row).join('')+'</ul></section>';}
 function view(){var h=head();
-  if(!S.people)return h+(S.busy?'<p class="muted">Loading…</p>':'<p class="err">'+esc(S.err)+'</p>');
+  if(!S.people)return h+(S.busy?'<p class="muted">Loading…</p>':'<form class="lock" id="lf"><h2>Managers</h2><label class="fld">Management PIN<input id="pn" type="password" inputmode="numeric" autocomplete="off"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary">Open</button></form>');
   var P=S.people,miss=P.filter(function(p){return p.missing;}),done=P.length-miss.length;
   var F=[['missing','Needs signatures',miss.length],['done','All signed',done],['all','Everyone',P.length]];
   h+='<div class="sum"><b>'+done+' of '+P.length+'</b><span class="meta">employees have signed all '+S.docs.length+' required documents</span></div>';
@@ -220,8 +221,9 @@ function view(){var h=head();
   h+='<p class="muted small">Names come from the Directory. Tap a date to open the signed PDF.</p>';
   return h;}
 function render(){app.innerHTML=view();}
+app.addEventListener('submit',function(e){e.preventDefault();var pn=document.getElementById('pn').value.trim();if(!pn){S.err='Enter the Management PIN.';render();return;}load(pn);});
 app.addEventListener('click',function(e){var t=e.target.closest('button');if(t&&t.dataset.f){S.f=t.dataset.f;render();}});
-load();
+var saved=ss('mgmt.pin');if(saved)load(saved,true);else render();
 })();
 </script>
 </body>
