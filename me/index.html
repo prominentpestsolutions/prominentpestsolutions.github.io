@@ -187,9 +187,9 @@ select{font:inherit;color:inherit;width:100%;min-height:48px;padding:0 12px;bord
 .foot{margin-top:8px}
 .lock .btn+.btn{margin-top:8px}
 </style>
-<meta name="build" content="20261105del">
+<meta name="build" content="20261105pin">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105del';
+(function(){var B='20261105pin';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -238,8 +238,8 @@ function dash(){var d=S.d,live=d.strikes.filter(function(i){return i.state==='Ac
   if(old.length)h+='<h2 class="sec">Past strikes</h2><div class="list">'+old.map(strike).join('')+'</div>';
   return h+'<div class="acts foot"><button class="btn deny" data-a="out">Sign out</button><button class="btn deny" data-a="change">Change PIN</button></div>';}
 function newPin(title,sub){return head()+'<form class="lock" id="nf"><h2>'+title+'</h2><p class="muted">'+sub+'</p><label class="fld">New PIN (4 to 8 digits)<input id="n1" type="password" inputmode="numeric" autocomplete="off" maxlength="8"></label><label class="fld">Type it again<input id="n2" type="password" inputmode="numeric" autocomplete="off" maxlength="8"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary"'+dis()+'>Save PIN</button>'+(S.change?'<button type="button" class="btn deny" data-a="nochange">Cancel</button>':'')+'</form>';}
-function login(){return head()+'<form class="lock" id="lf"><label class="fld">Your name<select id="nm"><option value="">Pick your name</option>'+S.people.map(function(n){return '<option'+(n===S.name?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</select></label><label class="fld">Your PIN<input id="pn" type="password" inputmode="numeric" autocomplete="off" maxlength="8"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary"'+dis()+'>'+(S.busy?'Opening…':'Open')+'</button><p class="muted small">No PIN yet? Ask a manager to set one.</p></form>';}
-function render(){app.innerHTML=S.must?newPin('Choose your PIN','Pick a PIN only you know before you continue.'):S.change?newPin('Change your PIN',''):S.d?dash():login();}
+function login(){return head()+'<form class="lock" id="lf"><label class="fld">Your name<select id="nm"><option value="">Pick your name</option>'+S.people.map(function(n){return '<option'+(n===S.name?' selected':'')+'>'+esc(n)+'</option>';}).join('')+'</select></label><label class="fld">Your PIN<input id="pn" type="password" inputmode="numeric" autocomplete="off" maxlength="8"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary"'+dis()+'>'+(S.busy?'Opening…':'Open')+'</button><p class="muted small">First time here? Use the temporary PIN from your manager.</p></form>';}
+function render(){app.innerHTML=S.must?newPin('Create your PIN','Welcome! Create a PIN only you know before you continue. You\'ll use it every time you sign in.'):S.change?newPin('Change your PIN',''):S.d?dash():login();}
 app.addEventListener('submit',function(e){e.preventDefault();
   if(e.target.id==='lf'){var n=document.getElementById('nm').value,p=document.getElementById('pn').value.trim();S.name=n;if(!n||!p){S.err='Pick your name and enter your PIN.';render();return;}S.busy=true;S.err='';render();
     api('myData',[n,p]).then(function(d){S.busy=false;S.pin=p;if(d.mustChange)S.must=true;else S.d=d;try{localStorage.setItem('to.name',n);}catch(x){}render();window.scrollTo(0,0);}).catch(function(x){S.busy=false;S.err=/fetch|network/i.test(String(x.message))?'Could not connect. Try again.':String(x.message||x);render();});}
