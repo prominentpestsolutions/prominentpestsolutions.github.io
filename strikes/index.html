@@ -187,9 +187,9 @@ select{font:inherit;color:inherit;width:100%;min-height:48px;padding:0 12px;bord
 .foot{margin-top:8px}
 .lock .btn+.btn{margin-top:8px}
 </style>
-<meta name="build" content="20261105strk">
+<meta name="build" content="20261105pin">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105strk';
+(function(){var B='20261105pin';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -244,7 +244,7 @@ function incCard(i){var st=i.state,h='<div class="card req"><div class="row"><b>
 function personView(){var p=S.d.team.filter(function(x){return x.name===S.who;})[0]||{name:S.who,active:0,resets12:0},l=S.d.incidents.filter(function(i){return i.employee===S.who;});
   var h='<button class="back asbtn" data-a="backteam">← Team</button><section class="card"><div class="row"><div><h2>'+esc(p.name)+'</h2><span class="meta">'+esc(p.branch||'')+'</span></div>'+dots(p.active)+'</div><span class="meta">'+plural(p.active,'active strike')+' · '+plural(p.resets12,'reset')+' in the last 12 months</span>'+(p.active&&!p.removable&&p.removeOn?'<span class="meta">Oldest strike can come off early on '+esc(nice(p.removeOn))+' if there are no new strikes</span>':'')+'</section>';
   var rs=S.d.resets.filter(function(r){return r.employee===S.who;});
-  h+='<section class="card"><div class="row"><b>My Dashboard PIN</b><span class="tag '+(p.hasPin?'ok':'')+'">'+(p.hasPin?'Set':'Not set')+'</span></div><span class="meta">Give the employee a starter PIN. They choose their own the first time they sign in.</span><label class="fld">Starter PIN (4 to 8 digits)<input id="sp" inputmode="numeric" autocomplete="off" maxlength="8"></label><div class="acts"><button class="btn deny" data-a="setpin" data-w="'+esc(p.name)+'"'+dis()+'>'+(p.hasPin?'Reset PIN':'Set PIN')+'</button></div></section>';
+  h+='<section class="card"><div class="row"><b>My Dashboard PIN</b><span class="tag '+(p.hasPin?'ok':'')+'">'+(p.hasPin?'Own PIN':'Temporary PIN')+'</span></div><span class="meta">'+(p.hasPin?'If they forget their PIN, reset it. They\'ll sign in with the temporary PIN and choose a new one.':'They sign in with the temporary PIN and choose their own the first time.')+'</span>'+(p.hasPin?'<div class="acts"><button class="btn deny" data-a="setpin" data-w="'+esc(p.name)+'"'+dis()+'>Reset to temporary PIN</button></div>':'')+'</section>';
   rs.forEach(function(r){if(!r.donuts||!r.meeting||(r.pip&&!r.pipDone))h+=todoCard({k:'reset',r:r});});
   return h+(l.length?'<div class="list">'+l.map(incCard).join('')+'</div>':'<p class="muted">No strike history.</p>');}
 function addView(){var f=S.form,p=S.d.team;return '<form class="card lockf" id="af"><h2>Add a strike</h2><label class="fld">Employee<select id="ae"><option value="">Pick a name</option>'+p.map(function(x){return '<option'+(x.name===f.employee?' selected':'')+'>'+esc(x.name)+'</option>';}).join('')+'</select></label><label class="fld">What happened<select id="at"><option value="Late notice"'+(f.type==='Late notice'?' selected':'')+'>Under 3 days\' notice: 1 strike</option><option value="No-call/no-show"'+(f.type==='No-call/no-show'?' selected':'')+'>No-call/no-show: 2 strikes</option></select></label><label class="fld">Date missed<input id="ad" type="date" value="'+esc(f.date)+'"></label><label class="fld">Note (optional)<input id="an" maxlength="200" value="'+esc(f.note)+'" placeholder="Don\'t include medical details"></label><div class="warnbox">Check the policy exceptions first. Illness, family emergencies, a death in the family, car trouble, unsafe weather, jury duty and protected leave never count.</div><div class="acts"><button class="btn primary"'+dis()+'>Issue strike</button><button type="button" class="btn deny" data-a="noadd">Cancel</button></div></form>';}
@@ -284,7 +284,7 @@ app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)
   if(a==='overturn')act('strikeDecide',[i,'Overturned',{by:S.by}],'Strike overturned.');
   if(a==='mistake')act('strikeDecide',[i,'Overturned',{by:S.by,mistake:true}],'Removed from the count.');
   if(a==='remove')act('strikeRemove',[t.dataset.w,S.by],'Oldest strike removed.');
-  if(a==='setpin')act('strikeSetPin',[t.dataset.w,document.getElementById('sp').value.trim(),S.by],'PIN saved. They will pick a new one when they sign in.');
+  if(a==='setpin')act('strikeSetPin',[t.dataset.w,S.by],'PIN reset. They will choose a new one when they sign in.');
   if(a==='mark')act('strikeMark',[t.dataset.id,t.dataset.f,S.by],'Saved.');});
 if(window.PREVIEW_API)api=window.PREVIEW_API;
 if(S.pin){S.busy=true;render();api('strikeData',[S.pin]).then(function(d){S.d=d;S.busy=false;render();}).catch(function(){S.busy=false;S.pin='';ss('strikes.pin',null);render();});}else render();
