@@ -74,9 +74,9 @@ form.search input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radiu
 .lbl{background:rgba(17,20,16,.85);color:#fff;border:0;border-radius:6px;padding:2px 6px;font:600 12px var(--body);box-shadow:none;white-space:nowrap}
 .lbl:before{display:none}
 </style>
-<meta name="build" content="20261106d">
+<meta name="build" content="20261106e">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261106d';
+(function(){var B='20261106e';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -114,7 +114,8 @@ function esriOn(){ cur='sat'; LAYERS.sat.addTo(map); document.querySelector('.la
 /* Google Map Tiles: with a key in google-key.js, Google is the only imagery shown. Esri returns only if Google can't load. */
 var GKEY=window.GOOGLE_KEY||'', GT='https://tile.googleapis.com', gSess=null, gl=null, gMax=19, gAttr='', gErr=0, gRetried=false, gTimer=null;
 function gLayer(){ var l=L.tileLayer(GT+'/v1/2dtiles/{z}/{x}/{y}?session='+gSess+'&key='+GKEY,{maxZoom:22,maxNativeZoom:gMax});
-  l.on('tileerror',function(e){ if(e.coords.z<=19&&++gErr>8) gFail(); }); return l; }
+  l.on('tileload',function(){ gErr=0; }); /* only an unbroken run of failed tiles means Google is down */
+  l.on('tileerror',function(e){ if(e.coords.z<=19&&++gErr>3) gFail(); }); return l; }
 function gSession(fresh){ var s=null; try{ s=JSON.parse(store('gSession')||'null'); }catch(_){}
   if(!fresh&&s&&s.expiry*1000>Date.now()+36e5) return Promise.resolve(s.session);
   var body={mapType:'satellite',language:'en-US',region:'US'}; if(HD){ body.scale='scaleFactor2x'; body.highDpi=true; }
@@ -127,9 +128,9 @@ function gFail(){ if(!gSess) return; gSess=null; clearTimeout(gTimer); map.remov
   if(gAttr){ map.attributionControl.removeAttribution(gAttr); gAttr=''; }
   if(!gRetried){ gRetried=true; gStart(true); } else { toast('Google imagery unavailable. Showing Esri.'); esriOn(); } }
 /* Google requires its current data attribution, and reports how deep imagery goes here. */
-function gView(q){ if(!gSess) return; var b=map.getBounds(), c=map.getCenter(), z=map.getZoom(), s=gSess, zq=q||Math.min(z,gMax);
+function gView(q){ if(!gSess) return; var b=map.getBounds(), c=map.getCenter(), z=Math.round(map.getZoom()), s=gSess, zq=q||Math.min(z,gMax); /* pinching passes through fractional zooms, which Google rejects */
   fetch(GT+'/tile/v1/viewport?session='+s+'&key='+GKEY+'&zoom='+zq+'&north='+Math.min(b.getNorth(),89.9)+'&south='+Math.max(b.getSouth(),-89.9)+'&east='+Math.min(b.getEast(),179.9)+'&west='+Math.max(b.getWest(),-179.9))
-    .then(function(r){ if(r.status>=400&&r.status<500){ gFail(); throw new Error('viewport'); } return r.json(); })
+    .then(function(r){ if(!r.ok) throw new Error('viewport'); return r.json(); })
     .then(function(v){ if(s!==gSess) return; var m=0;
       (v.maxZoomRects||[]).forEach(function(r){ if(c.lat<=r.north&&c.lat>=r.south&&c.lng<=r.east&&c.lng>=r.west&&r.maxZoom>m) m=r.maxZoom; });
       if(m&&m!==gMax){ var swap=map.getZoom()>Math.min(m,gMax); gMax=m; if(swap){ map.removeLayer(gl); gl=gLayer().addTo(map); } else gl.options.maxNativeZoom=m; }
