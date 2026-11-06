@@ -74,9 +74,9 @@ form.search input{flex:1;min-width:0;min-height:46px;padding:0 14px;border-radiu
 .lbl{background:rgba(17,20,16,.85);color:#fff;border:0;border-radius:6px;padding:2px 6px;font:600 12px var(--body);box-shadow:none;white-space:nowrap}
 .lbl:before{display:none}
 </style>
-<meta name="build" content="20261106e">
+<meta name="build" content="20261106f">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261106e';
+(function(){var B='20261106f';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -127,6 +127,9 @@ function gStart(fresh){ gSession(fresh).then(function(s){ gSess=s; gErr=0; gl=gL
 function gFail(){ if(!gSess) return; gSess=null; clearTimeout(gTimer); map.removeLayer(gl); document.getElementById('gm').hidden=true;
   if(gAttr){ map.attributionControl.removeAttribution(gAttr); gAttr=''; }
   if(!gRetried){ gRetried=true; gStart(true); } else { toast('Google imagery unavailable. Showing Esri.'); esriOn(); } }
+/* Google's logo must not be covered: sit above the attribution text when they would collide. */
+function gLogo(){ var g=document.getElementById('gm'), a=map.attributionControl.getContainer(); if(g.hidden) return; g.style.bottom='5px';
+  var gr=g.getBoundingClientRect(), ar=a.getBoundingClientRect(); if(gr.right+10>ar.left&&gr.bottom>ar.top) g.style.bottom=(a.offsetHeight+5)+'px'; }
 /* Google requires its current data attribution, and reports how deep imagery goes here. */
 function gView(q){ if(!gSess) return; var b=map.getBounds(), c=map.getCenter(), z=Math.round(map.getZoom()), s=gSess, zq=q||Math.min(z,gMax); /* pinching passes through fractional zooms, which Google rejects */
   fetch(GT+'/tile/v1/viewport?session='+s+'&key='+GKEY+'&zoom='+zq+'&north='+Math.min(b.getNorth(),89.9)+'&south='+Math.max(b.getSouth(),-89.9)+'&east='+Math.min(b.getEast(),179.9)+'&west='+Math.max(b.getWest(),-179.9))
@@ -136,7 +139,7 @@ function gView(q){ if(!gSess) return; var b=map.getBounds(), c=map.getCenter(), 
       if(m&&m!==gMax){ var swap=map.getZoom()>Math.min(m,gMax); gMax=m; if(swap){ map.removeLayer(gl); gl=gLayer().addTo(map); } else gl.options.maxNativeZoom=m; }
       if(!v.copyright&&zq>19){ gView(19); return; } /* Google can return an empty attribution at its deepest zooms */
       if(!q&&m&&Math.min(z,m)!==zq){ gView(); return; }
-      var a=esc('Google Maps'+(v.copyright?' · '+v.copyright:'')); if(a!==gAttr){ if(gAttr) map.attributionControl.removeAttribution(gAttr); map.attributionControl.addAttribution(a); gAttr=a; } })
+      var a=esc('Google Maps'+(v.copyright?' · '+v.copyright:'')); if(a!==gAttr){ if(gAttr) map.attributionControl.removeAttribution(gAttr); map.attributionControl.addAttribution(a); gAttr=a; } gLogo(); })
     .catch(function(){}); }
 map.on('moveend',function(){ if(!gSess) return; clearTimeout(gTimer); gTimer=setTimeout(gView,400); });
 if(GKEY){ document.querySelector('.layers').hidden=true; gStart(false); } else esriOn();
