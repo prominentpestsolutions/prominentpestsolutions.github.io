@@ -168,9 +168,9 @@ td:first-child{font-weight:600}
 .chk.fr{margin-top:6px;padding:10px 12px;border-radius:10px;background:var(--sunk)}
 .fld textarea{padding:10px 12px;resize:vertical}
 </style>
-<meta name="build" content="20261105strk2">
+<meta name="build" content="20261105del">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105strk2';
+(function(){var B='20261105del';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -225,7 +225,9 @@ function card(r){var late=r.notice<3,h='<div class="card req"><div class="row"><
   if(r.reason)h+='<span class="meta"><b>Reason:</b> '+esc(r.reason)+'</span>';
   if(r.status==='Approved')h+='<label class="chk fr"><input type="checkbox" data-b="'+esc(r.id)+'"'+(r.blocked?' checked':'')+(S.busy?' disabled':'')+'><span>Blocked in FieldRoutes</span></label>';
   if(S.denying===r.id){h+='<label class="fld">Reason for denial (optional, sent to the employee)<textarea id="why" rows="3" maxlength="500"></textarea></label><div class="acts"><button class="btn primary" data-a="denyyes" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Confirm denial</button><button class="btn deny" data-a="denyno">Cancel</button></div></div>';return h;}
-  h+='<div class="acts">'+(r.status!=='Approved'?'<button class="btn primary" data-d="Approved" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Approve</button>':'')+(r.status!=='Denied'?'<button class="btn deny" data-a="denyask" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Deny</button>':'')+'</div></div>';
+  h+='<div class="acts">'+(r.status!=='Approved'?'<button class="btn primary" data-d="Approved" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Approve</button>':'')+(r.status!=='Denied'?'<button class="btn deny" data-a="denyask" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Deny</button>':'')+'</div>';
+  if(S.del===r.id)h+='<div class="warnbox">Delete this request for '+esc(r.name)+'?'+(r.blocked?' Remove the block in FieldRoutes too.':'')+'</div><label class="fld">Management PIN<input id="dpin" type="password" inputmode="numeric" autocomplete="off"></label><div class="acts"><button class="btn deny" data-a="delyes" data-id="'+esc(r.id)+'"'+(S.busy?' disabled':'')+'>Yes, delete it</button><button class="btn deny" data-a="delno">Keep it</button></div></div>';
+  else h+='<button class="link" data-a="delask" data-id="'+esc(r.id)+'">Delete request</button></div>';
   return h;}
 function trackView(){var h=head('Approve and track requests');
   if(!S.list){h+='<form class="lock" id="lf"><h2>Managers</h2><label class="fld">Your name<input id="by" autocomplete="name" value="'+esc(S.by)+'"></label>'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+'<button class="btn primary" '+(S.busy?'disabled':'')+'>'+(S.busy?'Opening…':'Open tracker')+'</button></form>';return h;}
@@ -256,6 +258,9 @@ app.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)
   if(t.dataset.f){S.f=t.dataset.f;render();}
   if(t.dataset.a==='denyask'){S.denying=t.dataset.id;render();var w=document.getElementById('why');if(w)w.focus();}
   if(t.dataset.a==='denyno'){S.denying='';render();}
+  if(t.dataset.a==='delask'){S.del=t.dataset.id;render();}
+  if(t.dataset.a==='delno'){S.del='';render();}
+  if(t.dataset.a==='delyes'){var dp=document.getElementById('dpin').value.trim();if(!dp){S.err='Enter the Management PIN to delete.';render();return;}S.del='';act('toDelete',[dp,t.dataset.id,S.by]);}
   if(t.dataset.a==='denyyes'){var why=(document.getElementById('why').value||'').trim();S.denying='';act('toDecide',[S.pw,t.dataset.id,'Denied',S.by,why]);}
   if(t.dataset.d)act('toDecide',[S.pw,t.dataset.id,t.dataset.d,S.by,'']);});
 if(MODE==='req'){S.name=ls('to.name')||'';S.email=ls('to.email')||ls('pol.email')||'';render();
