@@ -187,9 +187,9 @@ select{font:inherit;color:inherit;width:100%;min-height:48px;padding:0 12px;bord
 .foot{margin-top:8px}
 .lock .btn+.btn{margin-top:8px}
 </style>
-<meta name="build" content="20261105pin">
+<meta name="build" content="20261105pto">
 <script>/* auto-update: reload when a newer version is published */
-(function(){var B='20261105pin';
+(function(){var B='20261105pto';
  function chk(){ fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){
   var m=/name="build" content="([^"]+)"/.exec(t); if(!m||m[1]===B) return;
   var u=new URL(location.href); if(u.searchParams.get('v')===m[1]) return;
@@ -234,6 +234,7 @@ function dash(){var d=S.d,live=d.strikes.filter(function(i){return i.state==='Ac
   if(d.active&&d.removeOn)h+='<span class="meta">'+(d.removable?'You\'ve gone 90 days with no new strikes. Your manager may remove your oldest strike.':'Stay strike-free until '+esc(nice(d.removeOn))+' and your oldest strike may come off early.')+'</span>';
   h+='</section>'+d.resets.map(reset).join('');
   if(live.length)h+='<div class="list">'+live.map(strike).join('')+'</div>';
+  var q=d.pto||{};if(q.eligible)h+='<section class="card"><div class="row"><div><h2>PTO '+esc(q.year)+'</h2><span class="meta">'+plural(q.left,'hour')+' left of '+q.allowance+'</span></div></div><span class="meta">'+plural(q.used+q.prior,'hour')+' used · '+plural(q.scheduled,'hour')+' scheduled · '+plural(q.pending,'hour')+' waiting on approval</span><span class="meta">Unused PTO doesn\'t carry over to next year.</span></section>';
   h+='<h2 class="sec">Time off requests</h2>'+(d.requests.length?'<div class="list">'+d.requests.map(reqCard).join('')+'</div>':'<p class="muted">No requests yet.</p>')+'<a class="btn primary linkbtn" href="/time-off/">Request time off</a>';
   if(old.length)h+='<h2 class="sec">Past strikes</h2><div class="list">'+old.map(strike).join('')+'</div>';
   return h+'<div class="acts foot"><button class="btn deny" data-a="out">Sign out</button><button class="btn deny" data-a="change">Change PIN</button></div>';}
